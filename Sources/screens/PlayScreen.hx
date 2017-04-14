@@ -1,14 +1,21 @@
 package screens;
 
+import systems.InputSystem;
 import kha.Assets;
 import sdg.Screen;
+import sdg.Object;
 import actors.Actor;
 import world.Level;
 import systems.AStar;
+import systems.Team;
 
-class PlayScreen extends Screen
+class PlayScreen extends Screen implements IGameState
 {
-	public var lvl:Level = new Level();
+	public var lvl:Level = new Level();	
+	public var teams(default,null):Array<Team> = [];
+	public var activeTeam(default,null):Team;
+	public var dashboard(default,null):Object;
+	public var inputSystem:InputSystem;
 	public function new()
 	{
 		super();
@@ -16,10 +23,25 @@ class PlayScreen extends Screen
 	public override function init()
 	{
 		super.init();
-
+		activeTeam = new Team();
+		teams.push(activeTeam);
+		teams.push(new Team());
 		lvl = new Level();
 		AStar.setLevel(lvl);
 		add(lvl);
-		add(new Actor(lvl.activeNodes[0], Assets.images.knight));
+		var act = new Actor(lvl.activeNodes[0], Assets.images.knight);
+		activeTeam.addUnit(act);
+		var act2 = new Actor(lvl.activeNodes[4], Assets.images.redknight);
+		teams[1].addUnit(act2);
+		add(act);
+		add(act2);
+		dashboard = new Object();
+		inputSystem = new InputSystem(this);
+	}
+
+	public override function update()
+	{
+		super.update();
+		inputSystem.update();
 	}
 }

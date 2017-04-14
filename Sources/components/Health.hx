@@ -1,23 +1,20 @@
 package components;
-import events.AddedSpriteEvent;
-import events.EventObject;
-import events.UpdateEvent;
+
+import sdg.event.EventObject;
+import sdg.components.Component;
+import sdg.Object;
+import actors.Actor;
 import events.RevealEvent;
 import events.HideEvent;
 import events.KillEvent;
 import events.HurtEvent;
 import events.GetSpriteEvent;
-import adapters.TwoDSprite;
-import adapters.TwoDRect;
 /**
  * ...
  * @author ...
  */
 class Health extends Component
 {
-
-
-
 	/**
 	 * Int used to decide health using health as a percent of healthMax total
 	 */
@@ -25,43 +22,39 @@ class Health extends Component
 	/**
 	 * simple health bar sprite
 	 */
-	private var healthBar:TwoDSprite;
+	private var healthBar:Object;
 	
 	/**
 	 * simple health bar fill sprite
 	 */
-	private var healthBarFill:TwoDSprite;
+	private var healthBarFill:Object;
 	
 	private var health:Float = 1;
 	
-	private var actorSprite:TwoDSprite;
+	private var actor:Actor;
 	
-	public function new(name:String) 
+	public function new() 
 	{
-		super(name);
+		super();
 	}
 	
 	override public function init() 
 	{
 		super.init();
 		
-		if (Reflect.hasField(entity.eData, "health"))
+		if (Type.getClass(object) == Actor)
 		{
-			this.healthMax = entity.eData.health;
+			actor = cast object;
 		}
 		else
 		{
-			entity.removeC(name);
+			destroy();
+			object.components.remove(this);
 		}
-		entity.dispatchEvent(GetSpriteEvent.GET, new GetSpriteEvent(attachSprite));
-		if (actorSprite == null)
-		{
-			entity.addEvent(AddedSpriteEvent.ADDED, function(e:AddedSpriteEvent){entity.dispatchEvent(GetSpriteEvent.GET, new GetSpriteEvent(attachSprite));});
-		}
-		entity.addEvent(RevealEvent.REVEAL, makeVisible);
-		entity.addEvent(HideEvent.HIDE, killVisibility);
-		entity.addEvent(HurtEvent.HURT, hurt);
-		entity.addEvent(UpdateEvent.UPDATE, update);
+		//object.eventDispatcher.addEvent(RevealEvent.REVEAL, makeVisible);
+		//object.eventDispatcher.addEvent(HideEvent.HIDE, killVisibility);
+		object.eventDispatcher.addEvent(HurtEvent.HURT, hurt);
+		//createSprite();
 	}
 	
 	public function hurt(e:HurtEvent)
@@ -74,8 +67,8 @@ class Health extends Component
 	 */
 	public function killVisibility(e:HideEvent = null)
 	{
-		healthBar.setVisibility(false);
-		healthBarFill.setVisibility(false);
+		healthBar.visible = false;
+		healthBarFill.visible = false;
 	}
 
 	
@@ -84,58 +77,57 @@ class Health extends Component
 	 */
 	public function makeVisible(e:RevealEvent = null)
 	{
-		healthBar.setVisibility(true);
-		healthBarFill.setVisibility(true);
+		healthBar.visible = true;
+		healthBarFill.visible = true;
 	}
 	
 	/**
 	 * keeps up the position of the health bar, and maintains the fill
 	 */
-	public function update(e:UpdateEvent = null)
+	public override function update()
 	{
-		
-		if (actorSprite != null)
+		super.update();
+		/*
+		if (healthBarFill != null)
 		{
-			if (healthBarFill != null)
+			if (health > 0)
 			{
-				if (health > 0)
-				{
-					healthBarFill.setScale(health, 1);
-				}
-				else
-				{
-					healthBarFill.setScale(0, 1);
-				}
-				healthBarFill.x = actorSprite.x;
-				healthBarFill.y = actorSprite.y - 1;
-				
+				//healthBarFill.graphic.setScale(health, 1);
 			}
-			if (healthBar != null)
+			else
 			{
-				healthBar.x = actorSprite.x;
-				healthBar.y = actorSprite.y - 1;
+				healthBarFill.visible = false;
 			}
+			healthBarFill.x = actor.x;
+			healthBarFill.y = actor.y - 1;
+			
 		}
+		if (healthBar != null)
+		{
+			healthBar.x = actor.x;
+			healthBar.y = actor.y - 1;
+		}*/
 		if (health <= 0)
 		{
 			kill();
 		}
 	}
 	
-	public function attachSprite(s:TwoDSprite)
-	{
-		actorSprite = s;			
-		healthBar = new TwoDRect(actorSprite.x, actorSprite.y - 1,"BLACK",Std.int(Math.sqrt(entity.currentNodes.length) * 8), 1);
-		FlxG.state.add(healthBar);
-		healthBarFill = new TwoDRect(actorSprite.x, actorSprite.y - 1, "RED", Std.int(Math.sqrt(entity.currentNodes.length) * 8), 1);
-		FlxG.state.add(healthBarFill);	
+	public function createSprite()
+	{			
+		healthBar = new Object();//actorSprite.x, actorSprite.y - 1,"BLACK",Std.int(Math.sqrt(entity.currentNodes.length) * 8), 1);
+		healthBarFill = new Object();//actorSprite.x, actorSprite.y - 1, "RED", Std.int(Math.sqrt(entity.currentNodes.length) * 8), 1);
+		object.screen.add(healthBar);
+		object.screen.add(healthBarFill);
 	}
 	
 	public function kill(e:EventObject = null)
 	{
-		FlxG.state.remove(healthBar);
-		FlxG.state.remove(healthBarFill);
-		entity.dispatchEvent(KillEvent.KILL, new KillEvent());
-		entity.kill();
+		/*
+		object.screen.remove(healthBar);
+		object.screen.remove(healthBarFill);
+		*/
+		object.eventDispatcher.dispatchEvent(KillEvent.KILL, new KillEvent());
+		object.screen.remove(object, true);
 	}
 }

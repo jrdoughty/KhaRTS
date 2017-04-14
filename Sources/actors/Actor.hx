@@ -9,6 +9,8 @@ import world.Node;
 import systems.AStar;
 import systems.Team;
 import sdg.components.EventDispatcher;
+import components.Health;
+import components.ControlledUnitAI;
 /**
  * @author John Doughty
  */
@@ -41,8 +43,9 @@ class Actor extends Object
 	public function new(node:Node, i:Image)
 	{
 		super();
+		x = node.x;
+		y = node.y;
 		addComponent(new EventDispatcher());
-		team = new Team();
 		var rl = Atlas.createRegionList(i,32,32);
 		setupNodes(node);
 		graphic = new Sprite(rl[0]);
@@ -50,7 +53,9 @@ class Actor extends Object
 		a.addAnimation("main", [rl[0],rl[1]], 5);
 		a.play('main',true);
 		addComponent(a);
-		addComponent(new components.ControlledUnitAI());
+		addComponent(new Health());
+		addComponent(new ControlledUnitAI());
+		
 	}
 	
 	/**
@@ -79,6 +84,5 @@ class Actor extends Object
 		{
 			i.occupant = null;
 		}
-		screen.remove(this);
 	}
 }
