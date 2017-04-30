@@ -88,7 +88,7 @@ class ControlledUnitAI extends AI
 			object.eventDispatcher.addEvent(MoveEvent.MOVE, MoveToNode);
 			object.eventDispatcher.addEvent(TargetEvent.ATTACK_ACTOR, TargetActor);
 			object.eventDispatcher.addEvent(StopEvent.STOP, resetStates);
-			delayTimer = new Timer(Math.floor(1000*Math.random()));//Keeps mass created units from updating at the exact same time. Idea from: http://answers.unity3d.com/questions/419786/a-pathfinding-multiple-enemies-MOVING-target-effic.html
+			delayTimer = new Timer(Math.floor(300*Math.random()));//Keeps mass created units from updating at the exact same time. Idea from: http://answers.unity3d.com/questions/419786/a-pathfinding-multiple-enemies-MOVING-target-effic.html
 			delayTimer.run = delayedStart;
 			
 		}
