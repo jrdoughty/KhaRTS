@@ -6,7 +6,7 @@ import sdg.graphics.tiles.Tileset;
  * ...
  * @author John Doughty
  */
-class Node
+class Node implements Util.ITwoD
 {
 	public var neighbors:Array<Node> = [];
 	public var leftNode:Node;
@@ -23,8 +23,8 @@ class Node
 	public var heiristic:Int = -1;
 	public var nodeX:Int;
 	public var nodeY:Int;
-	public var x:Int;
-	public var y:Int;
+	public var x:Float;
+	public var y:Float;
 	public var width:Int;
 	public var height:Int;
 	public var frame:Int;

@@ -11,10 +11,33 @@ typedef OverlappingObjects = {
 	group1:Array<Dynamic>,
 	group2:Array<Dynamic>
 }
-
+interface ITwoD {
+	public var x:Float;
+	public var y:Float;
+	public var width:Int;
+	public var height:Int;
+}
 class Util
 {	
 	public static function doesOverlap(object1:Object, object2:Object):Bool
+	{
+		var topLeftX1:Float = object1.x;
+		var topLeftY1:Float = object1.y;
+		var bottomRightX1:Float = object1.x + object1.width;
+		var bottomRightY1:Float = object1.y + object1.height;
+		
+		var topLeftX2:Float = object2.x;
+		var topLeftY2:Float = object2.y;
+		var bottomRightX2:Float = object2.x + object2.width;
+		var bottomRightY2:Float = object2.y + object2.height;
+		
+		if (topLeftX1 > bottomRightX2 || topLeftX2 > bottomRightX1 || topLeftY1 > bottomRightY2 || topLeftY2 > bottomRightY1)
+		{
+			return false;
+		}
+		return true;
+	}
+	public static function doesOverlapITwoD(object1:Object, object2:ITwoD):Bool
 	{
 		var topLeftX1:Float = object1.x;
 		var topLeftY1:Float = object1.y;
