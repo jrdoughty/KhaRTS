@@ -31,10 +31,13 @@ class PlayScreen extends Screen implements IGameState
 		add(lvl);
 		var act = new Actor(lvl.activeNodes[0], Assets.images.knight);
 		activeTeam.addUnit(act);
-		var act2 = new Actor(lvl.activeNodes[4], Assets.images.redknight);
+		var act3 = new Actor(lvl.activeNodes[1], Assets.images.knight);
+		activeTeam.addUnit(act3);
+		var act2 = new Actor(lvl.activeNodes[109], Assets.images.redknight);
 		teams[1].addUnit(act2);
 		add(act);
 		add(act2);
+		add(act3);
 		dashboard = new Object();
 		inputSystem = new InputSystem(this);
 	}

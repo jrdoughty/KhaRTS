@@ -9,6 +9,7 @@ import world.Node;
 import components.AI;
 import events.StopEvent;
 import events.GetSpriteEvent;
+import events.TargetEvent;
 import sdg.Object;
 import Util;
 import sdg.manager.Mouse;
@@ -92,7 +93,7 @@ class InputSystem
 	{
 		for(i in activeNodes)
 		{
-			if(Util.doesOverlapITwoD(selector, i) && 
+			if(Util.doObjectandITwoDOverlap(selector, i) && 
 			activeState.activeTeam.units.indexOf(i.occupant) != -1)
 			{
 				selectedActors.push(i.occupant);
@@ -109,7 +110,13 @@ class InputSystem
 			{
 				if(Mouse.x >= i.x && Mouse.x <= i.x + i.width && Mouse.y >= i.y && Mouse.y <= i.y + i.height)
 				{
-					selectedActors[0].eventDispatcher.dispatchEvent(MoveEvent.MOVE, new MoveEvent(i, false));
+					for(j in selectedActors) 
+					{
+						if(i.occupant != null && i.occupant.team != j.team)
+							j.eventDispatcher.dispatchEvent(TargetEvent.ATTACK_ACTOR, new TargetEvent(i.occupant));
+						else
+							j.eventDispatcher.dispatchEvent(MoveEvent.MOVE, new MoveEvent(i, false));
+					}
 				}
 			}
 		}

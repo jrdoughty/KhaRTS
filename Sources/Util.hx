@@ -19,17 +19,18 @@ interface ITwoD {
 }
 class Util
 {	
-	public static function doesOverlap(object1:Object, object2:Object):Bool
+	public static function doObjectsOverlap(object1:Object, object2:Object):Bool
 	{
-		var topLeftX1:Float = object1.x;
-		var topLeftY1:Float = object1.y;
-		var bottomRightX1:Float = object1.x + object1.width;
-		var bottomRightY1:Float = object1.y + object1.height;
+		var topLeftX1:Float = object1.width >= 0 ? object1.x : object1.x + object1.width;
+		var topLeftY1:Float = object1.height >= 0 ? object1.y : object1.y + object1.height;
+		var bottomRightX1:Float = object1.width >= 0 ? object1.x + object1.width : object1.x;
+		var bottomRightY1:Float = object1.height >= 0 ? object1.y + object1.height : object1.y;
 		
-		var topLeftX2:Float = object2.x;
-		var topLeftY2:Float = object2.y;
-		var bottomRightX2:Float = object2.x + object2.width;
-		var bottomRightY2:Float = object2.y + object2.height;
+
+		var topLeftX2:Float = object2.width >= 0 ? object2.x : object2.x + object2.width;
+		var topLeftY2:Float = object2.height >= 0 ? object2.y : object2.y + object2.height;
+		var bottomRightX2:Float = object2.width >= 0 ? object2.x + object2.width : object2.x;
+		var bottomRightY2:Float = object2.height >= 0 ? object2.y + object2.height : object2.y;
 		
 		if (topLeftX1 > bottomRightX2 || topLeftX2 > bottomRightX1 || topLeftY1 > bottomRightY2 || topLeftY2 > bottomRightY1)
 		{
@@ -37,17 +38,19 @@ class Util
 		}
 		return true;
 	}
-	public static function doesOverlapITwoD(object1:Object, object2:ITwoD):Bool
+	public static function doObjectandITwoDOverlap(object1:Object, object2:ITwoD):Bool
 	{
-		var topLeftX1:Float = object1.x;
-		var topLeftY1:Float = object1.y;
-		var bottomRightX1:Float = object1.x + object1.width;
-		var bottomRightY1:Float = object1.y + object1.height;
+		var topLeftX1:Float = object1.width >= 0 ? object1.x : object1.x + object1.width;
+		var topLeftY1:Float = object1.height >= 0 ? object1.y : object1.y + object1.height;
+		var bottomRightX1:Float = object1.width >= 0 ? object1.x + object1.width : object1.x;
+		var bottomRightY1:Float = object1.height >= 0 ? object1.y + object1.height : object1.y;
 		
-		var topLeftX2:Float = object2.x;
-		var topLeftY2:Float = object2.y;
-		var bottomRightX2:Float = object2.x + object2.width;
-		var bottomRightY2:Float = object2.y + object2.height;
+
+		var topLeftX2:Float = object2.width >= 0 ? object2.x : object2.x + object2.width;
+		var topLeftY2:Float = object2.height >= 0 ? object2.y : object2.y + object2.height;
+		var bottomRightX2:Float = object2.width >= 0 ? object2.x + object2.width : object2.x;
+		var bottomRightY2:Float = object2.height >= 0 ? object2.y + object2.height : object2.y;
+
 		
 		if (topLeftX1 > bottomRightX2 || topLeftX2 > bottomRightX1 || topLeftY1 > bottomRightY2 || topLeftY2 > bottomRightY1)
 		{
@@ -66,7 +69,7 @@ class Util
 		{
 			for (j in 0...objects2.length)
 			{
-				if (doesOverlap(objects1[i], objects2[j]))
+				if (doObjectsOverlap(objects1[i], objects2[j]))
 				{
 					result.group1.push(objects1[i]);
 					result.group2.push(objects2[j]);
