@@ -63,11 +63,7 @@ class ControlledUnitAI extends AI
 
 	private var actor:Actor;
 	
-	/**
-	 * initializes threat range. I want to remove this need
-	 * sets defaultName to 'AI'
-	 * @param	threatRange
-	 */
+
 	public function new()
 	{
 		super();

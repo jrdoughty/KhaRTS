@@ -38,6 +38,7 @@ class PlayScreen extends Screen implements IGameState
 		add(act);
 		add(act2);
 		add(act3);
+
 		dashboard = new Object();
 		inputSystem = new InputSystem(this);
 	}
@@ -46,5 +47,6 @@ class PlayScreen extends Screen implements IGameState
 	{
 		super.update();
 		inputSystem.update();
+		camera.center(500, 100);
 	}
 }

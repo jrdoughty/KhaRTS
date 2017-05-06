@@ -13,6 +13,7 @@ import events.TargetEvent;
 import sdg.Object;
 import Util;
 import sdg.manager.Mouse;
+import sdg.manager.Keyboard;
 import sdg.graphics.Sprite;
 import sdg.graphics.shapes.Polygon;
 /**
@@ -59,6 +60,12 @@ class InputSystem
 
 	public function update()
 	{
+		mouseUpdate();
+		keyboardUpdate();
+	}
+
+	public function mouseUpdate()
+	{
 		if(Mouse.isPressed(0))
 		{
 			leftDown();
@@ -89,20 +96,78 @@ class InputSystem
 		}
 	}
 
+	public function keyboardUpdate()
+	{
+		if(Keyboard.isPressed('m'))
+		{
+			inputState = MOVING;
+			selector.visible = false;
+		}
+		else if(Keyboard.isPressed('a'))
+		{
+			inputState = ATTACKING;
+			selector.visible = false;
+		}
+		else if(Keyboard.isPressed('s'))
+		{
+			inputState = SELECTING;
+			for(i in selectedActors)
+			{
+				i.eventDispatcher.dispatchEvent(StopEvent.STOP, new StopEvent());
+			}
+			selector.visible = false;
+		}
+	}
+
 	public function leftClick()
 	{
-		for(i in activeNodes)
+		if(inputState == SELECTING)
 		{
-			if(Util.doObjectandITwoDOverlap(selector, i) && 
-			activeState.activeTeam.units.indexOf(i.occupant) != -1)
+			for(i in activeNodes)
 			{
-				selectedActors.push(i.occupant);
+				if(Util.doObjectandITwoDOverlap(selector, i) && 
+				activeState.activeTeam.units.indexOf(i.occupant) != -1)
+				{
+					selectedActors.push(i.occupant);
+				}
 			}
+			selector.visible = false;
 		}
-		selector.visible = false;
+		if(inputState == MOVING)
+		{
+
+		}
+		if(inputState == ATTACKING)
+		{
+
+		}
 	}
 
 	public function rightClick()
+	{
+		inputState = SELECTING;
+	}
+
+	public function leftDown()
+	{		
+		if(inputState == SELECTING)
+		{
+			selectedActors = [];
+			selector.visible = true;
+			selector.x = Mouse.x;
+			selector.y = Mouse.y;
+			selector.width = 1;
+			selector.height = 1;
+			cast(selector.graphic, Polygon).points[1].x = Mouse.x+1;
+			cast(selector.graphic, Polygon).points[1].y = Mouse.y;
+			cast(selector.graphic, Polygon).points[2].x = Mouse.x+1;
+			cast(selector.graphic, Polygon).points[2].y = Mouse.y+1;
+			cast(selector.graphic, Polygon).points[3].x = Mouse.x;
+			cast(selector.graphic, Polygon).points[3].y = Mouse.y+1;
+		}
+	}
+
+	public function rightDown()
 	{
 		if(selectedActors.length != 0)
 		{
@@ -120,26 +185,5 @@ class InputSystem
 				}
 			}
 		}
-	}
-
-	public function leftDown()
-	{
-		selectedActors = [];
-		selector.visible = true;
-		selector.x = Mouse.x;
-		selector.y = Mouse.y;
-		selector.width = 1;
-		selector.height = 1;
-		cast(selector.graphic, Polygon).points[1].x = Mouse.x+1;
-		cast(selector.graphic, Polygon).points[1].y = Mouse.y;
-		cast(selector.graphic, Polygon).points[2].x = Mouse.x+1;
-		cast(selector.graphic, Polygon).points[2].y = Mouse.y+1;
-		cast(selector.graphic, Polygon).points[3].x = Mouse.x;
-		cast(selector.graphic, Polygon).points[3].y = Mouse.y+1;
-	}
-
-	public function rightDown()
-	{
-		
 	}
 }
