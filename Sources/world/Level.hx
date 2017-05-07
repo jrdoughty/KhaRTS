@@ -22,9 +22,10 @@ import world.Node;
 class Level extends Object
 {
 	public var activeNodes = [];
-	private var levelWidth:Int;
-	private var levelHeight:Int;
-	private var nodeTileSet:Tileset;
+	public var tileset:Tileset;
+	public var levelWidth:Int;
+	public var levelHeight:Int;
+
 	private var diagonal:Bool = false;
 	public function new() 
 	{
@@ -33,7 +34,7 @@ class Level extends Object
 		var t:TmxMap = r.read();
 		levelWidth = t.width;
 		levelHeight = t.height;
-		var tileset = new Tileset(Assets.images.floors, 32, 32);
+		tileset = new Tileset(Assets.images.floors, 32, 32);
 		var bgMap = new Tilemap(tileset);
 		var i = -1;
 		for(layer in t.layers)

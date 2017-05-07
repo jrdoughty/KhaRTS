@@ -1,20 +1,14 @@
 package systems;
 import actors.Actor;
-import events.TargetEvent;
-import sdg.event.EventObject;
 import events.MoveEvent;
 import screens.IGameState;
-//import dashboard.Control;
 import world.Node;
-import components.AI;
 import events.StopEvent;
-import events.GetSpriteEvent;
 import events.TargetEvent;
 import sdg.Object;
 import Util;
 import sdg.manager.Mouse;
 import sdg.manager.Keyboard;
-import sdg.graphics.Sprite;
 import sdg.graphics.shapes.Polygon;
 /**
  * ...
@@ -121,6 +115,7 @@ class InputSystem
 
 	public function leftClick()
 	{
+		var node:Node;
 		if(inputState == SELECTING)
 		{
 			for(i in activeNodes)
@@ -136,10 +131,25 @@ class InputSystem
 		if(inputState == MOVING)
 		{
 
+			node = activeNodes[Math.floor(Mouse.x / activeState.lvl.tileset.tileWidth) + Math.floor(Mouse.y / activeState.lvl.tileset.tileWidth)*activeState.lvl.levelWidth];
+			for(i in selectedActors) i.eventDispatcher.dispatchEvent(MoveEvent.MOVE, new MoveEvent(node, false));
+			inputState = SELECTING;
 		}
 		if(inputState == ATTACKING)
 		{
-
+			node = activeNodes[Math.floor(Mouse.x / activeState.lvl.tileset.tileWidth) + Math.floor(Mouse.y / activeState.lvl.tileset.tileWidth)*activeState.lvl.levelWidth];
+			for(i in selectedActors) 
+			{
+				if(node.occupant == null)
+				{
+					i.eventDispatcher.dispatchEvent(MoveEvent.MOVE, new MoveEvent(node, true));
+				}
+				else
+				{
+					i.eventDispatcher.dispatchEvent(TargetEvent.ATTACK_ACTOR, new TargetEvent(node.occupant));
+				}
+				inputState = SELECTING;
+			}
 		}
 	}
 
@@ -158,12 +168,13 @@ class InputSystem
 			selector.y = Mouse.y;
 			selector.width = 1;
 			selector.height = 1;
-			cast(selector.graphic, Polygon).points[1].x = Mouse.x+1;
-			cast(selector.graphic, Polygon).points[1].y = Mouse.y;
-			cast(selector.graphic, Polygon).points[2].x = Mouse.x+1;
-			cast(selector.graphic, Polygon).points[2].y = Mouse.y+1;
-			cast(selector.graphic, Polygon).points[3].x = Mouse.x;
-			cast(selector.graphic, Polygon).points[3].y = Mouse.y+1;
+			var p = cast(selector.graphic, Polygon);
+			p.points[1].x = Mouse.x+1;
+			p.points[1].y = Mouse.y;
+			p.points[2].x = Mouse.x+1;
+			p.points[2].y = Mouse.y+1;
+			p.points[3].x = Mouse.x;
+			p.points[3].y = Mouse.y+1;
 		}
 	}
 
