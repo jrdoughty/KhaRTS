@@ -27,6 +27,7 @@ class InputSystem
 {
 	private var inputState:InputState = InputState.SELECTING;
 	private var activeState:IGameState;
+	private var ui:UI;
 	
 	private var selectedActors:Array<Actor> = [];
 	private var activeNodes:Array<Node> = [];
@@ -50,6 +51,7 @@ class InputSystem
 		selector.graphic.alpha = .3;
 		sdg.Sdg.screen.add(selector);
 		selector.visible = false;
+		ui = new UI();
 	}
 
 	public function update()
@@ -118,6 +120,7 @@ class InputSystem
 		var node:Node;
 		if(inputState == SELECTING)
 		{
+			selectedActors = [];
 			for(i in activeNodes)
 			{
 				if(Util.doObjectandITwoDOverlap(selector, i) && 
@@ -126,6 +129,7 @@ class InputSystem
 					selectedActors.push(i.occupant);
 				}
 			}
+			ui.setUnits(selectedActors);
 			selector.visible = false;
 		}
 		if(inputState == MOVING)
@@ -160,9 +164,24 @@ class InputSystem
 
 	public function leftDown()
 	{		
-		if(inputState == SELECTING)
+		var intersetingUIElements = [];
+		for(i in ui.uiElements.objects)
 		{
-			selectedActors = [];
+			if(i.x<= Mouse.x && Mouse.x <= i.x + i.width &&
+			i.y <= Mouse.y && Mouse.y <= i.y + i.height)
+			{
+				intersetingUIElements.push(i);
+			}
+		}
+		if (intersetingUIElements.length != 0)
+		{
+			for(i in intersetingUIElements)
+			{
+				cast(i, UIElement).leftDown(Mouse.x, Mouse.y);
+			}
+		}
+		else if(inputState == SELECTING)
+		{
 			selector.visible = true;
 			selector.x = Mouse.x;
 			selector.y = Mouse.y;
