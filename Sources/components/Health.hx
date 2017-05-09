@@ -127,7 +127,8 @@ class Health extends Component
 		object.screen.remove(healthBar);
 		object.screen.remove(healthBarFill);
 		*/
-		object.eventDispatcher.dispatchEvent(KillEvent.KILL, new KillEvent());
+		actor.kill();
+		object.eventDispatcher.dispatchEvent(KillEvent.KILL, new KillEvent(actor));
 		object.screen.remove(object, true);
 	}
 }
