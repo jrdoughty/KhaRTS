@@ -35,7 +35,7 @@ class ControlledUnitAI extends AI
 	/**
 	 * damage dealt when attacking
 	 */
-	public var damage:Int = 1;
+	public var damage:Int = 2;
 	
 	/**
 	 * milliseconds between takeAction cycles

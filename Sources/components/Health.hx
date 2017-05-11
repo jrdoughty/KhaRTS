@@ -9,6 +9,8 @@ import events.HideEvent;
 import events.KillEvent;
 import events.HurtEvent;
 import events.GetSpriteEvent;
+import sdg.graphics.shapes.Polygon;
+import kha.Color;
 /**
  * ...
  * @author ...
@@ -32,10 +34,12 @@ class Health extends Component
 	private var health:Float = 1;
 	
 	private var actor:Actor;
+	private var p:Polygon;//shortcut
 	
-	public function new() 
+	public function new(max:Int = 8) 
 	{
 		super();
+		healthMax = max;
 	}
 	
 	override public function init() 
@@ -51,10 +55,10 @@ class Health extends Component
 			destroy();
 			object.components.remove(this);
 		}
-		//object.eventDispatcher.addEvent(RevealEvent.REVEAL, makeVisible);
-		//object.eventDispatcher.addEvent(HideEvent.HIDE, killVisibility);
+		object.eventDispatcher.addEvent(RevealEvent.REVEAL, makeVisible);
+		object.eventDispatcher.addEvent(HideEvent.HIDE, killVisibility);
 		object.eventDispatcher.addEvent(HurtEvent.HURT, hurt);
-		//createSprite();
+		createSprite();
 	}
 	
 	public function hurt(e:HurtEvent)
@@ -87,12 +91,13 @@ class Health extends Component
 	public override function update()
 	{
 		super.update();
-		/*
+		
 		if (healthBarFill != null)
 		{
 			if (health > 0)
 			{
-				//healthBarFill.graphic.setScale(health, 1);
+				p.points[1].x = 32*(health);
+				p.points[2].x = 32*(health);
 			}
 			else
 			{
@@ -106,7 +111,7 @@ class Health extends Component
 		{
 			healthBar.x = actor.x;
 			healthBar.y = actor.y - 1;
-		}*/
+		}
 		if (health <= 0)
 		{
 			kill();
@@ -115,18 +120,19 @@ class Health extends Component
 	
 	public function createSprite()
 	{			
-		healthBar = new Object();//actorSprite.x, actorSprite.y - 1,"BLACK",Std.int(Math.sqrt(entity.currentNodes.length) * 8), 1);
-		healthBarFill = new Object();//actorSprite.x, actorSprite.y - 1, "RED", Std.int(Math.sqrt(entity.currentNodes.length) * 8), 1);
-		object.screen.add(healthBar);
-		object.screen.add(healthBarFill);
+		healthBar = new Object(object.x, object.y, Polygon.createRectangle(32, 1, Color.Red, true));
+		p = Polygon.createRectangle(32, 1, Color.Green,true);
+		healthBarFill = new Object(object.x, object.y, p);
+		sdg.Sdg.screen.add(healthBar);
+		sdg.Sdg.screen.add(healthBarFill);
 	}
 	
 	public function kill(e:EventObject = null)
 	{
-		/*
+		
 		object.screen.remove(healthBar);
 		object.screen.remove(healthBarFill);
-		*/
+		
 		actor.kill();
 		object.eventDispatcher.dispatchEvent(KillEvent.KILL, new KillEvent(actor));
 		object.screen.remove(object, true);

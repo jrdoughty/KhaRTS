@@ -11,12 +11,14 @@ typedef OverlappingObjects = {
 	group1:Array<Dynamic>,
 	group2:Array<Dynamic>
 }
+
 interface ITwoD {
 	public var x:Float;
 	public var y:Float;
 	public var width:Int;
 	public var height:Int;
 }
+
 class Util
 {	
 	public static function doObjectsOverlap(object1:Object, object2:Object):Bool

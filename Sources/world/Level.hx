@@ -26,6 +26,8 @@ class Level extends Object
 	public var levelWidth:Int;
 	public var levelHeight:Int;
 
+	private var fog:Object;
+
 	private var diagonal:Bool = false;
 	public function new() 
 	{
