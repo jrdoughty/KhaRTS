@@ -12,6 +12,7 @@ import events.KillEvent;
 import haxe.Constraints.Function;
 import sdg.event.EventSystem;
 import sdg.event.EventObject;
+import systems.ActorRepresentative;
 
 class UI implements IEventDispatcher
 {
@@ -21,7 +22,7 @@ class UI implements IEventDispatcher
 	 */
 	private var listeners:Map<String, Array<Function>> = new Map();
 	private var dashboard:Object;
-	private var units:Array<UIElement> = [];
+	private var units:Array<ActorRepresentative> = [];
 
 	public function new()
 	{
@@ -43,8 +44,7 @@ class UI implements IEventDispatcher
 		units = [];
 		for(i in 0...actors.length)
 		{
-			var spr = new Sprite(cast(actors[i].graphic, Sprite).region);//Leak
-			units.push(new UIElement((i * 32) % 128 + dashboard.x, Math.floor(i/4)*32 + dashboard.y, spr));//Leak
+			units.push(new ActorRepresentative((i * 32) % 128 + dashboard.x, Math.floor(i/4)*32 + dashboard.y, actors[i]));
 			uiElements.add(units[i]);
 		}
 		uiElements.apply(Sdg.screen.add);
@@ -53,13 +53,13 @@ class UI implements IEventDispatcher
 	public function KillUnit(e:KillEvent)
 	{
 		var uiElemDied = false;
-		for(i in uiElements.objects)
+		for(i in units)
 		{
-			if(cast(e.actor.graphic, Sprite).region.image == cast(i.graphic, Sprite).region.image)
+			if(e.actor == i.actor)
 			{
 				uiElements.remove(i);
-				Sdg.screen.remove(i, true);
-				units.remove(cast i);
+				units.remove(i);
+				i.kill();
 				uiElemDied = true;
 				break;
 			}
@@ -73,6 +73,7 @@ class UI implements IEventDispatcher
 			}
 		}
 	}
+	
 	/**
 	 * Adds Event Listener for the name string and addes the callback to the functions to be 
 	 * run when that event is fired off
