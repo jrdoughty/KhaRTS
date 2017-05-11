@@ -40,6 +40,11 @@ class Actor extends Object
 	 */
 	public var selected:Bool = false;
 
+	/**
+	* data storage for sharing information between components and actors
+	*/
+	public var data:Map<String, Dynamic> = new Map<String, Dynamic>();
+
 	public function new(node:Node, i:Image)
 	{
 		super();

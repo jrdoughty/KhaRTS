@@ -16,6 +16,7 @@ class PlayScreen extends Screen implements IGameState
 	public var activeTeam(default,null):Team;
 	public var dashboard(default,null):Object;
 	public var inputSystem:InputSystem;
+	public var fogOfWar:Object;
 	public function new()
 	{
 		super();
@@ -38,15 +39,14 @@ class PlayScreen extends Screen implements IGameState
 		add(act);
 		add(act2);
 		add(act3);
-
 		dashboard = new Object();
 		inputSystem = new InputSystem(this);
+		fogOfWar = new Object(0,0);
 	}
 
 	public override function update()
 	{
 		super.update();
 		inputSystem.update();
-		camera.center(500, 100);
 	}
 }

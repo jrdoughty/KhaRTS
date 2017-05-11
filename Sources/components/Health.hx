@@ -31,8 +31,6 @@ class Health extends Component
 	 */
 	private var healthBarFill:Object;
 	
-	private var health:Float = 1;
-	
 	private var actor:Actor;
 	private var p:Polygon;//shortcut
 	
@@ -49,21 +47,23 @@ class Health extends Component
 		if (Type.getClass(object) == Actor)
 		{
 			actor = cast object;
+			object.eventDispatcher.addEvent(RevealEvent.REVEAL, makeVisible);
+			object.eventDispatcher.addEvent(HideEvent.HIDE, killVisibility);
+			object.eventDispatcher.addEvent(HurtEvent.HURT, hurt);
+			createSprite();
+			actor.data.set('health',1);
 		}
 		else
 		{
 			destroy();
 			object.components.remove(this);
 		}
-		object.eventDispatcher.addEvent(RevealEvent.REVEAL, makeVisible);
-		object.eventDispatcher.addEvent(HideEvent.HIDE, killVisibility);
-		object.eventDispatcher.addEvent(HurtEvent.HURT, hurt);
-		createSprite();
 	}
 	
 	public function hurt(e:HurtEvent)
 	{
-		health -= e.damage / healthMax;
+		
+			actor.data['health'] -= e.damage / healthMax;
 	}
 	
 	/**
@@ -94,10 +94,10 @@ class Health extends Component
 		
 		if (healthBarFill != null)
 		{
-			if (health > 0)
+			if (actor.data['health'] > 0)
 			{
-				p.points[1].x = 32*(health);
-				p.points[2].x = 32*(health);
+				p.points[1].x = 32*(actor.data['health']);
+				p.points[2].x = 32*(actor.data['health']);
 			}
 			else
 			{
@@ -112,7 +112,7 @@ class Health extends Component
 			healthBar.x = actor.x;
 			healthBar.y = actor.y - 1;
 		}
-		if (health <= 0)
+		if (actor.data['health'] <= 0)
 		{
 			kill();
 		}

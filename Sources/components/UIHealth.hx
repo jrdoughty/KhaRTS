@@ -1,12 +1,12 @@
 package components;
 import sdg.components.Component;
+import sdg.Object;
+import sdg.graphics.shapes.Polygon;
+import actors.Actor;
+import kha.Color;
 
 class UIHealth extends Component
 {
-	/**
-	 * Int used to decide health using health as a percent of healthMax total
-	 */
-	public var healthMax:Int = 8;
 	/**
 	 * simple health bar sprite
 	 */
@@ -16,8 +16,6 @@ class UIHealth extends Component
 	 * simple health bar fill sprite
 	 */
 	private var healthBarFill:Object;
-	
-	private var health:Float = 1;
 	
 	private var actor:Actor;
 	private var p:Polygon;//shortcut
@@ -31,8 +29,10 @@ class UIHealth extends Component
 	override public function init() 
 	{
 		super.init();
-		object.components.remove(this);
-		createSprite();
+		if(!actor.data.exists('health'))
+			object.components.remove(this);
+		else
+			createSprite();
 	}
 	
 	/**
@@ -44,17 +44,19 @@ class UIHealth extends Component
 		
 		if (healthBarFill != null)
 		{
-			if (health > 0)
+			if (actor.data['health'] > 0)
 			{
-				p.points[1].x = 32*(health);
-				p.points[2].x = 32*(health);
+				p.points[1].x = 32*(actor.data['health']);
+				p.points[2].x = 32*(actor.data['health']);
 			}
 			else
 			{
 				healthBarFill.visible = false;
 			}
-			healthBarFill.x = actor.x;
-			healthBarFill.y = actor.y - 1;
+			healthBarFill.x = object.x;
+			healthBarFill.y = object.y - 1;
+			healthBar.x = object.x;
+			healthBar.y = object.y - 1;
 			
 		}
 	}
@@ -72,16 +74,5 @@ class UIHealth extends Component
 	{
 		sdg.Sdg.screen.remove(healthBar);
 		sdg.Sdg.screen.remove(healthBarFill);
-	}
-	
-	public function kill(e:EventObject = null)
-	{
-		
-		object.screen.remove(healthBar);
-		object.screen.remove(healthBarFill);
-		
-		actor.kill();
-		object.eventDispatcher.dispatchEvent(KillEvent.KILL, new KillEvent(actor));
-		object.screen.remove(object, true);
 	}
 }

@@ -4,6 +4,7 @@ import actors.Actor;
 import sdg.graphics.Sprite;
 import systems.UIElement;
 import sdg.Sdg;
+import components.UIHealth;
 
 class ActorRepresentative extends UIElement
 {
@@ -15,6 +16,7 @@ class ActorRepresentative extends UIElement
 		actor = a;
 		spr = new Sprite(cast(a.graphic, Sprite).region);
 		super(x, y, spr);
+		addComponent(new UIHealth(a));
 	}
 
 	public function kill()

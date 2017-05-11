@@ -172,18 +172,4 @@ class Level extends Object
             }
         }
 	}
-	
-	public function rebuildFog()
-	{
-		/*
-		for (i in 0...activeNodes.length)
-		{
-			var sourceRect:Rectangle = new Rectangle(0, 0, activeNodes[i].width, activeNodes[i].height);
-			var destPoint:Point = new Point(Std.int(activeNodes[i].x), activeNodes[i].y);
-			var btmpdta:BitmapData = activeNodes[i].overlay.updateFramePixels();
-			fog.pixels.copyPixels(btmpdta, sourceRect, destPoint, btmpdta, new Point(0,0), false);
-		}
-		fog.dirty = true;
-		*/
-	}
 }
