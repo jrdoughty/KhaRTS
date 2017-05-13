@@ -12,6 +12,8 @@ import graphics.Fog;
 import sdg.graphics.tiles.Tilemap;
 import sdg.graphics.tiles.Tileset;
 import events.ClearFogEvent;
+import events.HideEvent;
+import events.RevealEvent;
 
 class PlayScreen extends Screen implements IGameState
 {
@@ -81,7 +83,18 @@ class PlayScreen extends Screen implements IGameState
 		}
 		for(i in lvl.activeNodes)
 		{
-			cast(fogOfWar.graphic, Tilemap).map[i.nodeY][i.nodeX] = !i.removeShadow ? 1:0;
+			if(i.removeShadow)
+			{
+				cast(fogOfWar.graphic, Tilemap).map[i.nodeY][i.nodeX] = 0;
+				if(i.occupant != null)
+					i.occupant.eventDispatcher.dispatchEvent(RevealEvent.REVEAL, new RevealEvent());
+			}
+			else
+			{
+				cast(fogOfWar.graphic, Tilemap).map[i.nodeY][i.nodeX] = 1;
+				if(i.occupant != null)
+					i.occupant.eventDispatcher.dispatchEvent(HideEvent.HIDE, new HideEvent());
+			}
 		}
 
 	}

@@ -3,6 +3,8 @@ import world.Node;
 import events.ClearFogEvent;
 import sdg.components.Component;
 import actors.Actor;
+import events.HideEvent;
+import events.RevealEvent;
 /**
  * ...
  * @author John Doughty
@@ -34,9 +36,11 @@ class View extends Component
 			actor = cast object;
 			if(!actor.data.exists('viewRange'))
 			{
-				actor.data.set('viewRange', 2);
+				actor.data.set('viewRange', 4);
 			}
 		 	actor.eventDispatcher.addEvent(ClearFogEvent.CLEAR, clearNodes);
+		 	actor.eventDispatcher.addEvent(HideEvent.HIDE, function(e:HideEvent){actor.visible = false;});//uproot these when final place is found
+		 	actor.eventDispatcher.addEvent(RevealEvent.REVEAL,  function(e:RevealEvent){actor.visible = true;});
 		}
 		else
 		{
