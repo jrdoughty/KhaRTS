@@ -21,12 +21,10 @@ import world.Node;
  */
 class Level extends Object
 {
-	public var activeNodes = [];
+	public var activeNodes:Array<Node> = [];
 	public var tileset:Tileset;
 	public var levelWidth:Int;
 	public var levelHeight:Int;
-
-	private var fog:Object;
 
 	private var diagonal:Bool = false;
 	public function new() 
@@ -71,7 +69,6 @@ class Level extends Object
 							i++;
 							if(tile.gid>0)
 							{
-								//add(new EnemyAI((i%layer.width) * 32, Std.int(i/layer.width)*32,Assets.images.redknight,32,32));
 							}
 						}
 					}
@@ -83,21 +80,7 @@ class Level extends Object
 							i++;
 							if(tile.gid>0)
 							{
-								//add(new Player((i%layer.width) * 32, Std.int(i/layer.width)*32,Assets.images.knight,32,32));
 							}
-						}
-					}
-				case ObjectGroup(layer):
-					if(layer.name == 'Boundries')
-					{
-						for(i in layer.objects)
-						{
-							//trace(i.x);
-							var x = Std.int(i.x);
-							var y = Std.int(i.y);
-							var w = Std.int(i.width);
-							var h = Std.int(i.height);
-							//walls.push(new Wall(x, y, w, h));
 						}
 					}
 				default:

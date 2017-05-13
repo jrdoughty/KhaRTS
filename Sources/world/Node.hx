@@ -2,6 +2,9 @@ package world;
 import actors.Actor;
 import sdg.graphics.Sprite;
 import sdg.graphics.tiles.Tileset;
+import events.RevealEvent;
+import events.HideEvent;
+
 /**
  * ...
  * @author John Doughty
@@ -28,6 +31,7 @@ class Node implements Util.ITwoD
 	public var width:Int;
 	public var height:Int;
 	public var frame:Int;
+	public var removeShadow:Bool = false;
 	
 	private var passable:Bool = true;
 	
@@ -36,9 +40,11 @@ class Node implements Util.ITwoD
 		x = X * width;
 		y = Y * height;
 		//asset
+		/*
 		this.width = width;
 		this.height = height;
 		this.frame = frame;
+		*/
 		nodeX = X;
 		nodeY = Y;
 		
@@ -94,4 +100,24 @@ class Node implements Util.ITwoD
 		}
         return result;
     }
+	
+	public function removeOverlay()
+	{
+		//overlay.setAlpha(0);
+		removeShadow = true;
+		if (occupant != null)
+		{
+			//occupant.eventDispatcher.dispatchEvent(RevealEvent.REVEAL, new RevealEvent());
+		}
+	}
+	
+	public function addOverlay()
+	{
+		//overlay.setAlpha(.5);
+		removeShadow = false;
+		if (occupant != null)
+		{
+			//occupant.eventDispatcher.dispatchEvent(HideEvent.HIDE, new HideEvent());
+		}
+}
 }

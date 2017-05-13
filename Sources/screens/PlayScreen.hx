@@ -8,6 +8,9 @@ import actors.Actor;
 import world.Level;
 import systems.AStar;
 import systems.Team;
+import graphics.Fog;
+import sdg.graphics.tiles.Tilemap;
+import sdg.graphics.tiles.Tileset;
 
 class PlayScreen extends Screen implements IGameState
 {
@@ -39,14 +42,46 @@ class PlayScreen extends Screen implements IGameState
 		add(act);
 		add(act2);
 		add(act3);
+		var tileset = new Tileset(Assets.images.fogtiles, 32, 32);
+		var bgMap = new Tilemap(tileset);
+		var data:Array<Array<Int>> = [];
+
+		for(y in 0...lvl.levelHeight)
+		{
+			trace("y " + y);
+			data.push(new Array<Int>());
+			for(x in 0...lvl.levelWidth)
+			{
+				trace("x " + x);
+				data[y].push(1);
+			}
+		}
+		bgMap.loadFrom2DArray(data);
+		fogOfWar = new Object(0,0,bgMap);
+		add(fogOfWar);
 		dashboard = new Object();
 		inputSystem = new InputSystem(this);
-		fogOfWar = new Object(0,0);
 	}
 
 	public override function update()
 	{
 		super.update();
+		recreateFog();
 		inputSystem.update();
+	}
+
+	private function recreateFog()
+	{
+		for(i in lvl.activeNodes)
+		{
+			/*
+			if(i.occupant == null)
+				i.addOverlay();
+			else
+				i.removeOverlay();
+				*/
+			cast(fogOfWar.graphic, Tilemap).map[i.nodeY][i.nodeX] = i.occupant == null? 1:0;
+		}
+
 	}
 }
