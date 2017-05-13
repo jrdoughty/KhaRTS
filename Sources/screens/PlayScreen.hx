@@ -11,6 +11,7 @@ import systems.Team;
 import graphics.Fog;
 import sdg.graphics.tiles.Tilemap;
 import sdg.graphics.tiles.Tileset;
+import events.ClearFogEvent;
 
 class PlayScreen extends Screen implements IGameState
 {
@@ -72,13 +73,15 @@ class PlayScreen extends Screen implements IGameState
 	{
 		for(i in lvl.activeNodes)
 		{
-			/*
-			if(i.occupant == null)
-				i.addOverlay();
-			else
-				i.removeOverlay();
-				*/
-			cast(fogOfWar.graphic, Tilemap).map[i.nodeY][i.nodeX] = i.occupant == null? 1:0;
+			i.addOverlay();
+		}
+		for(i in activeTeam.units)
+		{
+			i.eventDispatcher.dispatchEvent(ClearFogEvent.CLEAR, new ClearFogEvent());
+		}
+		for(i in lvl.activeNodes)
+		{
+			cast(fogOfWar.graphic, Tilemap).map[i.nodeY][i.nodeX] = !i.removeShadow ? 1:0;
 		}
 
 	}

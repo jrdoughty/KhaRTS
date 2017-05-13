@@ -11,6 +11,7 @@ import systems.Team;
 import sdg.components.EventDispatcher;
 import components.Health;
 import components.ControlledUnitAI;
+import components.View;
 /**
  * @author John Doughty
  */
@@ -58,6 +59,7 @@ class Actor extends Object
 		addComponent(a);
 		addComponent(new Health());
 		addComponent(new ControlledUnitAI());
+		addComponent(new View());
 		
 	}
 	

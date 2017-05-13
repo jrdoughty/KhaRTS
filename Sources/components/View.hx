@@ -1,44 +1,48 @@
 package components;
 import world.Node;
 import events.ClearFogEvent;
+import sdg.components.Component;
+import actors.Actor;
 /**
  * ...
  * @author John Doughty
  */
 class View extends Component
 {
-
-
-	/**
-	 * How many nodes over can the BaseActor's view clear the Fog of War
-	 */
-	public var viewRange:Int = 2;
-
 	/**
 	 * Nodes scanned to clear fog of war
 	 */
 	public var clearedNodes:Array<Node> = [];
+
+	/**
+	* pointer to help prevent unnecessary casting
+	*/
+	private var actor:Actor;
 	
 	
-	public function new(name:String) 
+	public function new() 
 	{
-		super(name);
+		super();
 	}
 	
 	override public function init() 
 	{
 		super.init();
 		
-		if (Reflect.hasField(entity.eData, "viewRange"))
+		if (Type.getClass(object) == Actor)
 		{
-			this.viewRange = entity.eData.viewRange;
+			actor = cast object;
+			if(!actor.data.exists('viewRange'))
+			{
+				actor.data.set('viewRange', 2);
+			}
+		 	actor.eventDispatcher.addEvent(ClearFogEvent.CLEAR, clearNodes);
 		}
 		else
 		{
-			entity.removeC(name);
+			destroy();
 		}
 		
-		entity.addEvent(ClearFogEvent.CLEAR, clearNodes);
 	}
 	
 	public function clearNodes(e:ClearFogEvent = null)
@@ -59,23 +63,28 @@ class View extends Component
 		var distance:Float;
 		if (node == null)
 		{
-			node = entity.currentNodes[0];
+			node = actor.currentNodes[0];
 		}
 		for (n in node.neighbors)
 		{
 			if (clearedNodes.indexOf(n) == -1)
 			{
-				distance = Math.sqrt(Math.pow(Math.abs(entity.currentNodes[0].nodeX - n.nodeX), 2) + Math.pow(Math.abs(entity.currentNodes[0].nodeY - n.nodeY), 2));
-				if (distance <= viewRange)
+				distance = Math.sqrt(Math.pow(Math.abs(actor.currentNodes[0].nodeX - n.nodeX), 2) + Math.pow(Math.abs(actor.currentNodes[0].nodeY - n.nodeY), 2));
+				if (distance <= actor.data['viewRange'])
 				{
 					n.removeOverlay();
 					clearedNodes.push(n);
-					if (distance < viewRange && n.isPassible())
+					if (distance < actor.data['viewRange'] && n.isPassible())
 					{
 						clearFogOfWar(n);
 					}
 				}
 			}
 		}
+	}
+
+	public override function destroy()
+	{
+		object.components.remove(this);
 	}
 }

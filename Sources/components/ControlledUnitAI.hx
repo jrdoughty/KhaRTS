@@ -91,7 +91,6 @@ class ControlledUnitAI extends AI
 		else
 		{
 			destroy();
-			object.components.remove(this);
 		}
 	}
 	
@@ -501,5 +500,6 @@ class ControlledUnitAI extends AI
 			actionTimer.stop();
 		}
 		super.destroy();
+		object.components.remove(this);
 	}
 }
