@@ -48,11 +48,9 @@ class PlayScreen extends Screen implements IGameState
 
 		for(y in 0...lvl.levelHeight)
 		{
-			trace("y " + y);
 			data.push(new Array<Int>());
 			for(x in 0...lvl.levelWidth)
 			{
-				trace("x " + x);
 				data[y].push(1);
 			}
 		}

@@ -40,11 +40,11 @@ class Node implements Util.ITwoD
 		x = X * width;
 		y = Y * height;
 		//asset
-		/*
+		
 		this.width = width;
 		this.height = height;
 		this.frame = frame;
-		*/
+		
 		nodeX = X;
 		nodeY = Y;
 		

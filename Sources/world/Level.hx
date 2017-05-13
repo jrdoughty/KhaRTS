@@ -83,8 +83,10 @@ class Level extends Object
 							}
 						}
 					}
+					
 				default:
-					trace(layer);
+					//trace(layer);
+					
 
 			}
 
