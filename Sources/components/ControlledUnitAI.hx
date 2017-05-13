@@ -28,11 +28,6 @@ class ControlledUnitAI extends AI
 	public var threatNodes:Array<Node> = [];
 
 	/**
-	 * How many nodes over can the Actor Detect and opponent
-	 */
-	public var threatRange:Int = 2;
-
-	/**
 	 * damage dealt when attacking
 	 */
 	public var damage:Int = 2;
@@ -79,12 +74,15 @@ class ControlledUnitAI extends AI
 			actor = cast object;
 			this.speed = 500;
 			this.damage = 1;
-			this.threatRange = 4;
+			if(!actor.data.exists('threatRange'))
+				actor.data.set('threatRange', 4);
 
 			object.eventDispatcher.addEvent(MoveEvent.MOVE, MoveToNode);
 			object.eventDispatcher.addEvent(TargetEvent.ATTACK_ACTOR, TargetActor);
 			object.eventDispatcher.addEvent(StopEvent.STOP, resetStates);
-			delayTimer = new Timer(Math.floor(300*Math.random()));//Keeps mass created units from updating at the exact same time. Idea from: http://answers.unity3d.com/questions/419786/a-pathfinding-multiple-enemies-MOVING-target-effic.html
+			//Keeps mass created units from updating at the exact same time. 
+			//Idea from: http://answers.unity3d.com/questions/419786/a-pathfinding-multiple-enemies-MOVING-target-effic.html
+			delayTimer = new Timer(Math.floor(300*Math.random()));
 			delayTimer.run = delayedStart;
 			
 		}
@@ -384,7 +382,6 @@ class ControlledUnitAI extends AI
 	 */
 	private function isEnemyInRange():Bool
 	{
-		var i:Int;
 		var inRange:Bool = false;
 		
 		for (i in 0...actor.currentNodes[0].neighbors.length)
@@ -479,10 +476,10 @@ class ControlledUnitAI extends AI
 			if (threatNodes.indexOf(n) == -1)
 			{
 				distance = Math.sqrt(Math.pow(Math.abs(actor.currentNodes[0].nodeX - n.nodeX), 2) + Math.pow(Math.abs(actor.currentNodes[0].nodeY - n.nodeY), 2));
-				if (distance <= threatRange)
+				if (distance <= actor.data['threatRange'])
 				{
 					threatNodes.push(n);
-					if (distance < threatRange && n.isPassible())
+					if (distance < actor.data['threatRange'] && n.isPassible())
 					{
 						checkView(n);
 					}
