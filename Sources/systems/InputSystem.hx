@@ -90,6 +90,19 @@ class InputSystem
 			cast(selector.graphic, Polygon).points[3].x = 0;
 			cast(selector.graphic, Polygon).points[3].y = Mouse.y - selector.y;
 		}
+		var unitWidth = sdg.Sdg.screen.worldWidth/100;
+		var moveCapAreaWidth = (sdg.Sdg.screen.worldWidth - (unitWidth * 89));
+		if(Mouse.x > 89 * unitWidth)
+		{
+			var mousePosInArea = Mouse.x - unitWidth * 89;
+			sdg.Sdg.screen.camera.x += Math.floor(mousePosInArea/moveCapAreaWidth * 10);
+
+		}
+		else if(Mouse.x < 9 * unitWidth)
+		{
+			var MouseX = Mouse.x < 1? 1:Mouse.x;
+			sdg.Sdg.screen.camera.x -= (Math.floor(moveCapAreaWidth/MouseX*10/unitWidth));
+		}
 	}
 
 	public function keyboardUpdate()
