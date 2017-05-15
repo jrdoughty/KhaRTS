@@ -36,6 +36,8 @@ class PlayScreen extends Screen implements IGameState
 		lvl = new Level();
 		AStar.setLevel(lvl);
 		add(lvl);
+		lvl.setSizeAuto();
+		setWorldSize(lvl.width,lvl.height);
 		var act = new Actor(lvl.activeNodes[0], Assets.images.knight);
 		activeTeam.addUnit(act);
 		var act3 = new Actor(lvl.activeNodes[1], Assets.images.knight);

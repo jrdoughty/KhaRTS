@@ -10,6 +10,7 @@ import Util;
 import sdg.manager.Mouse;
 import sdg.manager.Keyboard;
 import sdg.graphics.shapes.Polygon;
+import sdg.Sdg;
 /**
  * ...
  * @author ...
@@ -26,6 +27,8 @@ enum InputState
 class InputSystem
 {
 	private var inputState:InputState = InputState.SELECTING;
+	private var relativeMouseX:Float;
+	private var relativeMouseY:Float;
 	private var activeState:IGameState;
 	private var ui:UI;
 	
@@ -49,7 +52,7 @@ class InputSystem
 		activeNodes = state.lvl.activeNodes;
 		selector = new Object(0,0,Polygon.createRectangle(10,10,kha.Color.Green,true,.2));
 		selector.graphic.alpha = .3;
-		sdg.Sdg.screen.add(selector);
+		Sdg.screen.add(selector);
 		selector.visible = false;
 		ui = new UI();
 	}
@@ -62,6 +65,8 @@ class InputSystem
 
 	public function mouseUpdate()
 	{
+		relativeMouseX = Sdg.screen.camera.x + Mouse.x;
+		relativeMouseY = Sdg.screen.camera.y + Mouse.y;
 		if(Mouse.isPressed(0))
 		{
 			leftDown();
@@ -80,28 +85,75 @@ class InputSystem
 		}
 		if(Mouse.isHeld(0) && selector.visible == true)
 		{
-			selector.width = Std.int(Mouse.x - selector.x);
-			selector.height = Std.int(Mouse.y - selector.y);
+			selector.width = Std.int(relativeMouseX - selector.x);
+			selector.height = Std.int(relativeMouseY - selector.y);
 
-			cast(selector.graphic, Polygon).points[1].x = Mouse.x - selector.x;
+			cast(selector.graphic, Polygon).points[1].x = relativeMouseX - selector.x;
 			cast(selector.graphic, Polygon).points[1].y = 0;
-			cast(selector.graphic, Polygon).points[2].x = Mouse.x - selector.x;
-			cast(selector.graphic, Polygon).points[2].y = Mouse.y - selector.y;
+			cast(selector.graphic, Polygon).points[2].x = relativeMouseX - selector.x;
+			cast(selector.graphic, Polygon).points[2].y = relativeMouseY - selector.y;
 			cast(selector.graphic, Polygon).points[3].x = 0;
-			cast(selector.graphic, Polygon).points[3].y = Mouse.y - selector.y;
+			cast(selector.graphic, Polygon).points[3].y = relativeMouseY - selector.y;
 		}
-		var unitWidth = sdg.Sdg.screen.worldWidth/100;
-		var moveCapAreaWidth = (sdg.Sdg.screen.worldWidth - (unitWidth * 89));
-		if(Mouse.x > 89 * unitWidth)
+
+		updateCam();
+	}
+
+	public function updateCam()
+	{
+		var cam = Sdg.screen.camera;
+		var delta:Float;
+
+		var unitWidth = cam.width/100;
+		var moveCapAreaWidth = (cam.width - (unitWidth * 89));
+		if(Mouse.x > 97 * unitWidth)
 		{
 			var mousePosInArea = Mouse.x - unitWidth * 89;
-			sdg.Sdg.screen.camera.x += Math.floor(mousePosInArea/moveCapAreaWidth * 10);
+			delta = Math.floor(mousePosInArea/moveCapAreaWidth * 10);
+			if(delta + cam.x + cam.width > Sdg.screen.worldWidth)
+			{
+				delta = Sdg.screen.worldWidth - (cam.x + cam.width);
+			}
+			cam.x += delta;
+			ui.uiElements.apply(function(o:Object){o.x += delta;});
 
 		}
-		else if(Mouse.x < 9 * unitWidth)
+		else if(Mouse.x < 2 * unitWidth && Mouse.x > 0 )
 		{
-			var MouseX = Mouse.x < 1? 1:Mouse.x;
-			sdg.Sdg.screen.camera.x -= (Math.floor(moveCapAreaWidth/MouseX*10/unitWidth));
+			delta = 9 - Math.floor(Mouse.x/moveCapAreaWidth * 10);
+			if(delta > cam.x)
+			{
+				delta = cam.x;
+			}
+			cam.x -= delta;
+			ui.uiElements.apply(function(o:Object){o.x -= delta;});
+			
+		}
+
+		var unitHeight = cam.height/100;
+		var moveCapAreaHeight = (cam.height - (unitHeight * 89));
+		if(Mouse.y > 97 * unitHeight)
+		{
+			var mousePosInArea = Mouse.y - unitHeight * 89;
+			delta = Math.floor(mousePosInArea/moveCapAreaHeight * 10);
+			if(delta + cam.y + cam.height > Sdg.screen.worldHeight)
+			{
+				delta = Sdg.screen.worldHeight - (cam.y + cam.height);
+			}
+			cam.y += delta;
+			ui.uiElements.apply(function(o:Object){o.y += delta;});
+
+		}
+		else if(Mouse.y < 2 * unitHeight && Mouse.y > 0 )
+		{
+			delta = 9 - Math.floor(Mouse.y/moveCapAreaHeight * 10);
+			if(delta > cam.y)
+			{
+				delta = cam.y;
+			}
+			cam.y -= delta;
+			ui.uiElements.apply(function(o:Object){o.y -= delta;});
+			
 		}
 	}
 
@@ -148,13 +200,13 @@ class InputSystem
 		if(inputState == MOVING)
 		{
 
-			node = activeNodes[Math.floor(Mouse.x / activeState.lvl.tileset.tileWidth) + Math.floor(Mouse.y / activeState.lvl.tileset.tileWidth)*activeState.lvl.levelWidth];
+			node = activeNodes[Math.floor(relativeMouseX / activeState.lvl.tileset.tileWidth) + Math.floor(relativeMouseY / activeState.lvl.tileset.tileWidth)*activeState.lvl.levelWidth];
 			for(i in selectedActors) i.eventDispatcher.dispatchEvent(MoveEvent.MOVE, new MoveEvent(node, false));
 			inputState = SELECTING;
 		}
 		if(inputState == ATTACKING)
 		{
-			node = activeNodes[Math.floor(Mouse.x / activeState.lvl.tileset.tileWidth) + Math.floor(Mouse.y / activeState.lvl.tileset.tileWidth)*activeState.lvl.levelWidth];
+			node = activeNodes[Math.floor(relativeMouseX / activeState.lvl.tileset.tileWidth) + Math.floor(relativeMouseY / activeState.lvl.tileset.tileWidth)*activeState.lvl.levelWidth];
 			for(i in selectedActors) 
 			{
 				if(node.occupant == null)
@@ -180,8 +232,8 @@ class InputSystem
 		var intersetingUIElements = [];
 		for(i in ui.uiElements.objects)
 		{
-			if(i.x<= Mouse.x && Mouse.x <= i.x + i.width &&
-			i.y <= Mouse.y && Mouse.y <= i.y + i.height)
+			if(i.x<= relativeMouseX && relativeMouseX <= i.x + i.width &&
+			i.y <= relativeMouseY && relativeMouseY <= i.y + i.height)
 			{
 				intersetingUIElements.push(i);
 			}
@@ -190,23 +242,23 @@ class InputSystem
 		{
 			for(i in intersetingUIElements)
 			{
-				cast(i, UIElement).leftDown(Mouse.x, Mouse.y);
+				cast(i, UIElement).leftDown(relativeMouseX, relativeMouseY);
 			}
 		}
 		else if(inputState == SELECTING)
 		{
 			selector.visible = true;
-			selector.x = Mouse.x;
-			selector.y = Mouse.y;
+			selector.x = relativeMouseX;
+			selector.y = relativeMouseY;
 			selector.width = 1;
 			selector.height = 1;
 			var p = cast(selector.graphic, Polygon);
-			p.points[1].x = Mouse.x+1;
-			p.points[1].y = Mouse.y;
-			p.points[2].x = Mouse.x+1;
-			p.points[2].y = Mouse.y+1;
-			p.points[3].x = Mouse.x;
-			p.points[3].y = Mouse.y+1;
+			p.points[1].x = relativeMouseX+1;
+			p.points[1].y = relativeMouseY;
+			p.points[2].x = relativeMouseX+1;
+			p.points[2].y = relativeMouseY+1;
+			p.points[3].x = relativeMouseX;
+			p.points[3].y = relativeMouseY+1;
 		}
 	}
 
@@ -216,7 +268,7 @@ class InputSystem
 		{
 			for(i in activeNodes)
 			{
-				if(Mouse.x >= i.x && Mouse.x <= i.x + i.width && Mouse.y >= i.y && Mouse.y <= i.y + i.height)
+				if(relativeMouseX >= i.x && relativeMouseX <= i.x + i.width && relativeMouseY >= i.y && relativeMouseY <= i.y + i.height)
 				{
 					for(j in selectedActors) 
 					{
