@@ -34,9 +34,11 @@ class Level extends Object
 		var t:TmxMap = r.read();
 		levelWidth = t.width;
 		levelHeight = t.height;
-		tileset = new Tileset(Assets.images.floors, 32, 32);
+		tileset = new Tileset(Assets.images.hyptosistiles, 32, 32);
 		var bgMap = new Tilemap(tileset);
+		var fgMap = new Tilemap(tileset);
 		var i = -1;
+		var data = new Array<Array<Int>>();
 		for(layer in t.layers)
 		{
 			switch(layer)
@@ -44,7 +46,6 @@ class Level extends Object
 				case TileLayer(layer):
 					if(layer.name == 'Background')
 					{
-						var data = new Array<Array<Int>>();
 						i = 0;
 						for(y in 0...layer.height)	
 						{
@@ -52,14 +53,33 @@ class Level extends Object
 						
 							for (x in 0...layer.width)
 							{
-								data[y].push(layer.data.tiles[i].gid - 1);
+								data[y].push(layer.data.tiles[i].gid - 1);//need to use FirstGID instead
 								activeNodes.push(new Node(layer.data.tiles[i].gid - 1,t.tileWidth, t.tileHeight,x,y,true));
+								i++;
+							} 
+						}
+						createNeighbors(t.width,t.height);
+					}
+					else if(layer.name == 'Foreground')
+					{
+						i = 0;
+						for(y in 0...layer.height)	
+						{						
+							for (x in 0...layer.width)
+							{
+								if(layer.data.tiles[i].gid != 0)
+								{
+									data[y][x]=layer.data.tiles[i].gid - 1;//need to use FirstGID instead
+									getNodeByGridXY(x,y).passable = false;
+								}
 								i++;
 							} 
 						}
 						bgMap.loadFrom2DArray(data);
 						graphic = bgMap;
-						createNeighbors(t.width,t.height);
+						//fgMap.loadFrom2DArray(data);
+						//graphic = fgMap;
+						//createNeighbors(t.width,t.height);
 					}
 					else if (layer.name == 'EnemyLayer')
 					{

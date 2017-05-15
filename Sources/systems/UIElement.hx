@@ -16,5 +16,9 @@ class UIElement extends Object
 	{
 		super(x, y, graphic);
 		setSizeAuto();
+		leftClick = function(x:Float, y:Float){};
+		rightClick = function(x:Float, y:Float){};
+		leftDown = function(x:Float, y:Float){};
+		rightDown = function(x:Float, y:Float){};
 	}
 }

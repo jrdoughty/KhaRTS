@@ -183,7 +183,23 @@ class InputSystem
 	public function leftClick()
 	{
 		var node:Node;
-		if(inputState == SELECTING)
+		var intersetingUIElements = [];
+		for(i in ui.uiElements.objects)
+		{
+			if(i.x<= relativeMouseX && relativeMouseX <= i.x + i.width &&
+			i.y <= relativeMouseY && relativeMouseY <= i.y + i.height)
+			{
+				intersetingUIElements.push(i);
+			}
+		}
+		if (intersetingUIElements.length != 0)
+		{
+			for(i in intersetingUIElements)
+			{
+				cast(i, UIElement).leftClick(relativeMouseX, relativeMouseY);
+			}
+		}
+		else if(inputState == SELECTING)
 		{
 			selectedActors = [];
 			for(i in activeNodes)
@@ -197,14 +213,14 @@ class InputSystem
 			ui.setUnits(selectedActors);
 			selector.visible = false;
 		}
-		if(inputState == MOVING)
+		else if(inputState == MOVING)
 		{
 
 			node = activeNodes[Math.floor(relativeMouseX / activeState.lvl.tileset.tileWidth) + Math.floor(relativeMouseY / activeState.lvl.tileset.tileWidth)*activeState.lvl.levelWidth];
 			for(i in selectedActors) i.eventDispatcher.dispatchEvent(MoveEvent.MOVE, new MoveEvent(node, false));
 			inputState = SELECTING;
 		}
-		if(inputState == ATTACKING)
+		else if(inputState == ATTACKING)
 		{
 			node = activeNodes[Math.floor(relativeMouseX / activeState.lvl.tileset.tileWidth) + Math.floor(relativeMouseY / activeState.lvl.tileset.tileWidth)*activeState.lvl.levelWidth];
 			for(i in selectedActors) 

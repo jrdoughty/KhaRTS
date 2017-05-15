@@ -32,8 +32,7 @@ class Node implements Util.ITwoD
 	public var height:Int;
 	public var frame:Int;
 	public var removeShadow:Bool = false;
-	
-	private var passable:Bool = true;
+	public var passable:Bool = true;
 	
 	public function new(frame:Int, width:Int, height, X:Int = 0, Y:Int = 0, pass:Bool = true ) 
 	{

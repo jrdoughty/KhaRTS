@@ -54,9 +54,9 @@ class UIHealth extends Component
 				healthBarFill.visible = false;
 			}
 			healthBarFill.x = object.x;
-			healthBarFill.y = object.y - 1;
+			healthBarFill.y = object.y;
 			healthBar.x = object.x;
-			healthBar.y = object.y - 1;
+			healthBar.y = object.y;
 			
 		}
 	}
