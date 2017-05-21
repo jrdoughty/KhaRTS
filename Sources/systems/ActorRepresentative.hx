@@ -5,6 +5,8 @@ import sdg.graphics.Sprite;
 import systems.UIElement;
 import sdg.Sdg;
 import components.UIHealth;
+import sdg.components.EventDispatcher;
+import events.CenterOnUnitEvent;
 
 class ActorRepresentative extends UIElement
 {
@@ -17,6 +19,7 @@ class ActorRepresentative extends UIElement
 		spr = new Sprite(cast(a.graphic, Sprite).region);
 		super(x, y, spr);
 		addComponent(new UIHealth(a));
+		addComponent(new EventDispatcher());
 		leftClick = click;
 	}
 
@@ -27,10 +30,7 @@ class ActorRepresentative extends UIElement
 
 	private function click(x:Float, y:Float)
 	{
-		Sdg.screen.camera.x = actor.x - Sdg.screen.camera.halfWidth;
-		Sdg.screen.camera.y = actor.y - Sdg.screen.camera.halfHeight;
-		if(Sdg.screen.camera.x < 0) Sdg.screen.camera.x = 0; 
-		if(Sdg.screen.camera.y < 0) Sdg.screen.camera.y = 0; 
+		eventDispatcher.dispatchEvent(CenterOnUnitEvent.CENTER, new CenterOnUnitEvent(actor));
 		//make event to trigger ui recentering
 	}
 }

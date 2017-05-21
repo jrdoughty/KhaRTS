@@ -26,11 +26,12 @@ enum InputState
  
 class InputSystem
 {
+	public var ui:UI;
+
 	private var inputState:InputState = InputState.SELECTING;
 	private var relativeMouseX:Float;
 	private var relativeMouseY:Float;
 	private var activeState:IGameState;
-	private var ui:UI;
 	
 	private var selectedActors:Array<Actor> = [];
 	private var activeNodes:Array<Node> = [];
@@ -87,13 +88,15 @@ class InputSystem
 		{
 			selector.width = Std.int(relativeMouseX - selector.x);
 			selector.height = Std.int(relativeMouseY - selector.y);
+			
+			var p = cast(selector.graphic, Polygon);
 
-			cast(selector.graphic, Polygon).points[1].x = relativeMouseX - selector.x;
-			cast(selector.graphic, Polygon).points[1].y = 0;
-			cast(selector.graphic, Polygon).points[2].x = relativeMouseX - selector.x;
-			cast(selector.graphic, Polygon).points[2].y = relativeMouseY - selector.y;
-			cast(selector.graphic, Polygon).points[3].x = 0;
-			cast(selector.graphic, Polygon).points[3].y = relativeMouseY - selector.y;
+			p.points[1].x = relativeMouseX - selector.x;
+			p.points[1].y = 0;
+			p.points[2].x = relativeMouseX - selector.x;
+			p.points[2].y = relativeMouseY - selector.y;
+			p.points[3].x = 0;
+			p.points[3].y = relativeMouseY - selector.y;
 		}
 
 		updateCam();
@@ -268,7 +271,9 @@ class InputSystem
 			selector.y = relativeMouseY;
 			selector.width = 1;
 			selector.height = 1;
+
 			var p = cast(selector.graphic, Polygon);
+			
 			p.points[1].x = relativeMouseX+1;
 			p.points[1].y = relativeMouseY;
 			p.points[2].x = relativeMouseX+1;
