@@ -12,6 +12,7 @@ import events.AnimateAttackEvent;
 import events.MoveAnimEvent;
 import events.IdleAnimationEvent;
 import events.MoveToEvent;
+import tween.Delta;
 import sdg.event.EventObject;
 /**
  * ...
@@ -370,8 +371,13 @@ class ControlledUnitAI extends AI
 		actor.currentNodes[0] = path[0];
 		actor.currentNodes[0].occupant = actor;
 
-		object.x = actor.currentNodes[0].x;
-		object.y = actor.currentNodes[0].y;
+		trace(object.y + " " + actor.currentNodes[0].y);
+		Delta.tween(object)
+			.prop("x",actor.currentNodes[0].x,speed/1000)
+			.prop("y",actor.currentNodes[0].y,speed/1000)
+	    	.onComplete(function() { trace("Done");  } ); //Finally report completion;
+		//object.x = actor.currentNodes[0].x;
+		//object.y = actor.currentNodes[0].y;
 
 		//object.eventDispatcher.addEvent(MoveToEvent.MOVE, new MoveToEvent(actor.currentNodes[0].x,actor.currentNodes[0].y));
 	}

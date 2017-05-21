@@ -18,7 +18,7 @@ class Project {
 	function assetsLoaded()
 	{
 		var engine = new Engine(1280, 720);
-		engine.enable(KEYBOARD | MOUSE | GAMEPAD);
+		engine.enable(KEYBOARD | MOUSE | GAMEPAD | DELTA);
 
 		Sdg.addScreen('Play', new PlayScreen(), true);
 
