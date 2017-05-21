@@ -371,11 +371,9 @@ class ControlledUnitAI extends AI
 		actor.currentNodes[0] = path[0];
 		actor.currentNodes[0].occupant = actor;
 
-		trace(object.y + " " + actor.currentNodes[0].y);
 		Delta.tween(object)
 			.prop("x",actor.currentNodes[0].x,speed/1000)
-			.prop("y",actor.currentNodes[0].y,speed/1000)
-	    	.onComplete(function() { trace("Done");  } ); //Finally report completion;
+			.prop("y",actor.currentNodes[0].y,speed/1000); //Finally report completion;
 		//object.x = actor.currentNodes[0].x;
 		//object.y = actor.currentNodes[0].y;
 
