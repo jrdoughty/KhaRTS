@@ -15,7 +15,7 @@ import events.ClearFogEvent;
 import events.HideEvent;
 import events.RevealEvent;
 
-class PlayScreen extends Screen implements IGameState
+class PlayScreen extends Screen implements IGameScreen
 {
 	public var lvl:Level = new Level();	
 	public var teams(default,null):Array<Team> = [];

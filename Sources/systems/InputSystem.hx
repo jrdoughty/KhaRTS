@@ -1,7 +1,7 @@
 package systems;
 import actors.Actor;
 import events.MoveEvent;
-import screens.IGameState;
+import screens.IGameScreen;
 import world.Node;
 import events.StopEvent;
 import events.TargetEvent;
@@ -31,7 +31,7 @@ class InputSystem
 	private var inputState:InputState = InputState.SELECTING;
 	private var relativeMouseX:Float;
 	private var relativeMouseY:Float;
-	private var activeState:IGameState;
+	private var activeScreen:IGameScreen;
 	
 	private var selectedActors:Array<Actor> = [];
 	private var activeNodes:Array<Node> = [];
@@ -47,9 +47,9 @@ class InputSystem
 	private var clickSprites: Array<Object> = [];
 	
 	
-	public function new(state:IGameState) 
+	public function new(state:IGameScreen) 
 	{
-		activeState = state;
+		activeScreen = state;
 		activeNodes = state.lvl.activeNodes;
 		selector = new Object(0,0,Polygon.createRectangle(10,10,kha.Color.Green,true,.2));
 		selector.graphic.alpha = .3;
@@ -208,7 +208,7 @@ class InputSystem
 			for(i in activeNodes)
 			{
 				if(Util.doObjectandITwoDOverlap(selector, i) && 
-				activeState.activeTeam.units.indexOf(i.occupant) != -1)
+				activeScreen.activeTeam.units.indexOf(i.occupant) != -1)
 				{
 					selectedActors.push(i.occupant);
 				}
@@ -219,13 +219,13 @@ class InputSystem
 		else if(inputState == MOVING)
 		{
 
-			node = activeNodes[Math.floor(relativeMouseX / activeState.lvl.tileset.tileWidth) + Math.floor(relativeMouseY / activeState.lvl.tileset.tileWidth)*activeState.lvl.levelWidth];
+			node = activeNodes[Math.floor(relativeMouseX / activeScreen.lvl.tileset.tileWidth) + Math.floor(relativeMouseY / activeScreen.lvl.tileset.tileWidth)*activeScreen.lvl.levelWidth];
 			for(i in selectedActors) i.eventDispatcher.dispatchEvent(MoveEvent.MOVE, new MoveEvent(node, false));
 			inputState = SELECTING;
 		}
 		else if(inputState == ATTACKING)
 		{
-			node = activeNodes[Math.floor(relativeMouseX / activeState.lvl.tileset.tileWidth) + Math.floor(relativeMouseY / activeState.lvl.tileset.tileWidth)*activeState.lvl.levelWidth];
+			node = activeNodes[Math.floor(relativeMouseX / activeScreen.lvl.tileset.tileWidth) + Math.floor(relativeMouseY / activeScreen.lvl.tileset.tileWidth)*activeScreen.lvl.levelWidth];
 			for(i in selectedActors) 
 			{
 				if(node.occupant == null)

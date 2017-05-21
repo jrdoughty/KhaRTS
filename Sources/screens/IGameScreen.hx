@@ -7,7 +7,7 @@ import sdg.Object;
 /**
  * @author John Doughty
  */
-interface IGameState 
+interface IGameScreen 
 {
 	public var lvl:Level;
 	public var teams(default,null):Array<Team>;
