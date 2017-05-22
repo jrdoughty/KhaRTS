@@ -42,7 +42,7 @@ class StateAI extends AI
 		object.eventDispatcher.addEvent(MoveEvent.MOVE, MoveToNode);
 		object.eventDispatcher.addEvent(TargetEvent.ATTACK_ACTOR, TargetActor);
 		object.eventDispatcher.addEvent(StopEvent.STOP, resetStates);
-		object.eventDispatcher.addEvent(StateChangeEvent.CHANGE, ChangeState);
+		object.eventDispatcher.addEvent(StateChangeEvent.CHANGE, changeState);
 		
 		states.set(IDLE, new IdleState(actor));
 		state = states.get(IDLE);
@@ -68,7 +68,7 @@ class StateAI extends AI
 	{
 		if(nextState != null)
 		{
-			currentState = nextState
+			currentState = nextState;
 			nextState = null;
 		}
 		super.takeAction();
@@ -111,6 +111,7 @@ class StateAI extends AI
 
 	private function changeState(e:StateChangeEvent)
 	{
+		
 		if(e.immediate)
 		{
 			currentState = e.state;

@@ -1,14 +1,23 @@
 package states;
-
+import actors.Actor;
+import events.StateChangeEvent;
+import events.AnimateAttackEvent;
+import events.HurtEvent;
+import events.MoveAnimEvent;
+import events.IdleAnimationEvent;
+import world.Node;
+import systems.AStar;
+import tween.Delta;
 
 class AttackState extends BaseState
 {
-
+	private var path:Array<Node> = [];
+	private var failedToMove:Bool = false;
 	public override function takeAction()
 	{
 		var i:Int;
 		
-		if (targetEnemy != null && targetEnemy.alive)
+		if (actor.data['targetEnemy'] != null && actor.data['targetEnemy'].alive)
 		{
 			if (isEnemyInRange())
 			{
@@ -21,7 +30,10 @@ class AttackState extends BaseState
 		}
 		else
 		{
-			state = IDLE;
+			if(!actor.data['targetEnemy'].alive)
+				actor.data['targetEnemy'] = null;
+			
+			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent(IDLE, true));
 		}
 	}
 		
@@ -30,11 +42,11 @@ class AttackState extends BaseState
 	 */
 	private function hit()
 	{
-		targetEnemy.eventDispatcher.dispatchEvent(HurtEvent.HURT, new HurtEvent(damage));
-		object.eventDispatcher.dispatchEvent(AnimateAttackEvent.ATTACK, new AnimateAttackEvent());
-		if (targetEnemy.alive == false)
+		actor.data['targetEnemy'].eventDispatcher.dispatchEvent(HurtEvent.HURT, new HurtEvent(2));
+		actor.eventDispatcher.dispatchEvent(AnimateAttackEvent.ATTACK, new AnimateAttackEvent());
+		if (actor.data['targetEnemy'].alive == false)
 		{
-			targetEnemy = null;
+			actor.data['targetEnemy'] = null;
 		}
 	}
 
@@ -48,47 +60,62 @@ class AttackState extends BaseState
 		var i:Int;
 		failedToMove = false;
 		
-		state = CHASING;
+		actor.data['targetNode'] = actor.data['targetEnemy'].currentNodes[0];
 		
-		if (targetEnemy != null && targetEnemy.alive)
+		if (path.length == 0 || path[path.length - 1] != actor.data['targetNode'])
 		{
-			
-			if (isEnemyInRange())
-			{
-				hit();
-			}
-			else
-			{
-				targetNode = targetEnemy.currentNodes[0];
-				
-				if (path.length == 0 || path[path.length - 1] != targetNode)
-				{
-					path = AStar.newPath(actor.currentNodes[0], targetNode);
-				}
-				
-				
-				if (path.length > 1 && path[1].occupant == null)
-				{
-					moveAlongPath();
-				}
-				else
-				{
-					newPath();
-				}
-			}
+			path = AStar.newPath(actor.currentNodes[0], actor.data['targetNode']);
+		}
+		
+		
+		if (path.length > 1 && path[1].occupant == null)
+		{
+			moveAlongPath();
 		}
 		else
 		{
-			state = IDLE;
+			newPath();
 		}
 		if (failedToMove)
 		{
-			object.eventDispatcher.dispatchEvent(IdleAnimationEvent.IDLE, new IdleAnimationEvent());
+			actor.eventDispatcher.dispatchEvent(IdleAnimationEvent.IDLE, new IdleAnimationEvent());
 		}
 		else
 		{
-			object.eventDispatcher.dispatchEvent(MoveAnimEvent.MOVE, new MoveAnimEvent());
+			actor.eventDispatcher.dispatchEvent(MoveAnimEvent.MOVE, new MoveAnimEvent());
 		}
 	}
 	
+	/**
+	 * for the new path, separated for clean code
+	 * if the new path's next position fails to be different, it sets failedToMove to true
+	 */
+	//@:extern inline 
+	private function newPath()
+	{
+		var nextMove = path[1];
+		path = AStar.newPath(actor.currentNodes[0], actor.data['targetNode']);
+		if (path.length > 1 && nextMove != path[1])//In Plain english, if the new path is indeed a new path
+		{
+			chase();
+		}
+		else
+		{
+			failedToMove = true;
+		}
+	}
+	
+	/**
+	 * triggers the tweening of the movement from on node to the next and sets currentNodes and its occupant
+	 */
+	@:extern inline function moveAlongPath()
+	{
+		path.splice(0,1)[0].occupant = null;
+		actor.currentNodes[0] = path[0];
+		actor.currentNodes[0].occupant = actor;
+
+		Delta.tween(actor)
+			.prop("x",actor.currentNodes[0].x,actor.data['speed']/1000)
+			.prop("y",actor.currentNodes[0].y,actor.data['speed']/1000); //Finally report completion;
+		}
 }
