@@ -13,8 +13,7 @@ class KillEvent extends EventObject
 	public function new(a:Actor) 
 	{
 		actor = a;
-		super();
-		bubble = true;
+		super(true);
 		
 	}
 	

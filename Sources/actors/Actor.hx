@@ -58,7 +58,7 @@ class Actor extends Object
 		var a = new BasicAnimator(rl);
 		addComponent(a);
 		addComponent(new Health());
-		addComponent(new ControlledUnitAI());
+		addComponent(new components.StateAI());
 		addComponent(new View());
 		
 	}

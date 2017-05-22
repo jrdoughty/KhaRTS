@@ -3,10 +3,8 @@ package states;
 import world.Node;
 import actors.Actor;
 
-class BaseState
+class BaseState implements IState
 {
-	public var targetNode(default, null):Node = null;
-	public var targetEnemy:Actor = null;
 	private var actor:Actor;
 
 	/**
@@ -33,8 +31,8 @@ class BaseState
 		
 		for (i in 0...actor.currentNodes[0].neighbors.length)
 		{
-			if (actor.currentNodes[0].neighbors[i].occupant == targetEnemy && actor.currentNodes[0].neighbors[i].occupant != null || //if your target is close
-			targetEnemy == null && actor.currentNodes[0].neighbors[i].occupant != null && actor.team.isThreat(actor.currentNodes[0].neighbors[i].occupant.team.id)) // if you are near an enemy with no target of your own
+			if (actor.currentNodes[0].neighbors[i].occupant == actor.data['targetEnemy'] && actor.currentNodes[0].neighbors[i].occupant != null || //if your target is close
+			actor.data['targetEnemy'] == null && actor.currentNodes[0].neighbors[i].occupant != null && actor.team.isThreat(actor.currentNodes[0].neighbors[i].occupant.team.id)) // if you are near an enemy with no target of your own
 			{
 				inRange = true;
 				break;
@@ -55,8 +53,8 @@ class BaseState
 		
 		for (i in 0...threatNodes.length)
 		{
-			if (threatNodes[i].occupant == targetEnemy && threatNodes[i].occupant != null || //if your target is close
-			targetEnemy == null && threatNodes[i].occupant != null && actor.team.isThreat(threatNodes[i].occupant.team.id)) // if you are near an enemy with no target of your own
+			if (threatNodes[i].occupant == actor.data['targetEnemy'] && threatNodes[i].occupant != null || //if your target is close
+			actor.data['targetEnemy'] == null && threatNodes[i].occupant != null && actor.team.isThreat(threatNodes[i].occupant.team.id)) // if you are near an enemy with no target of your own
 			{
 				inRange = true;
 				break;

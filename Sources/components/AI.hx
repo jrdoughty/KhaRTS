@@ -6,10 +6,10 @@ import events.ActionEvent;
  * ...
  * @author John Doughty
  */
-class AI extends Component
+class AI extends ActorComponent
 {	
 	public function takeAction() 
 	{
-		object.eventDispatcher.dispatchEvent(ActionEvent.TAKE_ACTION, new ActionEvent());
+		
 	}
 }

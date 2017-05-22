@@ -56,8 +56,6 @@ class ControlledUnitAI extends AI
 	private var aggressive:Bool = false;
 	private var lastTargetNode:Node;
 	private var needsReset:Bool = false;
-
-	private var actor:Actor;
 	
 
 	public function new()
@@ -70,27 +68,18 @@ class ControlledUnitAI extends AI
 	override public function init() 
 	{
 		super.init();
-		if (Type.getClass(object) == Actor)
-		{
-			actor = cast object;
-			this.speed = 500;
-			this.damage = 1;
-			if(!actor.data.exists('threatRange'))
-				actor.data.set('threatRange', 4);
+		this.speed = 500;
+		this.damage = 1;
+		if(!actor.data.exists('threatRange'))
+			actor.data.set('threatRange', 4);
 
-			object.eventDispatcher.addEvent(MoveEvent.MOVE, MoveToNode);
-			object.eventDispatcher.addEvent(TargetEvent.ATTACK_ACTOR, TargetActor);
-			object.eventDispatcher.addEvent(StopEvent.STOP, resetStates);
-			//Keeps mass created units from updating at the exact same time. 
-			//Idea from: http://answers.unity3d.com/questions/419786/a-pathfinding-multiple-enemies-MOVING-target-effic.html
-			delayTimer = new Timer(Math.floor(300*Math.random()));
-			delayTimer.run = delayedStart;
-			
-		}
-		else
-		{
-			destroy();
-		}
+		object.eventDispatcher.addEvent(MoveEvent.MOVE, MoveToNode);
+		object.eventDispatcher.addEvent(TargetEvent.ATTACK_ACTOR, TargetActor);
+		object.eventDispatcher.addEvent(StopEvent.STOP, resetStates);
+		//Keeps mass created units from updating at the exact same time. 
+		//Idea from: http://answers.unity3d.com/questions/419786/a-pathfinding-multiple-enemies-MOVING-target-effic.html
+		delayTimer = new Timer(Math.floor(300*Math.random()));
+		delayTimer.run = delayedStart;
 	}
 	
 	/**

@@ -10,7 +10,6 @@ class CenterOnUnitEvent extends EventObject
 	public function new(actor:Actor)
 	{
 		this.actor = actor;
-		super();
-		bubble = true;
+		super(true);
 	}
 }
