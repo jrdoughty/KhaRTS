@@ -61,6 +61,10 @@ class Actor extends Object
 		addComponent(new components.StateAI());
 		addComponent(new View());
 		data['threatRange'] = 4;
+		data.set('speed', 500);
+		data.set('targetEnemy', null);
+		data.set('targetNode', null);
+		data.set('aggressive', false);
 	}
 	
 	/**

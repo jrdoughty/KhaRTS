@@ -20,12 +20,15 @@ class MoveState extends BaseState
 	public override function takeAction():Void
 	{
 		failedToMove = false;
-		
-		if (actor.data['aggressive'] && isEnemyInRange())
+		if (actor.data['aggressive'])
 		{
-			actor.data['targetEnemy'] = getEnemyInRange();	
-			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent(ATTACKING, true));
-			return;
+			checkView();
+			actor.data['targetEnemy'] = getEnemyInThreat();	
+			if(actor.data['targetEnemy'] != null)
+			{
+				actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent(ATTACKING));
+				return;
+			}
 		}
 		
 		if ((actor.data['targetNode'] != null && path.length == 0|| actor.data['targetNode'] != lastTargetNode) && actor.data['targetNode'].isPassible())
@@ -41,7 +44,6 @@ class MoveState extends BaseState
 			{
 				path = [];
 				actor.data['targetNode'] = null;
-				trace('made it');
 				actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent(IDLE));//Unlike other cases, this is after the action has been carried out.
 			}
 		}

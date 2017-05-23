@@ -40,13 +40,13 @@ class PlayScreen extends Screen implements IGameScreen
 		setWorldSize(lvl.width,lvl.height);
 		var act = new Actor(lvl.getNodeByGridXY(3,3), Assets.images.knight);
 		activeTeam.addUnit(act);
-		//var act3 = new Actor(lvl.getNodeByGridXY(13,15), Assets.images.knight);
-		//activeTeam.addUnit(act3);
-		var act2 = new Actor(lvl.getNodeByGridXY(3,5), Assets.images.redknight);
+		var act3 = new Actor(lvl.getNodeByGridXY(3,5), Assets.images.knight);
+		activeTeam.addUnit(act3);
+		var act2 = new Actor(lvl.getNodeByGridXY(13,15), Assets.images.redknight);
 		teams[1].addUnit(act2);
 		add(act);
 		add(act2);
-		//add(act3);
+		add(act3);
 		var tileset = new Tileset(Assets.images.fogtiles, 32, 32);
 		var bgMap = new Tilemap(tileset);
 		var data:Array<Array<Int>> = [];

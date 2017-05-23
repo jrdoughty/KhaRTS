@@ -30,7 +30,7 @@ class AttackState extends BaseState
 		}
 		else
 		{
-			if(!actor.data['targetEnemy'].alive)
+			if(actor.data['targetEnemy'] != null && !actor.data['targetEnemy'].alive)
 				actor.data['targetEnemy'] = null;
 			
 			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent(IDLE, true));

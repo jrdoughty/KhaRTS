@@ -37,10 +37,6 @@ class StateAI extends AI
 	public override function init()
 	{
 		super.init();
-		actor.data.set('speed', 500);
-		actor.data.set('targetEnemy', null);
-		actor.data.set('targetNode', null);
-		actor.data.set('aggressive', false);
 		object.eventDispatcher.addEvent(MoveEvent.MOVE, MoveToNode);
 		object.eventDispatcher.addEvent(TargetEvent.ATTACK_ACTOR, TargetActor);
 		object.eventDispatcher.addEvent(StopEvent.STOP, resetStates);
@@ -73,6 +69,7 @@ class StateAI extends AI
 		if(nextState != null)
 		{
 			currentState = nextState;
+			state = states[currentState];
 			nextState = null;
 		}
 		super.takeAction();
@@ -115,15 +112,17 @@ class StateAI extends AI
 
 	private function changeState(e:StateChangeEvent)
 	{
-
-		if(e.immediate)
+		if(states.exists(e.state))
 		{
-			currentState = e.state;
-			states[currentState].takeAction();
-		}
-		else
-		{
-			nextState = e.state;
+			if(e.immediate)
+			{
+				currentState = e.state;
+				states[currentState].takeAction();
+			}
+			else
+			{
+				nextState = e.state;
+			}
 		}
 	}
 }
