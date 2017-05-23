@@ -10,13 +10,19 @@ class IdleState extends BaseState
 
 	public override function takeAction()
 	{	
-		if (actor.data['targetNode'] != null)
+		if(actor.data['targetNode'] == null && actor.data['targetEnemy'] == null)
 		{
-			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent(MOVING, true));
+			checkView();
+			actor.data['targetEnemy'] = getEnemyInThreat();
 		}
-		else if (actor.data['targetEnemy'] != null)
+
+		if (actor.data['targetEnemy'] != null)
 		{
 			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent(ATTACKING, true));
+		} 
+		else if (actor.data['targetNode'] != null)
+		{
+			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent(MOVING, true));
 		}
 		else
 		{

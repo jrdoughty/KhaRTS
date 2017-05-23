@@ -3,6 +3,8 @@ package components;
 import actors.Actor;
 import states.IState;
 import states.IdleState;
+import states.AttackState;
+import states.MoveState;
 import events.TargetEvent;
 import events.MoveEvent;
 import events.StopEvent;
@@ -45,6 +47,8 @@ class StateAI extends AI
 		object.eventDispatcher.addEvent(StateChangeEvent.CHANGE, changeState);
 		
 		states.set(IDLE, new IdleState(actor));
+		states.set(MOVING, new MoveState(actor));
+		states.set(ATTACKING, new AttackState(actor));
 		state = states.get(IDLE);
 		//Keeps mass created units from updating at the exact same time. 
 		//Idea from: http://answers.unity3d.com/questions/419786/a-pathfinding-multiple-enemies-MOVING-target-effic.html
@@ -111,7 +115,7 @@ class StateAI extends AI
 
 	private function changeState(e:StateChangeEvent)
 	{
-		
+
 		if(e.immediate)
 		{
 			currentState = e.state;

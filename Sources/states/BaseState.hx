@@ -72,7 +72,6 @@ class BaseState implements IState
 	private function getEnemyInThreat():Actor
 	{
 		var result:Actor = null;
-		var i:Int;
 		for (i in 0...threatNodes.length)
 		{
 			if (threatNodes[i].occupant != null && actor.team.isThreat(threatNodes[i].occupant.team.id))
@@ -91,7 +90,6 @@ class BaseState implements IState
 	 */
 	public function checkView(node:Node = null)
 	{
-		var n;
 		var distance:Float;
 		if (node == null)
 		{

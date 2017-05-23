@@ -56,8 +56,6 @@ class AttackState extends BaseState
 	 */
 	private function chase()
 	{
-		var nextMove:Node;
-		var i:Int;
 		failedToMove = false;
 		
 		actor.data['targetNode'] = actor.data['targetEnemy'].currentNodes[0];
@@ -117,5 +115,5 @@ class AttackState extends BaseState
 		Delta.tween(actor)
 			.prop("x",actor.currentNodes[0].x,actor.data['speed']/1000)
 			.prop("y",actor.currentNodes[0].y,actor.data['speed']/1000); //Finally report completion;
-		}
+	}
 }

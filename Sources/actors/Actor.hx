@@ -60,7 +60,7 @@ class Actor extends Object
 		addComponent(new Health());
 		addComponent(new components.StateAI());
 		addComponent(new View());
-		
+		data['threatRange'] = 4;
 	}
 	
 	/**

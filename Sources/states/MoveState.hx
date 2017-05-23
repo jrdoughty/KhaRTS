@@ -1,7 +1,17 @@
 package states;
+import actors.Actor;
+import events.StateChangeEvent;
+import events.MoveAnimEvent;
+import events.IdleAnimationEvent;
+import world.Node;
+import systems.AStar;
+import tween.Delta;
 
 class MoveState extends BaseState
 {
+	private var path:Array<Node> = [];
+	private var failedToMove:Bool = false;
+	private var lastTargetNode:Node;
 
 	/**
 	 * moves to the next node. If a path doesn't exist to the targetNode, it creates one
@@ -9,30 +19,30 @@ class MoveState extends BaseState
 	 */
 	public override function takeAction():Void
 	{
-		var nextMove:Node;
 		failedToMove = false;
-		state = MOVING;
 		
-		if (aggressive && isEnemyInRange())
+		if (actor.data['aggressive'] && isEnemyInRange())
 		{
-			targetEnemy = getEnemyInRange();
-			attack();
+			actor.data['targetEnemy'] = getEnemyInRange();	
+			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent(ATTACKING, true));
 			return;
 		}
 		
-		if ((targetNode != null && path.length == 0|| targetNode != lastTargetNode) && targetNode.isPassible())
+		if ((actor.data['targetNode'] != null && path.length == 0|| actor.data['targetNode'] != lastTargetNode) && actor.data['targetNode'].isPassible())
 		{
-			path = AStar.newPath(actor.currentNodes[0], targetNode);//remember path[0] is the last 
+			path = AStar.newPath(actor.currentNodes[0], actor.data['targetNode']);//remember path[0] is the last 
 		}
 		
 		if (path.length > 1 && path[1].occupant == null)
 		{
 			moveAlongPath();
 			
-			if (actor.currentNodes[0] == targetNode)
+			if (actor.currentNodes[0] == actor.data['targetNode'])
 			{
 				path = [];
-				state = IDLE;//Unlike other cases, this is after the action has been carried out.
+				actor.data['targetNode'] = null;
+				trace('made it');
+				actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent(IDLE));//Unlike other cases, this is after the action has been carried out.
 			}
 		}
 		else if (path.length > 1 && path[1].occupant != null)
@@ -41,17 +51,18 @@ class MoveState extends BaseState
 		}
 		else
 		{
-			targetNode = null;
-			state = IDLE;
+			actor.data['targetNode'] = null;
+			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent(IDLE));
+			
 		}
-		lastTargetNode = targetNode;
+		lastTargetNode = actor.data['targetNode'];
 		if (failedToMove)
 		{
-			object.eventDispatcher.dispatchEvent(IdleAnimationEvent.IDLE, new IdleAnimationEvent());
+			actor.eventDispatcher.dispatchEvent(IdleAnimationEvent.IDLE, new IdleAnimationEvent());
 		}
 		else
 		{
-			object.eventDispatcher.dispatchEvent(MoveAnimEvent.MOVE, new MoveAnimEvent());
+			actor.eventDispatcher.dispatchEvent(MoveAnimEvent.MOVE, new MoveAnimEvent());
 		}
 	}
 	
@@ -63,22 +74,29 @@ class MoveState extends BaseState
 	private function newPath()
 	{
 		var nextMove = path[1];
-		path = AStar.newPath(actor.currentNodes[0], targetNode);
+		path = AStar.newPath(actor.currentNodes[0], actor.data['targetNode']);
 		if (path.length > 1 && nextMove != path[1])//In Plain english, if the new path is indeed a new path
 		{
-			//try new path
-			if (state == ActorState.MOVING)
-			{
-				move();	
-			} 
-			else if (state == ActorState.CHASING)
-			{
-				chase();
-			}
+			takeAction();//try again
 		}
 		else
 		{
 			failedToMove = true;
 		}
+	}
+	
+	/**
+	 * triggers the tweening of the movement from on node to the next and sets currentNodes and its occupant
+	 */
+	//@:extern inline 
+	function moveAlongPath()
+	{
+		path.splice(0,1)[0].occupant = null;
+		actor.currentNodes[0] = path[0];
+		actor.currentNodes[0].occupant = actor;
+
+		Delta.tween(actor)
+			.prop("x",actor.currentNodes[0].x,actor.data['speed']/1000)
+			.prop("y",actor.currentNodes[0].y,actor.data['speed']/1000); //Finally report completion;
 	}
 }
