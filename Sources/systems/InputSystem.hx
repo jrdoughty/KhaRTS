@@ -220,22 +220,29 @@ class InputSystem
 		{
 
 			node = activeNodes[Math.floor(relativeMouseX / activeScreen.lvl.tileset.tileWidth) + Math.floor(relativeMouseY / activeScreen.lvl.tileset.tileWidth)*activeScreen.lvl.levelWidth];
-			for(i in selectedActors) i.eventDispatcher.dispatchEvent(MoveEvent.MOVE, new MoveEvent(node, false));
+			var j = 0;
+			for(i in selectedActors) 
+			{
+				i.eventDispatcher.dispatchEvent(MoveEvent.MOVE, new MoveEvent(activeScreen.lvl.getNodeByGridXY(node.nodeX + j, node.nodeY), false));
+				j++;
+			}
 			inputState = SELECTING;
 		}
 		else if(inputState == ATTACKING)
 		{
 			node = activeNodes[Math.floor(relativeMouseX / activeScreen.lvl.tileset.tileWidth) + Math.floor(relativeMouseY / activeScreen.lvl.tileset.tileWidth)*activeScreen.lvl.levelWidth];
+			var j = 0;
 			for(i in selectedActors) 
 			{
 				if(node.occupant == null)
 				{
-					i.eventDispatcher.dispatchEvent(MoveEvent.MOVE, new MoveEvent(node, true));
+					i.eventDispatcher.dispatchEvent(MoveEvent.MOVE, new MoveEvent(activeScreen.lvl.getNodeByGridXY(node.nodeX + j, node.nodeY), true));
 				}
 				else
 				{
-					i.eventDispatcher.dispatchEvent(TargetEvent.ATTACK_ACTOR, new TargetEvent(node.occupant));
+					i.eventDispatcher.dispatchEvent(TargetEvent.ATTACK_ACTOR, new TargetEvent(activeScreen.lvl.getNodeByGridXY(node.nodeX + j, node.nodeY).occupant));
 				}
+				j++;
 				inputState = SELECTING;
 			}
 		}
@@ -291,12 +298,14 @@ class InputSystem
 			{
 				if(relativeMouseX >= i.x && relativeMouseX <= i.x + i.width && relativeMouseY >= i.y && relativeMouseY <= i.y + i.height)
 				{
+					var k = 0;
 					for(j in selectedActors) 
 					{
 						if(i.occupant != null && i.occupant.team != j.team)
 							j.eventDispatcher.dispatchEvent(TargetEvent.ATTACK_ACTOR, new TargetEvent(i.occupant));
 						else
-							j.eventDispatcher.dispatchEvent(MoveEvent.MOVE, new MoveEvent(i, false));
+							j.eventDispatcher.dispatchEvent(MoveEvent.MOVE, new MoveEvent(activeScreen.lvl.getNodeByGridXY(i.nodeX + k,i.nodeY), false));
+						k++;
 					}
 				}
 			}

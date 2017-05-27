@@ -58,11 +58,10 @@ class AttackState extends BaseState
 	{
 		failedToMove = false;
 		
-		actor.data['targetNode'] = actor.data['targetEnemy'].currentNodes[0];
 		
-		if (path.length == 0 || path[path.length - 1] != actor.data['targetNode'])
+		if (path.length == 0 || path[path.length - 1] != actor.data['targetEnemy'].currentNodes[0])
 		{
-			path = AStar.newPath(actor.currentNodes[0], actor.data['targetNode']);
+			path = AStar.newPath(actor.currentNodes[0], actor.data['targetEnemy'].currentNodes[0]);
 		}
 		
 		
@@ -92,7 +91,7 @@ class AttackState extends BaseState
 	private function newPath()
 	{
 		var nextMove = path[1];
-		path = AStar.newPath(actor.currentNodes[0], actor.data['targetNode']);
+		path = AStar.newPath(actor.currentNodes[0], actor.data['targetEnemy'].currentNodes[0]);
 		if (path.length > 1 && nextMove != path[1])//In Plain english, if the new path is indeed a new path
 		{
 			chase();

@@ -125,4 +125,16 @@ class StateAI extends AI
 			}
 		}
 	}
+	/**
+	 * detatches component and stops the UnitAI's action Timer
+	 */
+	public override function destroy() 
+	{
+		if (actionTimer != null)
+		{
+			actionTimer.stop();
+		}
+		super.destroy();
+		object.components.remove(this);
+	}
 }

@@ -12,6 +12,7 @@ class MoveState extends BaseState
 	private var path:Array<Node> = [];
 	private var failedToMove:Bool = false;
 	private var lastTargetNode:Node;
+	private var turnsIdle:Int = 0;
 
 	/**
 	 * moves to the next node. If a path doesn't exist to the targetNode, it creates one
@@ -39,7 +40,7 @@ class MoveState extends BaseState
 		if (path.length > 1 && path[1].occupant == null)
 		{
 			moveAlongPath();
-			
+			turnsIdle = 0;
 			if (actor.currentNodes[0] == actor.data['targetNode'])
 			{
 				path = [];
@@ -50,12 +51,16 @@ class MoveState extends BaseState
 		else if (path.length > 1 && path[1].occupant != null)
 		{
 			newPath();
+			trace('test');
 		}
 		else
 		{
-			actor.data['targetNode'] = null;
-			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent(IDLE));
-			
+			turnsIdle++;
+			if(turnsIdle > 3)
+			{
+				actor.data['targetNode'] = null;
+				actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent(IDLE));
+			}
 		}
 		lastTargetNode = actor.data['targetNode'];
 		if (failedToMove)
@@ -84,6 +89,7 @@ class MoveState extends BaseState
 		else
 		{
 			failedToMove = true;
+			trace('fail');
 		}
 	}
 	
