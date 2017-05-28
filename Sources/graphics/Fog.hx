@@ -73,64 +73,64 @@ class Fog extends Tilemap
 			switch config {
 				case 0: 
 					canvas.g2.opacity = .5;
-					canvas.g2.fillRect(_px, _py, 32, 32);
+					canvas.g2.fillRect(_px, _py, tileset.tileWidth, tileset.tileHeight);
 				case 1:
 					canvas.g2.opacity = .25;
-					canvas.g2.fillRect(_px + 16, _py, 16, 16);
-					canvas.g2.fillRect(_px, _py + 16, 16, 16);
+					canvas.g2.fillRect(_px + tileset.tileWidth / 2, _py, tileset.tileWidth / 2, tileset.tileHeight / 2);
+					canvas.g2.fillRect(_px, _py + tileset.tileHeight / 2, tileset.tileWidth / 2, tileset.tileHeight / 2);
 					canvas.g2.opacity = .5;
-					canvas.g2.fillRect(_px + 16, _py + 16, 16, 16);
+					canvas.g2.fillRect(_px + tileset.tileWidth / 2, _py + tileset.tileHeight / 2, tileset.tileWidth / 2, tileset.tileHeight / 2);
 				case 2:
 					canvas.g2.opacity = .25;
-					canvas.g2.fillRect(_px + 16, _py + 16, 16, 16);
-					canvas.g2.fillRect(_px, _py, 16, 16);
+					canvas.g2.fillRect(_px + tileset.tileWidth / 2, _py + tileset.tileHeight / 2, tileset.tileWidth / 2, tileset.tileHeight / 2);
+					canvas.g2.fillRect(_px, _py, tileset.tileWidth / 2, tileset.tileHeight / 2);
 					canvas.g2.opacity = .5;
-					canvas.g2.fillRect(_px, _py + 16, 16, 16);
+					canvas.g2.fillRect(_px, _py + tileset.tileHeight / 2, tileset.tileWidth / 2, tileset.tileHeight / 2);
 				case 3://TOP_LEFT | TOP_RIGHT:
 					canvas.g2.opacity = .25;
-					canvas.g2.fillRect(_px, _py + 16, 32, 16);
+					canvas.g2.fillRect(_px, _py + tileset.tileHeight / 2, tileset.tileWidth, tileset.tileHeight / 2);
 				case 4:
 					canvas.g2.opacity = .25;
-					canvas.g2.fillRect(_px + 16, _py + 16, 16, 16);
-					canvas.g2.fillRect(_px, _py, 16, 16);
+					canvas.g2.fillRect(_px + tileset.tileWidth / 2, _py + tileset.tileHeight / 2, tileset.tileWidth / 2, tileset.tileHeight / 2);
+					canvas.g2.fillRect(_px, _py, tileset.tileWidth / 2, tileset.tileHeight / 2);
 					canvas.g2.opacity = .5;
-					canvas.g2.fillRect(_px + 16, _py, 16, 16);
+					canvas.g2.fillRect(_px + tileset.tileWidth / 2, _py, tileset.tileWidth / 2, tileset.tileHeight / 2);
 				case 5://TOP_LEFT | BOTTOM_LEFT:
 					canvas.g2.opacity = .25;
-					canvas.g2.fillRect(_px + 16, _py, 16, 32);
+					canvas.g2.fillRect(_px + tileset.tileWidth / 2, _py, tileset.tileWidth / 2, tileset.tileHeight);
 				case 6:
 					canvas.g2.opacity = .25;
-					canvas.g2.fillRect(_px + 16, _py, 16, 16);
-					canvas.g2.fillRect(_px, _py + 16, 16, 16);
+					canvas.g2.fillRect(_px, _py, tileset.tileWidth / 2, tileset.tileHeight / 2);
+					canvas.g2.fillRect(_px + tileset.tileWidth / 2, _py + tileset.tileHeight / 2, tileset.tileWidth / 2, tileset.tileHeight / 2);
 				case 7://TOP_LEFT | TOP_RIGHT | BOTTOM_LEFT:
 					canvas.g2.opacity = .25;
-					canvas.g2.fillRect(_px + 16, _py + 16, 16, 16);
+					canvas.g2.fillRect(_px + tileset.tileWidth / 2, _py + tileset.tileHeight / 2, tileset.tileWidth / 2, tileset.tileHeight / 2);
 				case 8:
 					canvas.g2.opacity = .25;
-					canvas.g2.fillRect(_px + 16, _py, 16, 16);
-					canvas.g2.fillRect(_px, _py + 16, 16, 16);
+					canvas.g2.fillRect(_px + tileset.tileWidth / 2, _py, tileset.tileWidth / 2, tileset.tileHeight / 2);
+					canvas.g2.fillRect(_px, _py + tileset.tileHeight / 2, tileset.tileWidth / 2, tileset.tileHeight / 2);
 					canvas.g2.opacity = .5;
-					canvas.g2.fillRect(_px, _py, 16, 16);
+					canvas.g2.fillRect(_px, _py, tileset.tileWidth / 2, tileset.tileHeight / 2);
 				case 9://TOP_LEFT | BOTTOM_RIGHT:
 					canvas.g2.opacity = .25;
-					canvas.g2.fillRect(_px, _py, 16, 16);
-					canvas.g2.fillRect(_px + 16, _py + 16, 16, 16);
+					canvas.g2.fillRect(_px + tileset.tileWidth / 2, _py, tileset.tileWidth / 2, tileset.tileHeight / 2);
+					canvas.g2.fillRect(_px, _py + tileset.tileHeight / 2, tileset.tileWidth / 2, tileset.tileHeight / 2);
 				case 10://TOP_RIGHT | BOTTOM_RIGHT:
 					canvas.g2.opacity = .25;
-					canvas.g2.fillRect(_px, _py, 16, 32);
+					canvas.g2.fillRect(_px, _py, tileset.tileWidth / 2, tileset.tileHeight);
 				case 11://TOP_LEFT | TOP_RIGHT | BOTTOM_RIGHT:
 					canvas.g2.opacity = .25;
-					canvas.g2.fillRect(_px, _py + 16, 16, 16);
+					canvas.g2.fillRect(_px, _py + tileset.tileHeight / 2, tileset.tileWidth / 2, tileset.tileHeight / 2);
 				case 12://BOTTOM_LEFT | BOTTOM_RIGHT:
 					canvas.g2.opacity = .25;
-					canvas.g2.fillRect(_px, _py, 32, 16);
+					canvas.g2.fillRect(_px, _py, tileset.tileWidth, tileset.tileHeight / 2);
 				case 13://TOP_LEFT | BOTTOM_LEFT | BOTTOM_RIGHT:
 					canvas.g2.opacity = .25;
-					canvas.g2.fillRect(_px + 16, _py, 16, 16);
+					canvas.g2.fillRect(_px + tileset.tileWidth / 2, _py, tileset.tileWidth / 2, tileset.tileHeight / 2);
 				case 14://TOP_RIGHT | BOTTOM_LEFT | BOTTOM_RIGHT:
 					canvas.g2.opacity = .25;
-					canvas.g2.fillRect(_px, _py, 16, 16);
-				case 15://TOP_LEFT | BOTTOM_LEFT | BOTTOM_RIGHT | TOP_RIGHT:*/
+					canvas.g2.fillRect(_px, _py, tileset.tileWidth / 2, tileset.tileHeight / 2);
+				default:
 			}
 
 
