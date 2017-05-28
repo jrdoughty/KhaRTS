@@ -65,6 +65,7 @@ class Actor extends Object
 		data.set('targetEnemy', null);
 		data.set('targetNode', null);
 		data.set('aggressive', false);
+		data['damage'] = 2;
 	}
 	
 	/**

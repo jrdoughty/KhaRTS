@@ -48,7 +48,7 @@ class PlayScreen extends Screen implements IGameScreen
 		add(act2);
 		add(act3);
 		var tileset = new Tileset(Assets.images.fogtiles, 32, 32);
-		var bgMap = new Tilemap(tileset);
+		var bgMap = new Fog(tileset);
 		var data:Array<Array<Int>> = [];
 
 		for(y in 0...lvl.levelHeight)

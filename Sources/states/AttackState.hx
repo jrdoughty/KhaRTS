@@ -42,7 +42,7 @@ class AttackState extends BaseState
 	 */
 	private function hit()
 	{
-		actor.data['targetEnemy'].eventDispatcher.dispatchEvent(HurtEvent.HURT, new HurtEvent(2));
+		actor.data['targetEnemy'].eventDispatcher.dispatchEvent(HurtEvent.HURT, new HurtEvent(actor.data['damage']));
 		actor.eventDispatcher.dispatchEvent(AnimateAttackEvent.ATTACK, new AnimateAttackEvent());
 		if (actor.data['targetEnemy'].alive == false)
 		{
