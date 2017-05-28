@@ -36,20 +36,13 @@ class Fog extends Tilemap
 			
 		if (_endRow < heightInTiles)
 			_endRow++;
-		var skipX:Bool = false;
+
 		for (r in _startRow...(_endRow))
 		{
-			if(!skipX)
+			for (c in _startCol...(_endCol))
 			{
-				var skipY:Bool = false;
-				for (c in _startCol...(_endCol))
-				{
-					if(!skipY)
-						drawArea(r, c, canvas, objectX, objectY, cameraX, cameraY);
-					//skipY = !skipY;
-				}
+				drawArea(r, c, canvas, objectX, objectY, cameraX, cameraY);
 			}
-			//skipX = !skipX;
 		}
 		canvas.g2.opacity = 1;
 	}
