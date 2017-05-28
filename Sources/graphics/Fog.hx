@@ -109,6 +109,13 @@ class Fog extends Tilemap
 				canvas.g2.fillRect(_px + halfTW, _py, halfTW, fullTH);
 			case 6:
 				canvas.g2.opacity = .25;
+				canvas.g2.fillRect(_px + quarTW + halfTW, _py + quarTH, quarTW, quarTH);
+				canvas.g2.fillRect(_px + halfTW, _py, quarTW, quarTH);
+				canvas.g2.fillRect(_px + quarTW, _py + quarTH + halfTH, quarTW, quarTH);
+				canvas.g2.fillRect(_px, _py + halfTH, quarTW, quarTH);
+				canvas.g2.opacity = .5;
+				canvas.g2.fillRect(_px + quarTW, _py + halfTH, quarTW, quarTH);
+				canvas.g2.fillRect(_px + halfTW, _py + quarTH, quarTW, quarTH);
 				canvas.g2.fillRect(_px, _py, halfTW, halfTH);
 				canvas.g2.fillRect(_px + halfTW, _py + halfTH, halfTW, halfTH);
 			case 7://TOP_LEFT | TOP_RIGHT | BOTTOM_LEFT:
@@ -127,6 +134,13 @@ class Fog extends Tilemap
 				canvas.g2.fillRect(_px + halfTW, _py, halfTW, halfTH);
 			case 9://TOP_LEFT | BOTTOM_RIGHT:
 				canvas.g2.opacity = .25;
+				canvas.g2.fillRect(_px + quarTW, _py, quarTW, quarTH);
+				canvas.g2.fillRect(_px, _py + quarTH, quarTW, quarTH);
+				canvas.g2.fillRect(_px + quarTW + halfTW, _py + halfTH, quarTW, quarTH);
+				canvas.g2.fillRect(_px + halfTW, _py + quarTH + halfTH, quarTW, quarTH);
+				canvas.g2.opacity = .5;
+				canvas.g2.fillRect(_px + halfTW, _py + halfTH, quarTW, quarTH);
+				canvas.g2.fillRect(_px + quarTW, _py + quarTH, quarTW, quarTH);
 				canvas.g2.fillRect(_px + halfTW, _py, halfTW, halfTH);
 				canvas.g2.fillRect(_px, _py + halfTH, halfTW, halfTH);
 			case 10://TOP_RIGHT | BOTTOM_RIGHT:
