@@ -36,13 +36,20 @@ class Fog extends Tilemap
 			
 		if (_endRow < heightInTiles)
 			_endRow++;
-		
+		var skipX:Bool = false;
 		for (r in _startRow...(_endRow))
 		{
-			for (c in _startCol...(_endCol))
+			if(!skipX)
 			{
-				drawArea(r, c, canvas, objectX, objectY, cameraX, cameraY);
+				var skipY:Bool = false;
+				for (c in _startCol...(_endCol))
+				{
+					if(!skipY)
+						drawArea(r, c, canvas, objectX, objectY, cameraX, cameraY);
+					//skipY = !skipY;
+				}
 			}
+			//skipX = !skipX;
 		}
 		canvas.g2.opacity = 1;
 	}
@@ -55,15 +62,84 @@ class Fog extends Tilemap
 			_px = objectX + x + (c * tileset.tileWidth) - cameraX;
 			_py = objectY + y + (r * tileset.tileHeight) - cameraY;
 			
-
-
-			if(tile > 0)
-			{
-				canvas.g2.color = kha.Color.Black;
-				canvas.g2.opacity = .5;
-				canvas.g2.fillRect(_px,_py,32,32);
+			var config:Int = 0;
+			if(map[r][c] == 0) config += TOP_LEFT;
+			if(c < map[r].length && map[r][c+1] == 0) config += TOP_RIGHT;
+			if(r < map.length && c < map[r].length && map[r+1][c+1] == 0) config += BOTTOM_RIGHT;
+			if(r < map.length && map[r+1][c] == 0) config += BOTTOM_LEFT;
+			
+			canvas.g2.color = kha.Color.Black;
+			
+			switch config {
+				case 0: 
+					canvas.g2.opacity = .5;
+					canvas.g2.fillRect(_px, _py, 32, 32);
+				case 1:
+					canvas.g2.opacity = .25;
+					canvas.g2.fillRect(_px + 16, _py, 16, 16);
+					canvas.g2.fillRect(_px, _py + 16, 16, 16);
+					canvas.g2.opacity = .5;
+					canvas.g2.fillRect(_px + 16, _py + 16, 16, 16);
+				case 2:
+					canvas.g2.opacity = .25;
+					canvas.g2.fillRect(_px + 16, _py + 16, 16, 16);
+					canvas.g2.fillRect(_px, _py, 16, 16);
+					canvas.g2.opacity = .5;
+					canvas.g2.fillRect(_px, _py + 16, 16, 16);
+				case 3://TOP_LEFT | TOP_RIGHT:
+					canvas.g2.opacity = .25;
+					canvas.g2.fillRect(_px, _py + 16, 32, 16);
+				case 4:
+					canvas.g2.opacity = .25;
+					canvas.g2.fillRect(_px + 16, _py + 16, 16, 16);
+					canvas.g2.fillRect(_px, _py, 16, 16);
+					canvas.g2.opacity = .5;
+					canvas.g2.fillRect(_px + 16, _py, 16, 16);
+				case 5://TOP_LEFT | BOTTOM_LEFT:
+					canvas.g2.opacity = .25;
+					canvas.g2.fillRect(_px + 16, _py, 16, 32);
+				case 6:
+					canvas.g2.opacity = .25;
+					canvas.g2.fillRect(_px + 16, _py, 16, 16);
+					canvas.g2.fillRect(_px, _py + 16, 16, 16);
+				case 7://TOP_LEFT | TOP_RIGHT | BOTTOM_LEFT:
+					canvas.g2.opacity = .25;
+					canvas.g2.fillRect(_px + 16, _py + 16, 16, 16);
+				case 8:
+					canvas.g2.opacity = .25;
+					canvas.g2.fillRect(_px + 16, _py, 16, 16);
+					canvas.g2.fillRect(_px, _py + 16, 16, 16);
+					canvas.g2.opacity = .5;
+					canvas.g2.fillRect(_px, _py, 16, 16);
+				case 9://TOP_LEFT | BOTTOM_RIGHT:
+					canvas.g2.opacity = .25;
+					canvas.g2.fillRect(_px, _py, 16, 16);
+					canvas.g2.fillRect(_px + 16, _py + 16, 16, 16);
+				case 10://TOP_RIGHT | BOTTOM_RIGHT:
+					canvas.g2.opacity = .25;
+					canvas.g2.fillRect(_px, _py, 16, 32);
+				case 11://TOP_LEFT | TOP_RIGHT | BOTTOM_RIGHT:
+					canvas.g2.opacity = .25;
+					canvas.g2.fillRect(_px, _py + 16, 16, 16);
+				case 12://BOTTOM_LEFT | BOTTOM_RIGHT:
+					canvas.g2.opacity = .25;
+					canvas.g2.fillRect(_px, _py, 32, 16);
+				case 13://TOP_LEFT | BOTTOM_LEFT | BOTTOM_RIGHT:
+					canvas.g2.opacity = .25;
+					canvas.g2.fillRect(_px + 16, _py, 16, 16);
+				case 14://TOP_RIGHT | BOTTOM_LEFT | BOTTOM_RIGHT:
+					canvas.g2.opacity = .25;
+					canvas.g2.fillRect(_px, _py, 16, 16);
+				case 15://TOP_LEFT | BOTTOM_LEFT | BOTTOM_RIGHT | TOP_RIGHT:*/
 			}
 
+
 		}
+	}
+	private function drawbasic(canvas:kha.Canvas, _px:Float, _py:Float)
+	{
+		canvas.g2.color = kha.Color.Black;
+		canvas.g2.opacity = .5;
+		canvas.g2.fillRect(_px, _py, 64, 64);
 	}
 }
