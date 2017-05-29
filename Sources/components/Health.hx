@@ -90,7 +90,6 @@ class Health extends ActorComponent
 		{
 			if (actor.data['health'] > 0)
 			{
-				trace(actor.width);
 				p.points[1].x = actor.width*(actor.data['health']);
 				p.points[2].x = actor.width*(actor.data['health']);
 			}
