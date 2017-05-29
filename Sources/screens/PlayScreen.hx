@@ -73,6 +73,13 @@ class PlayScreen extends Screen implements IGameScreen
 			];
 		var act2 = new Actor(lvl.getNodeByGridXY(14,10), rl, cl, data);
 		teams[1].addUnit(act2);
+		
+		rl = Atlas.createRegionList(Assets.images.tree,64,64);
+		cl = [];
+		data = ["wood" => 5];
+		var act3 = new Actor(lvl.getNodeByGridXY(14,2), rl, cl, data);
+		add(act3);
+		teams[1].addUnit(act3);//temporary
 
 		add(act);
 		add(act2);

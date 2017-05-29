@@ -27,7 +27,6 @@ class BasicAnimator extends Animator
 		cast(object, Actor).eventDispatcher.addEvent(MoveAnimEvent.MOVE, moveAnim);
 		cast(object, Actor).eventDispatcher.addEvent(AnimateAttackEvent.ATTACK, attackAnim);
 		cast(object, Actor).eventDispatcher.addEvent(IdleAnimationEvent.IDLE, idleAnim);
-		object.setSizeAuto();
 	}
 
 	public function moveAnim(e:MoveAnimEvent)

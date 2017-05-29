@@ -54,8 +54,9 @@ class Actor extends Object
 		x = node.x;
 		y = node.y;
 		addComponent(new EventDispatcher());
-		setupNodes(node);
 		graphic = new Sprite(rl[0]);
+		setSizeAuto();
+		setupNodes(node);
 
 		for(i in cl)
 		{
