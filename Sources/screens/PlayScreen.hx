@@ -56,22 +56,8 @@ class PlayScreen extends Screen implements IGameScreen
 			"health" => 1,
 			'viewRange' => 6
 			];
-		var act = new Actor(lvl.getNodeByGridXY(3,3), rl, cl, data);
+		var act = new Actor(lvl.getNodeByGridXY(14,5), rl, cl, data);
 		activeTeam.addUnit(act);
-
-		cl = [new BasicAnimator(rl), new Health(), new StateAI(), new View()];
-		data = [
-			"threatRange"=> 4,
-			"speed" => 500,
-			"targetEnemy"=> null,
-			"targetNode"=> null,
-			"aggressive" => false,
-			"damage" => 2,
-			"health" => 1,
-			'viewRange' => 4
-			];
-		var act3 = new Actor(lvl.getNodeByGridXY(3,5), rl, cl, data);
-		activeTeam.addUnit(act3);
 		
 		rl = Atlas.createRegionList(Assets.images.redknight,32,32);
 		cl = [new BasicAnimator(rl), new Health(), new StateAI(), new View()];
@@ -85,12 +71,11 @@ class PlayScreen extends Screen implements IGameScreen
 			"health" => 1,
 			'viewRange' => 4
 			];
-		var act2 = new Actor(lvl.getNodeByGridXY(13,15), rl, cl, data);
+		var act2 = new Actor(lvl.getNodeByGridXY(14,10), rl, cl, data);
 		teams[1].addUnit(act2);
 
 		add(act);
 		add(act2);
-		add(act3);
 		
 		var bgMap = new Fog(lvl.tileset);
 		var data:Array<Array<Int>> = [];
