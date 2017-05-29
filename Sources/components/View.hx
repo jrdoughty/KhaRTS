@@ -37,6 +37,7 @@ class View extends Component
 			if(!actor.data.exists('viewRange'))
 			{
 				actor.data.set('viewRange', 4);
+				trace('viewRange not set');
 			}
 		 	actor.eventDispatcher.addEvent(ClearFogEvent.CLEAR, clearNodes);
 		 	actor.eventDispatcher.addEvent(HideEvent.HIDE, function(e:HideEvent){actor.visible = false;});//uproot these when final place is found
