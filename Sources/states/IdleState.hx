@@ -20,7 +20,7 @@ class IdleState extends BaseState
 		{
 			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent(MOVING, true));
 		}
-		else if (actor.data['targetEnemy'] != null)
+		else if (actor.data['targetEnemy'] != null && actor.data['targetEnemy'].data.exists('health'))
 		{
 			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent(ATTACKING));
 		} 
