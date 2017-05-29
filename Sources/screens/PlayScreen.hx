@@ -52,7 +52,9 @@ class PlayScreen extends Screen implements IGameScreen
 			"targetEnemy"=> null,
 			"targetNode"=> null,
 			"aggressive" => false,
-			"damage" => 2
+			"damage" => 2,
+			"health" => 1,
+			'viewRange' => 6
 			];
 		var act = new Actor(lvl.getNodeByGridXY(3,3), rl, cl, data);
 		activeTeam.addUnit(act);
@@ -64,7 +66,9 @@ class PlayScreen extends Screen implements IGameScreen
 			"targetEnemy"=> null,
 			"targetNode"=> null,
 			"aggressive" => false,
-			"damage" => 2
+			"damage" => 2,
+			"health" => 1,
+			'viewRange' => 4
 			];
 		var act3 = new Actor(lvl.getNodeByGridXY(3,5), rl, cl, data);
 		activeTeam.addUnit(act3);
@@ -77,7 +81,9 @@ class PlayScreen extends Screen implements IGameScreen
 			"targetEnemy"=> null,
 			"targetNode"=> null,
 			"aggressive" => false,
-			"damage" => 2
+			"damage" => 2,
+			"health" => 1,
+			'viewRange' => 4
 			];
 		var act2 = new Actor(lvl.getNodeByGridXY(13,15), rl, cl, data);
 		teams[1].addUnit(act2);
