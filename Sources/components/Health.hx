@@ -47,7 +47,11 @@ class Health extends ActorComponent
 		object.eventDispatcher.addEvent(HideEvent.HIDE, killVisibility);
 		object.eventDispatcher.addEvent(HurtEvent.HURT, hurt);
 		createSprite();
-		actor.data.set('health',1);
+		if(!actor.data.exists('health'))
+		{
+			actor.data.set('health', 1);
+			trace('health not set');
+		}
 	}
 	
 	public function hurt(e:HurtEvent)
@@ -86,8 +90,9 @@ class Health extends ActorComponent
 		{
 			if (actor.data['health'] > 0)
 			{
-				p.points[1].x = 32*(actor.data['health']);
-				p.points[2].x = 32*(actor.data['health']);
+				trace(actor.width);
+				p.points[1].x = actor.width*(actor.data['health']);
+				p.points[2].x = actor.width*(actor.data['health']);
 			}
 			else
 			{
@@ -110,8 +115,8 @@ class Health extends ActorComponent
 	
 	public function createSprite()
 	{			
-		healthBar = new Object(object.x, object.y, Polygon.createRectangle(32, 1, Color.Red, true));
-		p = Polygon.createRectangle(32, 1, Color.Green,true);
+		healthBar = new Object(object.x, object.y, Polygon.createRectangle(actor.width, 1, Color.Red, true));
+		p = Polygon.createRectangle(actor.width, 1, Color.Green,true);
 		healthBarFill = new Object(object.x, object.y, p);
 		sdg.Sdg.screen.add(healthBar);
 		sdg.Sdg.screen.add(healthBarFill);
