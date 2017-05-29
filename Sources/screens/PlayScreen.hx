@@ -11,9 +11,15 @@ import systems.Team;
 import graphics.Fog;
 import sdg.graphics.tiles.Tilemap;
 import sdg.graphics.tiles.Tileset;
+import sdg.components.Component;
+import components.StateAI;
+import components.Health;
+import components.BasicAnimator;
+import components.View;
 import events.ClearFogEvent;
 import events.HideEvent;
 import events.RevealEvent;
+import sdg.atlas.Atlas;
 
 class PlayScreen extends Screen implements IGameScreen
 {
@@ -38,17 +44,49 @@ class PlayScreen extends Screen implements IGameScreen
 		add(lvl);
 		lvl.setSizeAuto();
 		setWorldSize(lvl.width,lvl.height);
-		var act = new Actor(lvl.getNodeByGridXY(3,3), Assets.images.knight);
+		var rl = Atlas.createRegionList(Assets.images.knight, 32, 32);
+		var cl:Array<Component> = [new BasicAnimator(rl), new Health(), new StateAI(), new View()];
+		var data: Map<String, Dynamic> = [
+			"threatRange"=> 4,
+			"speed" => 500,
+			"targetEnemy"=> null,
+			"targetNode"=> null,
+			"aggressive" => false,
+			"damage" => 2
+			];
+		var act = new Actor(lvl.getNodeByGridXY(3,3), rl, cl, data);
 		activeTeam.addUnit(act);
-		var act3 = new Actor(lvl.getNodeByGridXY(3,5), Assets.images.knight);
+
+		cl = [new BasicAnimator(rl), new Health(), new StateAI(), new View()];
+		data = [
+			"threatRange"=> 4,
+			"speed" => 500,
+			"targetEnemy"=> null,
+			"targetNode"=> null,
+			"aggressive" => false,
+			"damage" => 2
+			];
+		var act3 = new Actor(lvl.getNodeByGridXY(3,5), rl, cl, data);
 		activeTeam.addUnit(act3);
-		var act2 = new Actor(lvl.getNodeByGridXY(13,15), Assets.images.redknight);
+		
+		rl = Atlas.createRegionList(Assets.images.redknight,32,32);
+		cl = [new BasicAnimator(rl), new Health(), new StateAI(), new View()];
+		data = [
+			"threatRange"=> 4,
+			"speed" => 500,
+			"targetEnemy"=> null,
+			"targetNode"=> null,
+			"aggressive" => false,
+			"damage" => 2
+			];
+		var act2 = new Actor(lvl.getNodeByGridXY(13,15), rl, cl, data);
 		teams[1].addUnit(act2);
+
 		add(act);
 		add(act2);
 		add(act3);
-		var tileset = new Tileset(Assets.images.fogtiles, 32, 32);
-		var bgMap = new Fog(tileset);
+		
+		var bgMap = new Fog(lvl.tileset);
 		var data:Array<Array<Int>> = [];
 
 		for(y in 0...lvl.levelHeight)

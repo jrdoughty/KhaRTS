@@ -2,7 +2,9 @@ package actors;
 
 import sdg.Object;
 import sdg.atlas.Atlas;
+import sdg.components.Component;
 import sdg.graphics.Sprite;
+import sdg.atlas.Region;
 import components.BasicAnimator;
 import kha.Image;
 import world.Node;
@@ -44,28 +46,22 @@ class Actor extends Object
 	/**
 	* data storage for sharing information between components and actors
 	*/
-	public var data:Map<String, Dynamic> = new Map<String, Dynamic>();
+	public var data:Map<String, Dynamic>;
 
-	public function new(node:Node, i:Image)
+	public function new(node:Node, rl:Array<Region>, cl:Array<Component>, data:Map<String, Dynamic>)
 	{
 		super();
 		x = node.x;
 		y = node.y;
 		addComponent(new EventDispatcher());
-		var rl = Atlas.createRegionList(i,32,32);
 		setupNodes(node);
 		graphic = new Sprite(rl[0]);
-		var a = new BasicAnimator(rl);
-		addComponent(a);
-		addComponent(new Health());
-		addComponent(new components.StateAI());
-		addComponent(new View());
-		data['threatRange'] = 4;
-		data.set('speed', 500);
-		data.set('targetEnemy', null);
-		data.set('targetNode', null);
-		data.set('aggressive', false);
-		data['damage'] = 2;
+
+		for(i in cl)
+		{
+			addComponent(i);
+		}
+		this.data = data;
 	}
 	
 	/**
