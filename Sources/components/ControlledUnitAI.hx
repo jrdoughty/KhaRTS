@@ -14,11 +14,12 @@ import events.IdleAnimationEvent;
 import events.MoveToEvent;
 import tween.Delta;
 import sdg.event.EventObject;
+import components.ActorComponent;
 /**
  * ...
  * @author John Doughty
  */
-class ControlledUnitAI extends AI
+class ControlledUnitAI extends ActorComponent implements AI
 {
 	public var targetNode(default, null):Node = null;
 	public var targetEnemy:Actor = null;
@@ -297,9 +298,8 @@ class ControlledUnitAI extends AI
 	/**
 	 * drives actions based on state
 	 */
-	override function takeAction() 
+	public function takeAction() 
 	{
-		super.takeAction();
 		lastState = state;
 		checkView();
 		

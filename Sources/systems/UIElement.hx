@@ -2,6 +2,7 @@ package systems;
 
 import sdg.Object;
 import sdg.Graphic;
+import sdg.math.Vector2b;
 
 class UIElement extends Object
 {
@@ -15,6 +16,7 @@ class UIElement extends Object
 	public function new(x:Float = 0, y:Float = 0, ?graphic:Graphic):Void
 	{
 		super(x, y, graphic);
+		fixed = new Vector2b(true, true);
 		setSizeAuto();
 		leftClick = function(x:Float, y:Float){};
 		rightClick = function(x:Float, y:Float){};

@@ -47,7 +47,7 @@ class PlayScreen extends Screen implements IGameScreen
 		var rl = Atlas.createRegionList(Assets.images.knight, 32, 32);
 		var cl:Array<Component> = [new BasicAnimator(rl), new Health(), new StateAI(), new View()];
 		var data: Map<String, Dynamic> = [
-			"threatRange"=> 4,
+			"threatRange"=> 3,
 			"speed" => 500,
 			"targetEnemy"=> null,
 			"targetNode"=> null,
@@ -62,7 +62,7 @@ class PlayScreen extends Screen implements IGameScreen
 		rl = Atlas.createRegionList(Assets.images.redknight,32,32);
 		cl = [new BasicAnimator(rl), new Health(), new StateAI(), new View()];
 		data = [
-			"threatRange"=> 4,
+			"threatRange"=> 3,
 			"speed" => 500,
 			"targetEnemy"=> null,
 			"targetNode"=> null,

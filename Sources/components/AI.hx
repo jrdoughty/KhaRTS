@@ -1,15 +1,9 @@
 package components;
-import events.ActionEvent;
-import sdg.components.Component;
-import events.ActionEvent;
 /**
  * ...
  * @author John Doughty
  */
-class AI extends ActorComponent
+interface AI 
 {	
-	public function takeAction() 
-	{
-		
-	}
+	public function takeAction():Void;
 }

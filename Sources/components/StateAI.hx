@@ -10,10 +10,11 @@ import events.MoveEvent;
 import events.StopEvent;
 import events.StateChangeEvent;
 import sdg.event.EventObject;
+import components.ActorComponent;
 
 import haxe.Timer;
 
-class StateAI extends AI
+class StateAI extends ActorComponent implements AI
 {
 	var states:Map<ActorState, IState> = new Map<ActorState, IState>();
 	var state:IState;
@@ -64,7 +65,7 @@ class StateAI extends AI
 	/**
 	 * drives actions based on state
 	 */
-	override function takeAction() 
+	public function takeAction() 
 	{
 		if(nextState != null)
 		{
@@ -72,7 +73,6 @@ class StateAI extends AI
 			state = states[currentState];
 			nextState = null;
 		}
-		super.takeAction();
 		lastState = currentState;
 		state.takeAction();
 	}
