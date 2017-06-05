@@ -145,13 +145,7 @@ class UI implements IEventDispatcher
 	}
 
 	public function centerOnActor(e:CenterOnUnitEvent)
-	{
-		var oldX:Float = Sdg.screen.camera.x;
-		var oldY:Float = Sdg.screen.camera.y;
-
-		var deltaX:Float;
-		var deltaY:Float;
-		
+	{	
 		Sdg.screen.camera.x = e.actor.x - Sdg.screen.camera.halfWidth;
 		Sdg.screen.camera.y = e.actor.y - Sdg.screen.camera.halfHeight;
 		
@@ -164,10 +158,5 @@ class UI implements IEventDispatcher
 			Sdg.screen.camera.y = 0; 
 		else if(Sdg.screen.camera.y > Sdg.screen.camera.height + Sdg.gameHeight) 
 			Sdg.screen.camera.y = Sdg.gameHeight - Sdg.screen.camera.width; 
-
-		deltaX = oldX - Sdg.screen.camera.x;
-		deltaY = oldY - Sdg.screen.camera.y;
-
-		uiElements.apply(function(o:Object){o.x -= deltaX; o.y -= deltaY;});
 	}
 }

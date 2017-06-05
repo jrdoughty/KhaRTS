@@ -118,7 +118,6 @@ class InputSystem
 				delta = Sdg.screen.worldWidth - (cam.x + cam.width);
 			}
 			cam.x += delta;
-			ui.uiElements.apply(function(o:Object){o.x += delta;});
 
 		}
 		else if(Mouse.x < 2 * unitWidth && Mouse.x > 0 )
@@ -129,7 +128,6 @@ class InputSystem
 				delta = cam.x;
 			}
 			cam.x -= delta;
-			ui.uiElements.apply(function(o:Object){o.x -= delta;});
 			
 		}
 
@@ -144,7 +142,6 @@ class InputSystem
 				delta = Sdg.screen.worldHeight - (cam.y + cam.height);
 			}
 			cam.y += delta;
-			ui.uiElements.apply(function(o:Object){o.y += delta;});
 
 		}
 		else if(Mouse.y < 2 * unitHeight && Mouse.y > 0 )
@@ -155,7 +152,6 @@ class InputSystem
 				delta = cam.y;
 			}
 			cam.y -= delta;
-			ui.uiElements.apply(function(o:Object){o.y -= delta;});
 			
 		}
 	}

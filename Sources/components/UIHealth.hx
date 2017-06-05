@@ -4,6 +4,7 @@ import sdg.Object;
 import sdg.graphics.shapes.Polygon;
 import actors.Actor;
 import kha.Color;
+import sdg.math.Vector2b;
 
 class UIHealth extends Component
 {
@@ -53,10 +54,6 @@ class UIHealth extends Component
 			{
 				healthBarFill.visible = false;
 			}
-			healthBarFill.x = object.x;
-			healthBarFill.y = object.y;
-			healthBar.x = object.x;
-			healthBar.y = object.y;
 			
 		}
 	}
@@ -68,6 +65,8 @@ class UIHealth extends Component
 		healthBarFill = new Object(object.x, object.y, p);
 		sdg.Sdg.screen.add(healthBar);
 		sdg.Sdg.screen.add(healthBarFill);
+		healthBar.fixed = new Vector2b(true, true);
+		healthBarFill.fixed = new Vector2b(true, true);
 	}
 
 	public override function destroy()
