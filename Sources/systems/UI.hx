@@ -48,6 +48,21 @@ class UI implements IEventDispatcher
 		{
 			units.push(new ActorRepresentative((i * 32) % 128 + dashboard.x, Math.floor(i/4)*32 + dashboard.y, actors[i]));
 			uiElements.add(units[i]);
+			if(actors[i].data.exists('damage'))
+			{
+				//addAttack
+			}
+			if(actors[i].data.exists('targetNode'))
+			{
+				//addMove
+			}
+			if(actors[i].data.exists('targetNode') || actors[i].data.exists('damage'))
+			{
+				//addMove
+			})
+			{
+				//addMove
+			}
 		}
 		uiElements.apply(Sdg.screen.add);
 	}
