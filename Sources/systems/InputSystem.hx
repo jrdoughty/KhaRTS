@@ -24,7 +24,7 @@ enum InputState
 	CASTING;
 }
  
-class InputSystem
+class InputSystem extends SimpleEventDispatcher
 {
 	public var ui:UI;
 
@@ -49,6 +49,7 @@ class InputSystem
 	
 	public function new(state:IGameScreen) 
 	{
+		super();
 		activeScreen = state;
 		activeNodes = state.lvl.activeNodes;
 		selector = new Object(0,0,Polygon.createRectangle(10,10,kha.Color.Green,true,.2));
