@@ -2,6 +2,7 @@ package systems;
 
 import sdg.Object;
 import sdg.graphics.Sprite;
+import sdg.atlas.Region;
 import kha.Assets;
 import sdg.Sdg;
 import sdg.ObjectList;
@@ -10,6 +11,9 @@ import systems.UIElement;
 import events.KillEvent;
 import systems.ActorRepresentative;
 import events.CenterOnUnitEvent;
+import events.AttackInputEvent;
+import events.StopInputEvent;
+import events.MoveInputEvent;
 
 class UI extends SimpleEventDispatcher
 {
@@ -40,24 +44,36 @@ class UI extends SimpleEventDispatcher
 			uiElements.remove(i);
 			Sdg.screen.remove(i,true);
 		}
+		for(i in controls)
+		{
+			uiElements.remove(i);
+			Sdg.screen.remove(i,true);
+		}
+		
 		units = [];
+		controls = [];
+
 		for(i in 0...actors.length)
 		{
 			units.push(new ActorRepresentative((i * 32) % 128 + dashboard.x, Math.floor(i/4)*32 + dashboard.y, actors[i]));
 			uiElements.add(units[i]);
-			if(actors[i].data.exists('damage'))
-			{
-				controls.push(new UIElement(0,0,new sdg.graphics.Sprite(kha.Assets.images.controls)));
-				controls[controls.length-1].leftClick = function(x:Float,y:Float){};
-				uiElements.add(controls[controls.length-1]);
-			}
 			if(actors[i].data.exists('targetNode'))
 			{
-				//addMove
+				controls.push(new UIElement(dashboard.width - 96, dashboard.y, new Sprite(new Region(Assets.images.controls,0,0,32,32))));
+				controls[controls.length-1].leftClick = function(x:Float,y:Float){dispatchEvent(MoveInputEvent.MOVE, new MoveInputEvent());};
+				uiElements.add(controls[controls.length-1]);
 			}
 			if(actors[i].data.exists('targetNode') || actors[i].data.exists('damage'))
 			{
-				//addStop
+				controls.push(new UIElement(dashboard.width - 64, dashboard.y, new Sprite(new Region(Assets.images.controls,32,0,32,32))));
+				controls[controls.length-1].leftClick = function(x:Float,y:Float){dispatchEvent(StopInputEvent.STOP, new StopInputEvent());};
+				uiElements.add(controls[controls.length-1]);
+			}
+			if(actors[i].data.exists('damage'))
+			{
+				controls.push(new UIElement(dashboard.width - 32, dashboard.y, new Sprite(new Region(Assets.images.controls,64,0,32,32))));
+				controls[controls.length-1].leftClick = function(x:Float,y:Float){dispatchEvent(AttackInputEvent.ATTACK, new AttackInputEvent());};
+				uiElements.add(controls[controls.length-1]);
 			}
 		}
 		uiElements.apply(Sdg.screen.add);

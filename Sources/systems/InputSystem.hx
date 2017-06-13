@@ -11,6 +11,9 @@ import sdg.manager.Mouse;
 import sdg.manager.Keyboard;
 import sdg.graphics.shapes.Polygon;
 import sdg.Sdg;
+import events.AttackInputEvent;
+import events.MoveInputEvent;
+import events.StopInputEvent;
 /**
  * ...
  * @author ...
@@ -57,6 +60,19 @@ class InputSystem extends SimpleEventDispatcher
 		Sdg.screen.add(selector);
 		selector.visible = false;
 		ui = new UI();
+		addEvent(AttackInputEvent.ATTACK, function(e){inputState = ATTACKING; selector.visible = false;});
+		addEvent(MoveInputEvent.MOVE, function(e){inputState = MOVING; selector.visible = false;});
+		addEvent(StopInputEvent.STOP, function(e){stopActors();});
+	}
+
+	private function stopActors()
+	{
+		inputState = SELECTING;
+		for(i in selectedActors)
+		{
+			i.eventDispatcher.dispatchEvent(StopEvent.STOP, new StopEvent());
+		}
+		selector.visible = false;
 	}
 
 	public function update()
@@ -171,12 +187,7 @@ class InputSystem extends SimpleEventDispatcher
 		}
 		else if(Keyboard.isPressed('s'))
 		{
-			inputState = SELECTING;
-			for(i in selectedActors)
-			{
-				i.eventDispatcher.dispatchEvent(StopEvent.STOP, new StopEvent());
-			}
-			selector.visible = false;
+			stopActors();
 		}
 	}
 
