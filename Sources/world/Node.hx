@@ -1,9 +1,5 @@
 package world;
 import actors.Actor;
-import sdg.graphics.Sprite;
-import sdg.graphics.tiles.Tileset;
-import events.RevealEvent;
-import events.HideEvent;
 
 /**
  * ...
@@ -102,21 +98,11 @@ class Node implements Util.ITwoD
 	
 	public function removeOverlay()
 	{
-		//overlay.setAlpha(0);
 		removeShadow = true;
-		if (occupant != null)
-		{
-			//occupant.eventDispatcher.dispatchEvent(RevealEvent.REVEAL, new RevealEvent());
-		}
 	}
 	
 	public function addOverlay()
 	{
-		//overlay.setAlpha(.5);
 		removeShadow = false;
-		if (occupant != null)
-		{
-			//occupant.eventDispatcher.dispatchEvent(HideEvent.HIDE, new HideEvent());
-		}
-}
+	}
 }

@@ -53,7 +53,12 @@ class AStar
 		{
 			cleanUp();
 			path.push(end);
-			createPath(end);
+			var curNode = end;
+			while (curNode.parentNode != null)
+			{
+				path.insert(0,curNode.parentNode);
+				curNode = curNode.parentNode;
+			}
 		}
 		else
 		{
@@ -90,19 +95,6 @@ class AStar
 		openList = [];
 	}
 	
-	/**
-	 * Recursive function that populates path by going back from the end to the end,
-	 * stopping at the start which has no parent
-	 * @param	node	Node to add to path
-	 */
-	private static function createPath(node:Node)
-	{
-		if (node.parentNode != null)
-		{
-			path.insert(0,node.parentNode);
-			createPath(node.parentNode);
-		}
-	}
 
 	/**
 	 * calculates out the path recursively. returns true if it finds path
@@ -110,39 +102,33 @@ class AStar
 	 */
 	private static function calculate():Bool
 	{
-		var i:Int = 0;
-        var closestIndex:Int = -1;
-
-        for (i in 0...openList.length) 
+		while(openList.length > 0)
 		{
-            if (closestIndex == -1) 
-			{
-                closestIndex = i;
-            } 
-			else if (openList[i].getFinal() < openList[closestIndex].getFinal()) 
-			{
-                closestIndex = i;
-            }
-        }
+			var closestIndex:Int = -1;
 
-		for (i in 0...openList[closestIndex].neighbors.length) 
-		{
-			if (SetupChildNode(openList[closestIndex].neighbors[i], openList[closestIndex]))
+			for (i in 0...openList.length) 
 			{
-				return true;
+				if (closestIndex == -1) 
+				{
+					closestIndex = i;
+				} 
+				else if (openList[i].getFinal() < openList[closestIndex].getFinal()) 
+				{
+					closestIndex = i;
+				}
 			}
-        }
-        closedList.push(openList[closestIndex]);
-        openList.splice(closestIndex, 1);
 
-        if (openList.length > 0) 
-		{
-            return calculate();
-        }
-		else
-		{
-			return false;
+			for (i in 0...openList[closestIndex].neighbors.length) 
+			{
+				if (SetupChildNode(openList[closestIndex].neighbors[i], openList[closestIndex]))
+				{
+					return true;
+				}
+			}
+			closedList.push(openList[closestIndex]);
+			openList.splice(closestIndex, 1);
 		}
+		return false;
 	}
 	
 	/**
