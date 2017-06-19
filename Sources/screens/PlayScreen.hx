@@ -49,9 +49,8 @@ class PlayScreen extends Screen implements IGameScreen
 		var data: Map<String, Dynamic> = [
 			"threatRange"=> 3,
 			"speed" => 500,
-			"targetEnemy"=> null,
-			"targetNode"=> null,
 			"aggressive" => false,
+			"mobile" => true,
 			"damage" => 2,
 			"health" => 1,
 			'viewRange' => 6
@@ -64,9 +63,8 @@ class PlayScreen extends Screen implements IGameScreen
 		data = [
 			"threatRange"=> 3,
 			"speed" => 500,
-			"targetEnemy"=> null,
-			"targetNode"=> null,
 			"aggressive" => false,
+			"mobile" => true,
 			"damage" => 2,
 			"health" => 1,
 			'viewRange' => 4

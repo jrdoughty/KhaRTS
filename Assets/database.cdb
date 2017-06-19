@@ -1,0 +1,87 @@
+{
+	"sheets": [
+		{
+			"name": "database",
+			"columns": [
+				{
+					"typeStr": "1",
+					"name": "name"
+				},
+				{
+					"typeStr": "1",
+					"name": "image",
+					"display": null
+				},
+				{
+					"typeStr": "2",
+					"name": "mobile"
+				},
+				{
+					"typeStr": "2",
+					"name": "aggressive",
+					"opt": true,
+					"display": null
+				},
+				{
+					"typeStr": "3",
+					"name": "threatRange",
+					"opt": true
+				},
+				{
+					"typeStr": "3",
+					"name": "viewRange",
+					"opt": true
+				},
+				{
+					"typeStr": "3",
+					"name": "speed",
+					"opt": true
+				},
+				{
+					"typeStr": "3",
+					"name": "damage",
+					"opt": true
+				},
+				{
+					"typeStr": "4",
+					"name": "health",
+					"display": 1
+				},
+				{
+					"typeStr": "3",
+					"name": "healthMax"
+				}
+			],
+			"lines": [
+				{
+					"name": "soldier",
+					"health": 1,
+					"threatRange": 3,
+					"speed": 500,
+					"aggressive": false,
+					"damage": 2,
+					"viewRange": 6,
+					"image": "knight",
+					"healthMax": 5,
+					"mobile": false
+				},
+				{
+					"name": "enemy",
+					"health": 1,
+					"image": "redknight",
+					"threatRange": 3,
+					"speed": 500,
+					"aggressive": false,
+					"damage": 2,
+					"viewRange": 6,
+					"healthMax": 5,
+					"mobile": false
+				}
+			],
+			"separators": [],
+			"props": {}
+		}
+	],
+	"customTypes": [],
+	"compress": false
+}

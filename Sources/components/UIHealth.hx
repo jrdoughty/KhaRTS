@@ -2,6 +2,7 @@ package components;
 import sdg.components.Component;
 import sdg.Object;
 import sdg.graphics.shapes.Polygon;
+import sdg.graphics.Sprite;
 import actors.Actor;
 import kha.Color;
 import sdg.math.Vector2b;
@@ -47,8 +48,8 @@ class UIHealth extends Component
 		{
 			if (actor.data['health'] > 0)
 			{
-				p.points[1].x = 32*(actor.data['health']);
-				p.points[2].x = 32*(actor.data['health']);
+				p.points[1].x = object.width*(actor.data['health']);
+				p.points[2].x = object.width*(actor.data['health']);
 			}
 			else
 			{
@@ -60,8 +61,8 @@ class UIHealth extends Component
 	
 	public function createSprite()
 	{			
-		healthBar = new Object(object.x, object.y, Polygon.createRectangle(32, 1, Color.Red, true));
-		p = Polygon.createRectangle(32, 1, Color.Green,true);
+		healthBar = new Object(object.x, object.y, Polygon.createRectangle(object.width, 2, Color.Red, true));
+		p = Polygon.createRectangle(object.width, 2, Color.Green,true);
 		healthBarFill = new Object(object.x, object.y, p);
 		sdg.Sdg.screen.add(healthBar);
 		sdg.Sdg.screen.add(healthBarFill);

@@ -23,6 +23,7 @@ class UI extends SimpleEventDispatcher
 	 */
 	private var dashboard:Object;
 	private var units:Array<ActorRepresentative> = [];
+	private var focusUnit:ActorRepresentative;
 	private var controls:Array<UIElement> = [];
 
 	public function new()
@@ -49,9 +50,14 @@ class UI extends SimpleEventDispatcher
 			uiElements.remove(i);
 			Sdg.screen.remove(i,true);
 		}
-		
+		if(focusUnit != null)
+		{
+			uiElements.remove(focusUnit);
+			Sdg.screen.remove(focusUnit, true);
+		}
 		units = [];
 		controls = [];
+		focusUnit = null;
 
 		for(i in 0...actors.length)
 		{
@@ -75,6 +81,11 @@ class UI extends SimpleEventDispatcher
 				controls[controls.length-1].leftClick = function(x:Float,y:Float){dispatchEvent(AttackInputEvent.ATTACK, new AttackInputEvent());};
 				uiElements.add(controls[controls.length-1]);
 			}
+		}
+		if(units.length > 0)
+		{
+			focusUnit = units[0].clone(192, dashboard.y, 4, 4);
+			uiElements.add(focusUnit);
 		}
 		uiElements.apply(Sdg.screen.add);
 	}

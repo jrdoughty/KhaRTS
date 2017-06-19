@@ -197,8 +197,8 @@ class InputSystem extends SimpleEventDispatcher
 		var intersetingUIElements = [];
 		for(i in ui.uiElements.objects)
 		{
-			if(i.x<= relativeMouseX && relativeMouseX <= i.x + i.width &&
-			i.y <= relativeMouseY && relativeMouseY <= i.y + i.height)
+			if(i.x<= Mouse.x && Mouse.x <= i.x + i.width &&
+			i.y <= Mouse.y && Mouse.y <= i.y + i.height)
 			{
 				intersetingUIElements.push(i);
 			}
@@ -207,7 +207,7 @@ class InputSystem extends SimpleEventDispatcher
 		{
 			for(i in intersetingUIElements)
 			{
-				cast(i, UIElement).leftClick(relativeMouseX, relativeMouseY);
+				cast(i, UIElement).leftClick(Mouse.x, Mouse.y);
 			}
 		}
 		else if(inputState == SELECTING)
@@ -266,8 +266,8 @@ class InputSystem extends SimpleEventDispatcher
 		var intersetingUIElements = [];
 		for(i in ui.uiElements.objects)
 		{
-			if(i.x<= relativeMouseX && relativeMouseX <= i.x + i.width &&
-			i.y <= relativeMouseY && relativeMouseY <= i.y + i.height)
+			if(i.x<= Mouse.x && Mouse.x <= i.x + i.width &&
+			i.y <= Mouse.y && Mouse.y <= i.y + i.height)
 			{
 				intersetingUIElements.push(i);
 			}
@@ -276,7 +276,7 @@ class InputSystem extends SimpleEventDispatcher
 		{
 			for(i in intersetingUIElements)
 			{
-				cast(i, UIElement).leftDown(relativeMouseX, relativeMouseY);
+				cast(i, UIElement).leftDown(Mouse.x, Mouse.y);
 			}
 		}
 		else if(inputState == SELECTING)
