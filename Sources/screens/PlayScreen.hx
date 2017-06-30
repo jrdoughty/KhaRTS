@@ -29,6 +29,7 @@ class PlayScreen extends Screen implements IGameScreen
 	public var dashboard(default,null):Object;
 	public var inputSystem:InputSystem;
 	public var fogOfWar:Object;
+	
 	public function new()
 	{
 		super();
@@ -36,6 +37,7 @@ class PlayScreen extends Screen implements IGameScreen
 	public override function init()
 	{
 		super.init();
+
 		activeTeam = new Team();
 		teams.push(activeTeam);
 		teams.push(new Team());
@@ -44,17 +46,10 @@ class PlayScreen extends Screen implements IGameScreen
 		add(lvl);
 		lvl.setSizeAuto();
 		setWorldSize(lvl.width,lvl.height);
-		var rl = Atlas.createRegionList(Assets.images.knight, 32, 32);
+		var data: Map<String, Dynamic> = systems.Data.dataMap['units']['soldier'];
+		var image:kha.Image = Reflect.field(Assets.images, data['image']);
+		var rl = Atlas.createRegionList(image, 32, 32);
 		var cl:Array<Component> = [new BasicAnimator(rl), new Health(), new StateAI(), new View()];
-		var data: Map<String, Dynamic> = [
-			"threatRange"=> 3,
-			"speed" => 500,
-			"aggressive" => false,
-			"mobile" => true,
-			"damage" => 2,
-			"health" => 1,
-			'viewRange' => 6
-			];
 		var act = new Actor(lvl.getNodeByGridXY(14,5), rl, cl, data);
 		activeTeam.addUnit(act);
 		

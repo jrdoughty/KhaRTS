@@ -51,11 +51,6 @@ class Node implements Util.ITwoD
 		return (passable);
 	}
 	
-	public function resetState():Void
-	{
-		//playAnimation("main");
-	}
-	
 	public function getFinal():Int
 	{
 		return heiristic + g;
