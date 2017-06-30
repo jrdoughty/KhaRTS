@@ -63,13 +63,13 @@ class UI extends SimpleEventDispatcher
 		{
 			units.push(new ActorRepresentative((i * 32) % 128 + dashboard.x, Math.floor(i/4)*32 + dashboard.y, actors[i]));
 			uiElements.add(units[i]);
-			if(actors[i].data.exists('targetNode'))
+			if(actors[i].data['mobile'])
 			{
 				controls.push(new UIElement(dashboard.width - 96, dashboard.y, new Sprite(new Region(Assets.images.controls,0,0,32,32))));
 				controls[controls.length-1].leftClick = function(x:Float,y:Float){dispatchEvent(MoveInputEvent.MOVE, new MoveInputEvent());};
 				uiElements.add(controls[controls.length-1]);
 			}
-			if(actors[i].data.exists('targetNode') || actors[i].data.exists('damage'))
+			if(actors[i].data['mobile'] || actors[i].data.exists('damage'))
 			{
 				controls.push(new UIElement(dashboard.width - 64, dashboard.y, new Sprite(new Region(Assets.images.controls,32,0,32,32))));
 				controls[controls.length-1].leftClick = function(x:Float,y:Float){dispatchEvent(StopInputEvent.STOP, new StopInputEvent());};

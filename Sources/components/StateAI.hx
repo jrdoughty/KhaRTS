@@ -38,9 +38,12 @@ class StateAI extends ActorComponent implements AI
 	public override function init()
 	{
 		super.init();
-		object.eventDispatcher.addEvent(MoveEvent.MOVE, MoveToNode);
-		object.eventDispatcher.addEvent(TargetEvent.ATTACK_ACTOR, TargetActor);
-		object.eventDispatcher.addEvent(StopEvent.STOP, resetStates);
+		if(actor.data['mobile'])
+			object.eventDispatcher.addEvent(MoveEvent.MOVE, MoveToNode);
+		if(actor.data['damage'])
+			object.eventDispatcher.addEvent(TargetEvent.ATTACK_ACTOR, TargetActor);
+		if(actor.data['damage'] || actor.data['mobile'])
+			object.eventDispatcher.addEvent(StopEvent.STOP, resetStates);
 		object.eventDispatcher.addEvent(StateChangeEvent.CHANGE, changeState);
 		
 		states.set(IDLE, new IdleState(actor));

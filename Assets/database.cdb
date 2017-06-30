@@ -63,7 +63,7 @@
 					"viewRange": 6,
 					"image": "knight",
 					"healthMax": 5,
-					"mobile": false
+					"mobile": true
 				},
 				{
 					"name": "enemy",
@@ -75,7 +75,7 @@
 					"damage": 2,
 					"viewRange": 6,
 					"healthMax": 5,
-					"mobile": false
+					"mobile": true
 				}
 			],
 			"separators": [],

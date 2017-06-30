@@ -16,7 +16,7 @@ class IdleState extends BaseState
 			actor.data['targetEnemy'] = getEnemyInThreat();
 		}
 
-		if (actor.data['targetNode'] != null)
+		if (actor.data['targetNode'] != null && actor.data['mobile'])
 		{
 			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent(MOVING, true));
 		}

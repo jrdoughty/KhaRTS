@@ -46,11 +46,11 @@ class PlayScreen extends Screen implements IGameScreen
 		add(lvl);
 		lvl.setSizeAuto();
 		setWorldSize(lvl.width,lvl.height);
-		var data: Map<String, Dynamic> = systems.Data.dataMap['units']['soldier'];
-		var image:kha.Image = Reflect.field(Assets.images, data['image']);
+		var data: Map<String, Dynamic>;
+		var image:kha.Image = Reflect.field(Assets.images, systems.Data.dataMap['units']['soldier']['image']);
 		var rl = Atlas.createRegionList(image, 32, 32);
 		var cl:Array<Component> = [new BasicAnimator(rl), new Health(), new StateAI(), new View()];
-		var act = new Actor(lvl.getNodeByGridXY(14,5), rl, cl, data);
+		var act = new Actor(lvl.getNodeByGridXY(14,5), rl, cl, systems.Data.dataMap['units']['soldier']);
 		activeTeam.addUnit(act);
 		
 		rl = Atlas.createRegionList(Assets.images.redknight,32,32);
