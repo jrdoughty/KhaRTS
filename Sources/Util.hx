@@ -95,4 +95,9 @@ class Util
 		}
 		return result;
 	}
+
+	public static inline function getOrInit<K,V>(m:Map<K,V>,k:K,init:Void->V):V 
+	{
+      return if (m.exists(k)) m[k] else m[k] = init();
+	}
 }

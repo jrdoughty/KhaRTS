@@ -23,7 +23,7 @@ class AttackState extends BaseState
 			{
 				hit();
 			}
-			else
+			else if(actor.data['mobile'])
 			{
 				chase();
 			}

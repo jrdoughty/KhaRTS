@@ -55,15 +55,7 @@ class PlayScreen extends Screen implements IGameScreen
 		
 		rl = Atlas.createRegionList(Assets.images.redknight,32,32);
 		cl = [new BasicAnimator(rl), new Health(), new StateAI(), new View()];
-		data = [
-			"threatRange"=> 3,
-			"speed" => 500,
-			"aggressive" => false,
-			"mobile" => true,
-			"damage" => 2,
-			"health" => 1,
-			'viewRange' => 4
-			];
+		data = systems.Data.dataMap['units']['enemy'];
 		var act2 = new Actor(lvl.getNodeByGridXY(14,10), rl, cl, data);
 		teams[1].addUnit(act2);
 		

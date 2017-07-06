@@ -2,15 +2,13 @@ package components;
 
 import actors.Actor;
 import states.IState;
-import states.IdleState;
-import states.AttackState;
-import states.MoveState;
 import events.TargetEvent;
 import events.MoveEvent;
 import events.StopEvent;
 import events.StateChangeEvent;
 import sdg.event.EventObject;
 import components.ActorComponent;
+import states.StateFactory;
 
 import haxe.Timer;
 
@@ -46,9 +44,10 @@ class StateAI extends ActorComponent implements AI
 			object.eventDispatcher.addEvent(StopEvent.STOP, resetStates);
 		object.eventDispatcher.addEvent(StateChangeEvent.CHANGE, changeState);
 		
-		states.set(IDLE, new IdleState(actor));
-		states.set(MOVING, new MoveState(actor));
-		states.set(ATTACKING, new AttackState(actor));
+		//states.set(IDLE, new IdleState(actor));
+		states.set(IDLE, StateFactory.create('idle',actor));
+		states.set(MOVING, StateFactory.create('move',actor));
+		states.set(ATTACKING, StateFactory.create('attack',actor));
 		state = states.get(IDLE);
 		//Keeps mass created units from updating at the exact same time. 
 		//Idea from: http://answers.unity3d.com/questions/419786/a-pathfinding-multiple-enemies-MOVING-target-effic.html

@@ -18,10 +18,6 @@ import kha.Color;
 class Health extends ActorComponent
 {
 	/**
-	 * Int used to decide health using health as a percent of healthMax total
-	 */
-	public var healthMax:Int = 8;
-	/**
 	 * simple health bar sprite
 	 */
 	private var healthBar:Object;
@@ -33,10 +29,9 @@ class Health extends ActorComponent
 	
 	private var p:Polygon;//shortcut
 	
-	public function new(max:Int = 8) 
+	public function new() 
 	{
 		super();
-		healthMax = max;
 	}
 	
 	override public function init() 
@@ -47,17 +42,16 @@ class Health extends ActorComponent
 		object.eventDispatcher.addEvent(HideEvent.HIDE, killVisibility);
 		object.eventDispatcher.addEvent(HurtEvent.HURT, hurt);
 		createSprite();
-		if(!actor.data.exists('health'))
-		{
-			actor.data.set('health', 1);
-			trace('health not set');
-		}
+
+		Util.getOrInit(actor.data, 'healthMax', function(){return cast 1;});
+		Util.getOrInit(actor.data, 'health', function(){return cast 1;});
+
 	}
 	
 	public function hurt(e:HurtEvent)
 	{
 		
-			actor.data['health'] -= e.damage / healthMax;
+			actor.data['health'] -= e.damage / actor.data['healthMax'];
 	}
 	
 	/**
