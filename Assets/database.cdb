@@ -84,7 +84,7 @@
 					"damage": 2,
 					"viewRange": 6,
 					"healthMax": 5,
-					"mobile": false,
+					"mobile": true,
 					"states": []
 				}
 			],

@@ -23,7 +23,7 @@ import sdg.atlas.Atlas;
 
 class PlayScreen extends Screen implements IGameScreen
 {
-	public var lvl:Level = new Level();	
+	public var lvl:Level;	
 	public var teams(default,null):Array<Team> = [];
 	public var activeTeam(default,null):Team;
 	public var dashboard(default,null):Object;
@@ -41,7 +41,7 @@ class PlayScreen extends Screen implements IGameScreen
 		activeTeam = new Team();
 		teams.push(activeTeam);
 		teams.push(new Team());
-		lvl = new Level();
+		lvl = new Level(Assets.blobs.level_tmx.toString(), Assets.images.hyptosistiles);
 		AStar.setLevel(lvl);
 		add(lvl);
 		lvl.setSizeAuto();

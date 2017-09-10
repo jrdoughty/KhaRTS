@@ -2,6 +2,7 @@ package world;
 
 import kha.Assets;
 import kha.Scheduler;
+import kha.Image;
 import format.tmx.Reader;
 import format.tmx.Data.TmxMap;
 import format.tmx.Data.TmxTileLayer;
@@ -27,14 +28,14 @@ class Level extends Object
 	public var levelHeight:Int;
 
 	private var diagonal:Bool = false;
-	public function new() 
+	public function new(xmlString:String, tilesetImage:Image) 
 	{
 		super();
-		var r = new Reader(Xml.parse(Assets.blobs.level_tmx.toString()));
+		var r = new Reader(Xml.parse(xmlString));
 		var t:TmxMap = r.read();
 		levelWidth = t.width;
 		levelHeight = t.height;
-		tileset = new Tileset(Assets.images.hyptosistiles, 32, 32);
+		tileset = new Tileset(tilesetImage, t.tileWidth, t.tileHeight);
 		var bgMap = new Tilemap(tileset);
 		var fgMap = new Tilemap(tileset);
 		var i = -1;
