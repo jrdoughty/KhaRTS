@@ -50,22 +50,22 @@ class PlayScreen extends Screen implements IGameScreen
 		var image:kha.Image = Reflect.field(Assets.images, systems.Data.dataMap['units']['soldier']['image']);
 		var rl = Atlas.createRegionList(image, 32, 32);
 		var cl:Array<Component> = [new BasicAnimator(rl), new Health(), new StateAI(), new View()];
-		var act = new Actor(lvl.getNodeByGridXY(14,5), rl, cl, systems.Data.dataMap['units']['soldier']);
+		var act = new Actor(lvl.getNodeByGridXY(0,0), rl, cl, systems.Data.dataMap['units']['soldier']);
 		activeTeam.addUnit(act);
 		
-		rl = Atlas.createRegionList(Assets.images.redknight,32,32);
+		rl = Atlas.createRegionList(Assets.images.redknight, 32, 32);
 		cl = [new BasicAnimator(rl), new Health(), new StateAI(), new View()];
 		data = systems.Data.dataMap['units']['enemy'];
-		var act2 = new Actor(lvl.getNodeByGridXY(14,10), rl, cl, data);
+		var act2 = new Actor(lvl.getNodeByGridXY(0,7), rl, cl, data);
 		teams[1].addUnit(act2);
-		
+		/*
 		rl = Atlas.createRegionList(Assets.images.tree,64,64);
 		cl = [];
 		data = ["wood" => 5];
-		var act3 = new Actor(lvl.getNodeByGridXY(14,2), rl, cl, data);
+		var act3 = new Actor(lvl.getNodeByGridXY(5,2), rl, cl, data);
 		add(act3);
 		teams[1].addUnit(act3);//temporary
-
+		*/
 		add(act);
 		add(act2);
 		

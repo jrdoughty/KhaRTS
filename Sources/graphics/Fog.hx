@@ -72,8 +72,8 @@ class Fog extends Tilemap
 		var config:Int = 0;
 		if(map[r][c] == 0) config += TOP_LEFT;
 		if(c < map[r].length && map[r][c+1] == 0) config += TOP_RIGHT;
-		if(r < map.length && c < map[r].length && map[r+1][c+1] == 0) config += BOTTOM_RIGHT;
-		if(r < map.length && map[r+1][c] == 0) config += BOTTOM_LEFT;
+		if(r < map.length - 1 && c < map[r].length-1 && map[r+1][c+1] == 0) config += BOTTOM_RIGHT;
+		if(r < map.length - 1 && map[r+1][c] == 0) config += BOTTOM_LEFT;
 		
 		canvas.g2.color = kha.Color.Black;
 		
@@ -173,12 +173,5 @@ class Fog extends Tilemap
 				canvas.g2.fillRect(_px, _py, quarTW, quarTH);
 			default:
 		}
-	}
-
-	private function drawbasic(canvas:kha.Canvas, _px:Float, _py:Float)
-	{
-		canvas.g2.color = kha.Color.Black;
-		canvas.g2.opacity = DARK;
-		canvas.g2.fillRect(_px, _py, 64, 64);
 	}
 }

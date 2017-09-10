@@ -200,7 +200,7 @@ class InputSystem extends SimpleEventDispatcher
 			if(i.x<= Mouse.x && Mouse.x <= i.x + i.width &&
 			i.y <= Mouse.y && Mouse.y <= i.y + i.height)
 			{
-				intersetingUIElements.push(i);
+				intersetingUIElements.push(i); 
 			}
 		}
 		if (intersetingUIElements.length != 0)
@@ -216,7 +216,8 @@ class InputSystem extends SimpleEventDispatcher
 			for(i in activeNodes)
 			{
 				if(Util.doObjectandITwoDOverlap(selector, i) && 
-				activeScreen.activeTeam.units.indexOf(i.occupant) != -1)
+				activeScreen.activeTeam.units.indexOf(i.occupant) != -1 &&
+				selectedActors.indexOf(i.occupant) == -1)
 				{
 					selectedActors.push(i.occupant);
 				}
