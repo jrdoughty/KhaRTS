@@ -100,4 +100,14 @@ class Util
 	{
       return if (m.exists(k)) m[k] else m[k] = init();
 	}
+
+	public static function cloneStringMap(m:Map<String,Dynamic>):Map<String,Dynamic>
+	{
+		var resultMap = new Map<String,Dynamic>();
+		for(i in m.keys())
+		{
+			resultMap[i] = m[i];
+		}
+		return resultMap;
+	}
 }

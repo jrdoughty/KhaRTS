@@ -232,7 +232,7 @@ class InputSystem extends SimpleEventDispatcher
 			var j = 0;
 			for(i in selectedActors) 
 			{
-				i.eventDispatcher.dispatchEvent(MoveEvent.MOVE, new MoveEvent(activeScreen.lvl.getNodeByGridXY(node.nodeX + j, node.nodeY), false));
+				i.eventDispatcher.dispatchEvent(MoveEvent.MOVE, new MoveEvent(activeScreen.lvl.getNodeByGridXY(node.nodeX + Math.floor(j % Math.sqrt(selectedActors.length))-Math.floor(Math.sqrt(selectedActors.length)/2), node.nodeY + Math.floor(j/Math.sqrt(selectedActors.length))-Math.floor(Math.sqrt(selectedActors.length)/2)), false));
 				j++;
 			}
 			inputState = SELECTING;
@@ -245,7 +245,7 @@ class InputSystem extends SimpleEventDispatcher
 			{
 				if(node.occupant == null)
 				{
-					i.eventDispatcher.dispatchEvent(MoveEvent.MOVE, new MoveEvent(activeScreen.lvl.getNodeByGridXY(node.nodeX + j, node.nodeY), true));
+					i.eventDispatcher.dispatchEvent(MoveEvent.MOVE, new MoveEvent(activeScreen.lvl.getNodeByGridXY(node.nodeX + Math.floor(j % Math.sqrt(selectedActors.length))-Math.floor(Math.sqrt(selectedActors.length)/2), node.nodeY + Math.floor(j/Math.sqrt(selectedActors.length))-Math.floor(Math.sqrt(selectedActors.length)/2)), false));
 				}
 				else
 				{
@@ -313,7 +313,9 @@ class InputSystem extends SimpleEventDispatcher
 						if(i.occupant != null && i.occupant.team != j.team)
 							j.eventDispatcher.dispatchEvent(TargetEvent.ATTACK_ACTOR, new TargetEvent(i.occupant));
 						else
-							j.eventDispatcher.dispatchEvent(MoveEvent.MOVE, new MoveEvent(activeScreen.lvl.getNodeByGridXY(i.nodeX + k,i.nodeY), false));
+						{
+							j.eventDispatcher.dispatchEvent(MoveEvent.MOVE, new MoveEvent(activeScreen.lvl.getNodeByGridXY(i.nodeX + Math.floor(k % Math.sqrt(selectedActors.length))-Math.floor(Math.sqrt(selectedActors.length)/2), i.nodeY + Math.floor(k/Math.sqrt(selectedActors.length))-Math.floor(Math.sqrt(selectedActors.length)/2)), false));
+						}
 						k++;
 					}
 				}
