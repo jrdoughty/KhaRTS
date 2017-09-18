@@ -1,16 +1,14 @@
 package states;
 
 import events.IdleAnimationEvent;
-import actors.Actor;
 import events.StateChangeEvent;
 
 
-class IdleState extends BaseState
+class WanderState extends BaseState
 {
 
 	public override function takeAction()
 	{	
-		//trace('test');
 		if(actor.data['targetNode'] == null && actor.data['targetEnemy'] == null)
 		{
 			checkView();
@@ -27,7 +25,13 @@ class IdleState extends BaseState
 		} 
 		else
 		{
-			actor.eventDispatcher.dispatchEvent(IdleAnimationEvent.IDLE, new IdleAnimationEvent());
+			if(Math.random() <.5)
+			{
+				actor.data['targetNode'] = actor.currentNodes[0].neighbors[Math.floor(Math.random() * actor.currentNodes[0].neighbors.length)];
+				actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('moving', true));
+			}
+			else
+				actor.eventDispatcher.dispatchEvent(IdleAnimationEvent.IDLE, new IdleAnimationEvent());
 		}
 	}
 	

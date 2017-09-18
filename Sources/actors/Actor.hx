@@ -1,30 +1,16 @@
 package actors;
 
 import sdg.Object;
-import sdg.atlas.Atlas;
 import sdg.components.Component;
 import sdg.graphics.Sprite;
 import sdg.atlas.Region;
-import components.BasicAnimator;
-import kha.Image;
 import world.Node;
-import systems.AStar;
 import systems.Team;
 import sdg.components.EventDispatcher;
-import components.Health;
-import components.ControlledUnitAI;
-import components.View;
 /**
  * @author John Doughty
  */
-enum ActorState 
-{
-	MOVING;
-	ATTACKING;
-	IDLE;
-	BUSY;
-	CHASING;
-}
+
 class Actor extends Object
 {
 	/**

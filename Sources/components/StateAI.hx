@@ -9,16 +9,16 @@ import events.StateChangeEvent;
 import sdg.event.EventObject;
 import components.ActorComponent;
 import states.StateFactory;
-
+import systems.Data;
 import haxe.Timer;
 
 class StateAI extends ActorComponent implements AI
 {
-	var states:Map<ActorState, IState> = new Map<ActorState, IState>();
+	var states:Map<String, IState> = new Map<String, IState>();
 	var state:IState;
-	var nextState:ActorState;
-	var currentState:ActorState;
-	var lastState:ActorState = null;
+	var nextState:String;
+	var currentState:String;
+	var lastState:String = null;
 	/**
 	 * timer whose frequency is set by speed
 	 */
@@ -36,19 +36,20 @@ class StateAI extends ActorComponent implements AI
 	public override function init()
 	{
 		super.init();
-		if(actor.data['mobile'])
-			object.eventDispatcher.addEvent(MoveEvent.MOVE, MoveToNode);
-		if(actor.data['damage'])
-			object.eventDispatcher.addEvent(TargetEvent.ATTACK_ACTOR, TargetActor);
-		if(actor.data['damage'] || actor.data['mobile'])
-			object.eventDispatcher.addEvent(StopEvent.STOP, resetStates);
+
+		object.eventDispatcher.addEvent(StopEvent.STOP, resetStates);
 		object.eventDispatcher.addEvent(StateChangeEvent.CHANGE, changeState);
+
+		var ais:Array<Dynamic> = cast (Data.dataMap['ai'][actor.data['ai']]['states'], Array<Dynamic>);
+		for(i in ais)
+		{
+			var key:String = 'idle';
+			if(i.name.indexOf('main') == -1)
+				key = i.name;
+			states.set(key, StateFactory.create(i.name, actor));
+		}
 		
-		//states.set(IDLE, new IdleState(actor));
-		states.set(IDLE, StateFactory.create('idle',actor));
-		states.set(MOVING, StateFactory.create('move',actor));
-		states.set(ATTACKING, StateFactory.create('attack',actor));
-		state = states.get(IDLE);
+		state = states.get('idle');
 		//Keeps mass created units from updating at the exact same time. 
 		//Idea from: http://answers.unity3d.com/questions/419786/a-pathfinding-multiple-enemies-MOVING-target-effic.html
 		delayTimer = new Timer(Math.floor(300*Math.random()));
@@ -78,38 +79,15 @@ class StateAI extends ActorComponent implements AI
 		lastState = currentState;
 		state.takeAction();
 	}
-	/**
-	 * sets target to start either attack or chase sequence
-	 * @param	aEvent 	holds target Actor, may need qualifier eventually
-	 */
-	public function TargetActor(aEvent:TargetEvent)
-	{
-		resetStates();
-		actor.data['targetEnemy'] = aEvent.target;
-	}
-	/**
-	 * sets node to move to with move sequence, if the event says aggressive, it attacks enemies on the way
-	 * if aggressive is off, it will ignore all enemies
-	 * @param	moveEvent
-	 */
-	public function MoveToNode(moveEvent:MoveEvent)
-	{
-		resetStates();
-		actor.data['targetNode'] = moveEvent.node;
-		actor.data['aggressive'] = moveEvent.aggressive;
-	}
 	
 	/**
-	 * resets all the decision making vars to null or false
+	 * resets state to idle
 	 * 
 	 * @param	eO		EventObject is required for listenerCallbacks
 	 */
-	public function resetStates(eO:EventObject = null):Void 
+	public function resetStates(eO:StopEvent = null):Void 
 	{
-		actor.data.set('targetEnemy', null);
-		actor.data.set('targetNode', null);
-		actor.data.set('aggressive', false);
-		nextState = IDLE;
+		nextState = 'idle';
 	}
 
 	private function changeState(e:StateChangeEvent)

@@ -8,11 +8,25 @@ import events.IdleAnimationEvent;
 import world.Node;
 import systems.AStar;
 import tween.Delta;
+import events.StopEvent;
+import events.TargetEvent;
 
 class AttackState extends BaseState
 {
 	private var path:Array<Node> = [];
 	private var failedToMove:Bool = false;
+
+	public function new(a:Actor)
+	{
+		super(a);
+		
+		if(a.data['damage'])
+			a.eventDispatcher.addEvent(TargetEvent.ATTACK_ACTOR, TargetActor);
+		else
+			trace('attacking unit created without damage value');
+		a.eventDispatcher.addEvent(StopEvent.STOP, resetData);
+	}
+
 	public override function takeAction()
 	{
 		var i:Int;
@@ -33,7 +47,7 @@ class AttackState extends BaseState
 			if(actor.data['targetEnemy'] != null && !actor.data['targetEnemy'].alive)
 				actor.data['targetEnemy'] = null;
 			
-			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent(IDLE, true));
+			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('idle', true));
 		}
 	}
 		
@@ -114,5 +128,26 @@ class AttackState extends BaseState
 		Delta.tween(actor)
 			.prop("x",actor.currentNodes[0].x,actor.data['speed']/1000)
 			.prop("y",actor.currentNodes[0].y,actor.data['speed']/1000); //Finally report completion;
+	}
+	/**
+	 * sets target to start either attack or chase sequence
+	 * @param	aEvent 	holds target Actor, may need qualifier eventually
+	 */
+	public function TargetActor(aEvent:TargetEvent)
+	{
+		actor.eventDispatcher.dispatchEvent(StopEvent.STOP, new StopEvent());
+		actor.data['targetEnemy'] = aEvent.target;
+	}
+	
+	
+	/**
+	 * resets all the decision making vars to null or false
+	 * 
+	 * @param	eO		EventObject is required for listenerCallbacks
+	 */
+	public function resetData(eO:StopEvent = null):Void 
+	{
+		actor.data.set('targetEnemy', null);
+		actor.data.set('aggressive', false);
 	}
 }
