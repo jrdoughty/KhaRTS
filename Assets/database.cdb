@@ -48,12 +48,12 @@
 					"display": 1
 				},
 				{
-					"typeStr": "8",
-					"name": "states"
-				},
-				{
 					"typeStr": "3",
 					"name": "healthMax"
+				},
+				{
+					"typeStr": "6:ai",
+					"name": "ai"
 				}
 			],
 			"lines": [
@@ -68,11 +68,7 @@
 					"image": "knight",
 					"healthMax": 5,
 					"mobile": true,
-					"states": [
-						{
-							"name": "Idle"
-						}
-					]
+					"ai": "soldier"
 				},
 				{
 					"name": "enemy",
@@ -85,32 +81,17 @@
 					"viewRange": 6,
 					"healthMax": 5,
 					"mobile": true,
-					"states": []
+					"ai": "soldier"
 				}
 			],
 			"separators": [],
 			"props": {}
 		},
 		{
-			"name": "units@states",
-			"props": {
-				"hide": true
-			},
-			"separators": [],
-			"lines": [],
-			"columns": [
-				{
-					"typeStr": "1",
-					"name": "name",
-					"display": null
-				}
-			]
-		},
-		{
 			"name": "ai",
 			"columns": [
 				{
-					"typeStr": "1",
+					"typeStr": "0",
 					"name": "name"
 				},
 				{
@@ -124,13 +105,13 @@
 					"name": "soldier",
 					"states": [
 						{
-							"name": "idle"
+							"name": "main_idle"
 						},
 						{
-							"name": "attack"
+							"name": "attacking"
 						},
 						{
-							"name": "move"
+							"name": "moving"
 						}
 					]
 				}
@@ -162,13 +143,13 @@
 			],
 			"lines": [
 				{
-					"name": "attack"
+					"name": "attacking"
 				},
 				{
-					"name": "move"
+					"name": "moving"
 				},
 				{
-					"name": "idle"
+					"name": "main_idle"
 				}
 			],
 			"separators": [],

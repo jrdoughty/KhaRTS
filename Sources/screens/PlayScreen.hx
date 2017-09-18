@@ -50,7 +50,7 @@ class PlayScreen extends Screen implements IGameScreen
 		var image:kha.Image = Reflect.field(Assets.images, systems.Data.dataMap['units']['soldier']['image']);
 		var rl = Atlas.createRegionList(image, 32, 32);
 		var cl:Array<Component> = [new BasicAnimator(rl), new Health(), new StateAI(), new View()];
-		var act = new Actor(lvl.getNodeByGridXY(0,0), rl, cl, systems.Data.dataMap['units']['soldier']);
+		var act = new Actor(lvl.getNodeByGridXY(2,3), rl, cl, systems.Data.dataMap['units']['soldier']);
 		activeTeam.addUnit(act);
 		
 		rl = Atlas.createRegionList(Assets.images.redknight, 32, 32);
