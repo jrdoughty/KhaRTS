@@ -13,6 +13,15 @@
 					"display": null
 				},
 				{
+					"typeStr": "3",
+					"name": "width"
+				},
+				{
+					"typeStr": "3",
+					"name": "height",
+					"display": null
+				},
+				{
 					"typeStr": "2",
 					"name": "mobile"
 				},
@@ -53,7 +62,13 @@
 				},
 				{
 					"typeStr": "6:ai",
-					"name": "ai"
+					"name": "ai",
+					"display": null
+				},
+				{
+					"typeStr": "8",
+					"name": "comps",
+					"opt": true
 				}
 			],
 			"lines": [
@@ -68,7 +83,23 @@
 					"image": "knight",
 					"healthMax": 5,
 					"mobile": true,
-					"ai": "soldier"
+					"ai": "soldier",
+					"width": 32,
+					"height": 32,
+					"comps": [
+						{
+							"name": "BasicAnimator"
+						},
+						{
+							"name": "Health"
+						},
+						{
+							"name": "StateAI"
+						},
+						{
+							"name": "View"
+						}
+					]
 				},
 				{
 					"name": "enemy",
@@ -81,7 +112,23 @@
 					"viewRange": 6,
 					"healthMax": 5,
 					"mobile": true,
-					"ai": "soldier"
+					"ai": "wanderer",
+					"width": 32,
+					"height": 32,
+					"comps": [
+						{
+							"name": "BasicAnimator"
+						},
+						{
+							"name": "Health"
+						},
+						{
+							"name": "StateAI"
+						},
+						{
+							"name": "View"
+						}
+					]
 				}
 			],
 			"separators": [],
@@ -112,6 +159,20 @@
 						},
 						{
 							"name": "moving"
+						}
+					]
+				},
+				{
+					"name": "wanderer",
+					"states": [
+						{
+							"name": "attacking"
+						},
+						{
+							"name": "moving"
+						},
+						{
+							"name": "main_wander"
 						}
 					]
 				}
@@ -149,6 +210,9 @@
 					"name": "moving"
 				},
 				{
+					"name": "main_wander"
+				},
+				{
 					"name": "main_idle"
 				}
 			],
@@ -165,18 +229,63 @@
 				},
 				{
 					"typeStr": "1",
-					"name": "tmxFile"
+					"name": "tmxFile",
+					"display": null
 				},
 				{
 					"typeStr": "1",
-					"name": "tsxFile"
+					"name": "tsxFile",
+					"display": null
 				}
 			],
 			"lines": [
 				{
 					"name": "demo",
-					"tmxFile": "moba",
-					"tsxFile": "tinytileset"
+					"tmxFile": "level",
+					"tsxFile": "tiles"
+				}
+			],
+			"separators": [],
+			"props": {}
+		},
+		{
+			"name": "units@comps",
+			"props": {
+				"hide": true
+			},
+			"separators": [],
+			"lines": [],
+			"columns": [
+				{
+					"typeStr": "6:comps",
+					"name": "name"
+				}
+			]
+		},
+		{
+			"name": "comps",
+			"columns": [
+				{
+					"typeStr": "0",
+					"name": "name",
+					"display": null
+				}
+			],
+			"lines": [
+				{
+					"name": "BasicAnimator"
+				},
+				{
+					"name": "Health"
+				},
+				{
+					"name": "UIHealth"
+				},
+				{
+					"name": "View"
+				},
+				{
+					"name": "StateAI"
 				}
 			],
 			"separators": [],

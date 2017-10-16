@@ -43,7 +43,7 @@ class PlayScreen extends Screen implements IGameScreen
 				activeTeam = team;
 			teams.push(team);
 			
-			var startNode = lvl.getNodeByGridXY(Std.int(lvl.playerStartPos[i].x),Std.int(lvl.playerStartPos[i].y))
+			var startNode = lvl.getNodeByGridXY(Std.int(lvl.playerStartPos[i].x),Std.int(lvl.playerStartPos[i].y));
 			var act = new Actor(startNode, Util.cloneStringMap(systems.Data.dataMap['units']['soldier']));
 			add(team.addUnit(act));
 		}

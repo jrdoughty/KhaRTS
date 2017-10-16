@@ -30,7 +30,7 @@ class UI extends SimpleEventDispatcher
 	{
 		super();
 		uiElements = new ObjectList(0,0);
-		dashboard = new Dashboard(0,184, new Sprite(Assets.images.dashui));
+		dashboard = new Dashboard(0,592, new Sprite(Assets.images.dashui));
 		uiElements.add(dashboard);
 		uiElements.apply(Sdg.screen.add);
 

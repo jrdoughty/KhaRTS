@@ -67,7 +67,7 @@ class StateAI extends ActorComponent implements AI
 	{
 		trace('new time');
 		Sdg.removeTimeTask(actionTimer);
-		actionTimer = Sdg.addTimeTask(takeAction, e.milSec/1000,e.milSec/1000);
+		actionTimer = Sdg.addTimeTask(takeAction, e.milSec/1000, e.milSec/1000);
 	}
 	/**
 	 * drives actions based on state

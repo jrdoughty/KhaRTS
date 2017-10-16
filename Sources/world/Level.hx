@@ -43,6 +43,7 @@ class Level extends Object
 					if(layer.name == 'Background')
 					{
 						i = 0;
+						var count:Int = 0;
 						for(y in 0...layer.height)	
 						{
 							data.push(new Array<Int>());
@@ -54,14 +55,15 @@ class Level extends Object
 								var canSee = true;
 								for(k in tileset.specialTiles)//can probably be made more efficient
 								{
-									if(layer.data.tiles[i].gid == k.id && k.type == 'wall')
+									if(layer.data.tiles[i].gid - 1 == k.id && k.type == 'wall')
 									{
 										shouldPass = false;
 										canSee = false;
 									}
-									if(layer.data.tiles[i].gid == k.id && k.type == 'water')
+									if(layer.data.tiles[i].gid - 1 == k.id && k.type == 'water')
 									{
 										shouldPass = false;
+										trace(++count + " " + x + " " + y + " " + layer.data.tiles[i].gid);
 									}
 								} 
 								activeNodes.push(new Node(layer.data.tiles[i].gid - 1, t.tileWidth, t.tileHeight, x, y, shouldPass, canSee));
