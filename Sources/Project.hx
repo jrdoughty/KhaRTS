@@ -18,12 +18,13 @@ class Project {
 
 	function assetsLoaded()
 	{
-		var engine = new Engine(1280, 720);
+		var engine = new Engine(320, 240, false, true, 60);
 		engine.enable(KEYBOARD | MOUSE | GAMEPAD | DELTA);
 		Data.loadData();
 		Sdg.addScreen('Play', new PlayScreen(), true);
 
 		System.notifyOnRender(engine.render);
 		Scheduler.addTimeTask(engine.update, 0, 1 / 60);
+		
 	}
 }

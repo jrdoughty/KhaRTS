@@ -61,8 +61,8 @@ class UIHealth extends Component
 	
 	public function createSprite()
 	{			
-		healthBar = new Object(object.x, object.y, Polygon.createRectangle(object.width, 2, Color.Red, true));
-		p = Polygon.createRectangle(object.width, 2, Color.Green,true);
+		healthBar = new Object(object.x, object.y, Polygon.createRectangle(object.width, 1, Color.Red, true));
+		p = Polygon.createRectangle(object.width, 1, Color.Green,true);
 		healthBarFill = new Object(object.x, object.y, p);
 		sdg.Sdg.screen.add(healthBar);
 		sdg.Sdg.screen.add(healthBarFill);

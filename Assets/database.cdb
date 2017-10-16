@@ -154,6 +154,33 @@
 			],
 			"separators": [],
 			"props": {}
+		},
+		{
+			"name": "levels",
+			"columns": [
+				{
+					"typeStr": "0",
+					"name": "name",
+					"display": null
+				},
+				{
+					"typeStr": "1",
+					"name": "tmxFile"
+				},
+				{
+					"typeStr": "1",
+					"name": "tsxFile"
+				}
+			],
+			"lines": [
+				{
+					"name": "demo",
+					"tmxFile": "moba",
+					"tsxFile": "tinytileset"
+				}
+			],
+			"separators": [],
+			"props": {}
 		}
 	],
 	"customTypes": [],

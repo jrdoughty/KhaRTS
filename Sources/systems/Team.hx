@@ -1,7 +1,6 @@
 package systems;
 
 import actors.Actor;
-import actors.Actor;
 
 /**
  * ...
@@ -30,10 +29,11 @@ class Team
 	 * Adds unit to flxUnits and sets unit's team
 	 * @param	unit	Unit to be added to Team
 	 */
-	public function addUnit(unit:Actor):Void
+	public function addUnit(unit:Actor):Actor
 	{
 		units.push(unit);
 		unit.team = this;
+		return unit;
 	}
 	/**
 	 * Adds building to flxBuildings and sets building's team

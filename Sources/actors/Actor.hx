@@ -5,8 +5,16 @@ import sdg.components.Component;
 import sdg.graphics.Sprite;
 import sdg.atlas.Region;
 import world.Node;
+import kha.Image;
+import kha.Assets;
+import sdg.atlas.Atlas;
 import systems.Team;
 import sdg.components.EventDispatcher;
+import components.StateAI;
+import components.Health;
+import components.BasicAnimator;
+import components.View;
+import components.ComponentSystem;
 /**
  * @author John Doughty
  */
@@ -34,19 +42,22 @@ class Actor extends Object
 	*/
 	public var data:Map<String, Dynamic>;
 
-	public function new(node:Node, rl:Array<Region>, cl:Array<Component>, data:Map<String, Dynamic>)
+	public function new(node:Node,  data:Map<String, Dynamic>)
 	{
 		super();
 		x = node.x;
 		y = node.y;
 		addComponent(new EventDispatcher());
+		var image:Image = Reflect.field(Assets.images, data['image']);
+		var rl:Array<Region> = Atlas.createRegionList(image, data['width'], data['height']);
+		data.set('rl', rl);
 		graphic = new Sprite(rl[0]);
 		setSizeAuto();
 		setupNodes(node);
-
-		for(i in cl)
+		var compData:Array<Dynamic> = data['comps'];
+		for(i in compData)
 		{
-			addComponent(i);
+			addComponent(ComponentSystem.getInstance().getC(i.name));
 		}
 		this.data = data;
 	}

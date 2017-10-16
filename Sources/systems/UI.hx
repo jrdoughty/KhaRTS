@@ -30,7 +30,7 @@ class UI extends SimpleEventDispatcher
 	{
 		super();
 		uiElements = new ObjectList(0,0);
-		dashboard = new Dashboard(0,592, new Sprite(Assets.images.dashui));
+		dashboard = new Dashboard(0,184, new Sprite(Assets.images.dashui));
 		uiElements.add(dashboard);
 		uiElements.apply(Sdg.screen.add);
 
@@ -61,7 +61,7 @@ class UI extends SimpleEventDispatcher
 
 		for(i in 0...actors.length)
 		{
-			units.push(new ActorRepresentative((i * 32) % 128 + dashboard.x, Math.floor(i/4)*32 + dashboard.y, actors[i]));
+			units.push(new ActorRepresentative((i * actors[i].width) % (actors[i].width * 6) + dashboard.x, Math.floor(i / 6) * actors[i].height + dashboard.y, actors[i]));
 			uiElements.add(units[i]);
 			if(actors[i].data['mobile'])
 			{
@@ -84,7 +84,7 @@ class UI extends SimpleEventDispatcher
 		}
 		if(units.length > 0)
 		{
-			focusUnit = units[0].clone(192, dashboard.y, 4, 4);
+			focusUnit = units[0].clone((units[0].width * 8), dashboard.y, 4, 4);
 			uiElements.add(focusUnit);
 		}
 		uiElements.apply(Sdg.screen.add);
@@ -108,8 +108,8 @@ class UI extends SimpleEventDispatcher
 		{
 			for(i in 0...units.length)
 			{
-				units[i].x = (i * 32) % 128 + dashboard.x;
-				units[i].y = Math.floor(i/4)*32 + dashboard.y;
+				units[i].x = (i * 8) % 48 + dashboard.x;
+				units[i].y = Math.floor(i/6)*8 + dashboard.y;
 			}
 		}
 	}

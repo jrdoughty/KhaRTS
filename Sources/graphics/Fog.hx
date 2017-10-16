@@ -12,7 +12,7 @@ class Fog extends Tilemap
 	private static inline var TOP_RIGHT = 2;
 	private static inline var BOTTOM_LEFT = 4;
 	private static inline var BOTTOM_RIGHT = 8;
-	private static inline var UNEXPLORED = 1;
+	private static inline var UNEXPLORED = .9;
 	private static inline var DARK = .7;
 	private static inline var LIGHT = .45;
 
@@ -77,7 +77,8 @@ class Fog extends Tilemap
 		
 		canvas.g2.color = kha.Color.Black;
 		
-		switch config {
+		switch config 
+		{
 			case 0: 
 				canvas.g2.opacity = DARK;
 				canvas.g2.fillRect(_px, _py, fullTW, fullTH);

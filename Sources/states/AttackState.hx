@@ -11,10 +11,8 @@ import tween.Delta;
 import events.StopEvent;
 import events.TargetEvent;
 
-class AttackState extends BaseState
+class AttackState extends MovingState
 {
-	private var path:Array<Node> = [];
-	private var failedToMove:Bool = false;
 
 	public function new(a:Actor)
 	{
@@ -29,6 +27,7 @@ class AttackState extends BaseState
 
 	public override function takeAction()
 	{
+		super.takeAction();
 		var i:Int;
 		
 		if (actor.data['targetEnemy'] != null && actor.data['targetEnemy'].alive)
@@ -56,7 +55,8 @@ class AttackState extends BaseState
 	 */
 	private function hit()
 	{
-		actor.data['targetEnemy'].eventDispatcher.dispatchEvent(HurtEvent.HURT, new HurtEvent(actor.data['damage']));
+		var ed = actor.data['targetEnemy'].eventDispatcher;//hack to deal with js error, js gets confusted as to what 'this' should be
+		ed.dispatchEvent(HurtEvent.HURT, new HurtEvent(actor.data['damage']));
 		actor.eventDispatcher.dispatchEvent(AnimateAttackEvent.ATTACK, new AnimateAttackEvent());
 		if (actor.data['targetEnemy'].alive == false)
 		{
@@ -69,10 +69,7 @@ class AttackState extends BaseState
 	 * targetEnemy has moved and adjust if it has. May merge with Move Eventually
 	 */
 	private function chase()
-	{
-		failedToMove = false;
-		
-		
+	{		
 		if (path.length == 0 || path[path.length - 1] != actor.data['targetEnemy'].currentNodes[0])
 		{
 			path = AStar.newPath(actor.currentNodes[0], actor.data['targetEnemy'].currentNodes[0]);
@@ -97,38 +94,6 @@ class AttackState extends BaseState
 		}
 	}
 	
-	/**
-	 * for the new path, separated for clean code
-	 * if the new path's next position fails to be different, it sets failedToMove to true
-	 */
-	//@:extern inline 
-	private function newPath()
-	{
-		var nextMove = path[1];
-		path = AStar.newPath(actor.currentNodes[0], actor.data['targetEnemy'].currentNodes[0]);
-		if (path.length > 1 && nextMove != path[1])//In Plain english, if the new path is indeed a new path
-		{
-			chase();
-		}
-		else
-		{
-			failedToMove = true;
-		}
-	}
-	
-	/**
-	 * triggers the tweening of the movement from on node to the next and sets currentNodes and its occupant
-	 */
-	@:extern inline function moveAlongPath()
-	{
-		path.splice(0,1)[0].occupant = null;
-		actor.currentNodes[0] = path[0];
-		actor.currentNodes[0].occupant = actor;
-
-		Delta.tween(actor)
-			.prop("x",actor.currentNodes[0].x,actor.data['speed']/1000)
-			.prop("y",actor.currentNodes[0].y,actor.data['speed']/1000); //Finally report completion;
-	}
 	/**
 	 * sets target to start either attack or chase sequence
 	 * @param	aEvent 	holds target Actor, may need qualifier eventually

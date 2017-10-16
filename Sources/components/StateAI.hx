@@ -11,6 +11,8 @@ import components.ActorComponent;
 import states.StateFactory;
 import systems.Data;
 import haxe.Timer;
+import sdg.Sdg;
+import events.ChangeTimingEvent;
 
 class StateAI extends ActorComponent implements AI
 {
@@ -22,12 +24,7 @@ class StateAI extends ActorComponent implements AI
 	/**
 	 * timer whose frequency is set by speed
 	 */
-	private var actionTimer:Timer;
-
-	/**
-	 * offset delay timer that starts the action timer. Used to keep AI from starting at the same time. Set to 0 - 1 sec
-	 */
-	private var delayTimer:Timer;
+	private var actionTimer:Int;
 
 	public function new ()
 	{
@@ -39,6 +36,7 @@ class StateAI extends ActorComponent implements AI
 
 		object.eventDispatcher.addEvent(StopEvent.STOP, resetStates);
 		object.eventDispatcher.addEvent(StateChangeEvent.CHANGE, changeState);
+		object.eventDispatcher.addEvent(ChangeTimingEvent.CHANGE, newActionTime);
 
 		var ais:Array<Dynamic> = cast (Data.dataMap['ai'][actor.data['ai']]['states'], Array<Dynamic>);
 		for(i in ais)
@@ -52,19 +50,25 @@ class StateAI extends ActorComponent implements AI
 		state = states.get('idle');
 		//Keeps mass created units from updating at the exact same time. 
 		//Idea from: http://answers.unity3d.com/questions/419786/a-pathfinding-multiple-enemies-MOVING-target-effic.html
-		delayTimer = new Timer(Math.floor(300*Math.random()));
-		delayTimer.run = delayedStart;
+
+		actionTimer = Sdg.addTimeTask(delayedStart, .3 * Math.random());
 	}
 	/**
 	* end of delay timer that starts the takeAction cycle. 
 	* This prevents too many AI scripts firing at once
 	*/
 	private function delayedStart()
-    {
-	   delayTimer.stop();
-	   actionTimer = new Timer(actor.data['speed']);
-	   actionTimer.run = takeAction;
-    }
+	{
+		Sdg.removeTimeTask(actionTimer);
+		actionTimer = Sdg.addTimeTask(takeAction, actor.data['speed']/1000, actor.data['speed']/1000);
+	}
+
+	public function newActionTime(e:ChangeTimingEvent)
+	{
+		trace('new time');
+		Sdg.removeTimeTask(actionTimer);
+		actionTimer = Sdg.addTimeTask(takeAction, e.milSec/1000,e.milSec/1000);
+	}
 	/**
 	 * drives actions based on state
 	 */
@@ -110,10 +114,7 @@ class StateAI extends ActorComponent implements AI
 	 */
 	public override function destroy() 
 	{
-		if (actionTimer != null)
-		{
-			actionTimer.stop();
-		}
+		Sdg.removeTimeTask(actionTimer);
 		super.destroy();
 		object.components.remove(this);
 	}

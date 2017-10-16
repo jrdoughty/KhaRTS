@@ -179,7 +179,7 @@ class AStar
         } 
 		else 
 		{
-            prospectiveG = parentNode.g + 14;//should be 14 but I'm sabotaging the heiristic for diagonals unless last resort
+            prospectiveG = parentNode.g + 14;
         }
         if (prospectiveG + childNode.heiristic < childNode.getFinal() || childNode.g == -1) 
 		{

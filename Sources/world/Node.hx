@@ -28,9 +28,11 @@ class Node implements Util.ITwoD
 	public var height:Int;
 	public var frame:Int;
 	public var removeShadow:Bool = false;
-	public var passable:Bool = true;
+	public var canSeeOver:Bool = false;
+	public var shadowHasBeenRemoved:Bool = false;
+	private var isPassable:Bool = true;
 	
-	public function new(frame:Int, width:Int, height, X:Int = 0, Y:Int = 0, pass:Bool = true ) 
+	public function new(frame:Int, width:Int, height, X:Int = 0, Y:Int = 0, pass:Bool = true, canSeeOver:Bool = true ) 
 	{
 		x = X * width;
 		y = Y * height;
@@ -43,12 +45,13 @@ class Node implements Util.ITwoD
 		nodeX = X;
 		nodeY = Y;
 		
-		passable = pass;
+		isPassable = pass;
+		this.canSeeOver = canSeeOver;
 	}
 	
 	public function isPassible():Bool
 	{
-		return (passable);
+		return (isPassable);
 	}
 	
 	public function getFinal():Int
@@ -94,6 +97,7 @@ class Node implements Util.ITwoD
 	public function removeOverlay()
 	{
 		removeShadow = true;
+		shadowHasBeenRemoved = true;
 	}
 	
 	public function addOverlay()

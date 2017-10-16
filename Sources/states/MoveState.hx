@@ -9,10 +9,8 @@ import tween.Delta;
 import events.MoveEvent;
 import events.StopEvent;
 
-class MoveState extends BaseState
+class MoveState extends MovingState
 {
-	private var path:Array<Node> = [];
-	private var failedToMove:Bool = false;
 	private var lastTargetNode:Node;
 	private var turnsIdle:Int = 0;
 
@@ -33,7 +31,8 @@ class MoveState extends BaseState
 	 */
 	public override function takeAction():Void
 	{
-		failedToMove = false;
+		super.takeAction();
+
 		if (actor.data['aggressive'])
 		{
 			checkView();
@@ -52,6 +51,7 @@ class MoveState extends BaseState
 		
 		if (path.length > 1 && path[1].occupant == null)
 		{
+			trace('movin');
 			moveAlongPath();
 			turnsIdle = 0;
 			if (actor.currentNodes[0] == actor.data['targetNode'])
@@ -84,41 +84,6 @@ class MoveState extends BaseState
 		{
 			actor.eventDispatcher.dispatchEvent(MoveAnimEvent.MOVE, new MoveAnimEvent());
 		}
-	}
-	
-	/**
-	 * for the new path, separated for clean code
-	 * if the new path's next position fails to be different, it sets failedToMove to true
-	 */
-	//@:extern inline 
-	private function newPath()
-	{
-		var nextMove = path[1];
-		path = AStar.newPath(actor.currentNodes[0], actor.data['targetNode']);
-		if (path.length > 1 && nextMove != path[1])//In Plain english, if the new path is indeed a new path
-		{
-			takeAction();//try again
-		}
-		else
-		{
-			failedToMove = true;
-			trace('fail');
-		}
-	}
-	
-	/**
-	 * triggers the tweening of the movement from on node to the next and sets currentNodes and its occupant
-	 */
-	//@:extern inline 
-	function moveAlongPath()
-	{
-		path.splice(0,1)[0].occupant = null;
-		actor.currentNodes[0] = path[0];
-		actor.currentNodes[0].occupant = actor;
-
-		Delta.tween(actor)
-			.prop("x",actor.currentNodes[0].x,actor.data['speed']/1000)
-			.prop("y",actor.currentNodes[0].y,actor.data['speed']/1000); //Finally report completion;
 	}
 
 	/**

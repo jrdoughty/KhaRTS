@@ -14,6 +14,7 @@ import sdg.Sdg;
 import events.AttackInputEvent;
 import events.MoveInputEvent;
 import events.StopInputEvent;
+import kha.input.KeyCode;
 /**
  * ...
  * @author ...
@@ -175,17 +176,17 @@ class InputSystem extends SimpleEventDispatcher
 
 	public function keyboardUpdate()
 	{
-		if(Keyboard.isPressed('m'))
+		if(Keyboard.isPressed(KeyCode.M))
 		{
 			inputState = MOVING;
 			selector.visible = false;
 		}
-		else if(Keyboard.isPressed('a'))
+		else if(Keyboard.isPressed(KeyCode.A))
 		{
 			inputState = ATTACKING;
 			selector.visible = false;
 		}
-		else if(Keyboard.isPressed('s'))
+		else if(Keyboard.isPressed(KeyCode.S))
 		{
 			stopActors();
 		}

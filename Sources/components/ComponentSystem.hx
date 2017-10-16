@@ -1,18 +1,18 @@
 package components;
-
+import sdg.components.Component;
 /**
  * ...
  * @author John Doughty
  */
 class ComponentSystem
 {
+	
 	private static var instance:ComponentSystem;
-	public static var components(default, null):Array<Class<Component>> = [ControlledUnitAI,
+	public static var components:Array<Class<Component>> = [StateAI,
 		Health,
-		SpriteC,
 		View,
-		AI,
-		RandomAI];
+		BasicAnimator,
+		UIHealth];
 	private var componentMap:Map<String, Class<Component>> = new Map();
 	
 	public function new() 
@@ -38,11 +38,11 @@ class ComponentSystem
 	{
 		if (componentMap.exists(c))
 		{
-			return cast (Type.createInstance(componentMap.get(c), [c]));
+			return cast (Type.createInstance(componentMap.get(c), []));
 		}
 		else
 		{
-			return new Component(c);
+			return new Component();
 		}
 	}
 }

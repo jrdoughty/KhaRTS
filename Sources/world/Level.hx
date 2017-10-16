@@ -1,21 +1,15 @@
 package world;
 
 import kha.Assets;
-import kha.Scheduler;
-import kha.Image;
 import format.tmx.Reader;
 import format.tmx.Data.TmxMap;
-import format.tmx.Data.TmxTileLayer;
-import format.tmx.Data.TmxObjectGroup;
-import sdg.graphics.tiles.Tileset;
 import sdg.graphics.tiles.Tilemap;
 import sdg.Object;
-import sdg.atlas.Region;
-import sdg.graphics.TileSprite;
-//import collision.Wall;
-import sdg.event.EventSystem;
-import actors.Actor;
 import world.Node;
+import sdg.graphics.tiles.Tilemap;
+import events.HideEvent;
+import events.RevealEvent;
+import kha.math.Vector2;
 /**
  * ...
  * @author John Doughty
@@ -23,21 +17,22 @@ import world.Node;
 class Level extends Object
 {
 	public var activeNodes:Array<Node> = [];
-	public var tileset:Tileset;
+
+	public var tileset:RTSTileset;
 	public var levelWidth:Int;
 	public var levelHeight:Int;
+	public var playerStartPos:Map<Int, Vector2> = new Map<Int, Vector2>();
 
-	private var diagonal:Bool = false;
-	public function new(xmlString:String, tilesetImage:Image) 
+	private var diagonal:Bool = true;
+	public function new(tmxFileName:String, tilesetTSXFileName:String) 
 	{
 		super();
-		var r = new Reader(Xml.parse(xmlString));
+		var r = new Reader(Xml.parse(Reflect.field(Assets.blobs,tmxFileName+"_tmx").toString()));
 		var t:TmxMap = r.read();
 		levelWidth = t.width;
 		levelHeight = t.height;
-		tileset = new Tileset(tilesetImage, t.tileWidth, t.tileHeight);
+		tileset = new RTSTileset(tilesetTSXFileName);
 		var bgMap = new Tilemap(tileset);
-		var fgMap = new Tilemap(tileset);
 		var i = -1;
 		var data = new Array<Array<Int>>();
 		for(layer in t.layers)
@@ -55,32 +50,27 @@ class Level extends Object
 							for (x in 0...layer.width)
 							{
 								data[y].push(layer.data.tiles[i].gid - 1);//need to use FirstGID instead
-								activeNodes.push(new Node(layer.data.tiles[i].gid - 1,t.tileWidth, t.tileHeight,x,y,true));
+								var shouldPass = true;
+								var canSee = true;
+								for(k in tileset.specialTiles)//can probably be made more efficient
+								{
+									if(layer.data.tiles[i].gid == k.id && k.type == 'wall')
+									{
+										shouldPass = false;
+										canSee = false;
+									}
+									if(layer.data.tiles[i].gid == k.id && k.type == 'water')
+									{
+										shouldPass = false;
+									}
+								} 
+								activeNodes.push(new Node(layer.data.tiles[i].gid - 1, t.tileWidth, t.tileHeight, x, y, shouldPass, canSee));
 								i++;
 							} 
 						}
 						createNeighbors(t.width,t.height);
-					}
-					else if(layer.name == 'Foreground')
-					{
-						i = 0;
-						for(y in 0...layer.height)	
-						{						
-							for (x in 0...layer.width)
-							{
-								if(layer.data.tiles[i].gid != 0)
-								{
-									data[y][x]=layer.data.tiles[i].gid - 1;//need to use FirstGID instead
-									getNodeByGridXY(x,y).passable = false;
-								}
-								i++;
-							} 
-						}
 						bgMap.loadFrom2DArray(data);
 						graphic = bgMap;
-						//fgMap.loadFrom2DArray(data);
-						//graphic = fgMap;
-						//createNeighbors(t.width,t.height);
 					}
 					else if (layer.name == 'EnemyLayer')
 					{
@@ -93,14 +83,17 @@ class Level extends Object
 							}
 						}
 					}
-					else if (layer.name == 'PlayerLayer')
+					else if (layer.name.indexOf('Player') != -1)
 					{
+						var player = Std.parseInt(layer.name.substr(6,2));
 						i = -1;
 						for(tile in layer.data.tiles)
 						{
 							i++;
 							if(tile.gid>0)
 							{
+								if(!playerStartPos.exists(player))//forces single start point
+									playerStartPos.set(player, new Vector2(i%levelWidth,Std.int(i/levelWidth)));
 							}
 						}
 					}
@@ -177,5 +170,34 @@ class Level extends Object
                 }
             }
         }
+	}
+
+	public function resetFog()
+	{
+		for(i in activeNodes)
+		{
+			i.addOverlay();
+		}
+	}
+	public function recreateFog(fogOfWarGraphic:Tilemap)
+	{
+		for(i in activeNodes)
+		{
+			if(i.removeShadow)
+			{
+				fogOfWarGraphic.map[i.nodeY][i.nodeX] = 0;
+				if(i.occupant != null)
+					i.occupant.eventDispatcher.dispatchEvent(RevealEvent.REVEAL, new RevealEvent());
+			}
+			else
+			{
+				if(i.shadowHasBeenRemoved)
+					fogOfWarGraphic.map[i.nodeY][i.nodeX] = 1;
+				else
+					fogOfWarGraphic.map[i.nodeY][i.nodeX] = 2;
+				if(i.occupant != null)
+					i.occupant.eventDispatcher.dispatchEvent(HideEvent.HIDE, new HideEvent());
+			}
+		}
 	}
 }

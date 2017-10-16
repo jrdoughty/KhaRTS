@@ -10,23 +10,23 @@ import actors.Actor;
 class BasicAnimator extends Animator
 {
 	var regionList:Array<Region>;
-	public function new(rl:Array<Region>)
+	public function new()
 	{
 		super();
-		regionList = rl;
-		
 	}
 
 	public override function init()
 	{
 		super.init();
+		var a = cast (object, Actor);
+		regionList = a.data['rl'];
+		a.eventDispatcher.addEvent(MoveAnimEvent.MOVE, moveAnim);
+		a.eventDispatcher.addEvent(AnimateAttackEvent.ATTACK, attackAnim);
+		a.eventDispatcher.addEvent(IdleAnimationEvent.IDLE, idleAnim);
 		addAnimation("idle", [regionList[0]], 5);
 		addAnimation("move", [regionList[0],regionList[1]], 5);
 		addAnimation("attack", [regionList[2],regionList[0]], 5);
 		play('idle', true);
-		cast(object, Actor).eventDispatcher.addEvent(MoveAnimEvent.MOVE, moveAnim);
-		cast(object, Actor).eventDispatcher.addEvent(AnimateAttackEvent.ATTACK, attackAnim);
-		cast(object, Actor).eventDispatcher.addEvent(IdleAnimationEvent.IDLE, idleAnim);
 	}
 
 	public function moveAnim(e:MoveAnimEvent)

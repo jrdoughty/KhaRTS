@@ -10,15 +10,8 @@ import systems.AStar;
 import systems.Team;
 import graphics.Fog;
 import sdg.graphics.tiles.Tilemap;
-import sdg.graphics.tiles.Tileset;
 import sdg.components.Component;
-import components.StateAI;
-import components.Health;
-import components.BasicAnimator;
-import components.View;
 import events.ClearFogEvent;
-import events.HideEvent;
-import events.RevealEvent;
 import sdg.atlas.Atlas;
 
 class PlayScreen extends Screen implements IGameScreen
@@ -38,36 +31,22 @@ class PlayScreen extends Screen implements IGameScreen
 	{
 		super.init();
 
-		activeTeam = new Team();
-		teams.push(activeTeam);
-		teams.push(new Team());
-		lvl = new Level(Assets.blobs.level_tmx.toString(), Assets.images.hyptosistiles);
+		lvl = new Level(systems.Data.dataMap['levels']['demo']['tmxFile'], systems.Data.dataMap['levels']['demo']['tsxFile']);
 		AStar.setLevel(lvl);
 		add(lvl);
 		lvl.setSizeAuto();
 		setWorldSize(lvl.width,lvl.height);
-		var data: Map<String, Dynamic>;
-		var image:kha.Image = Reflect.field(Assets.images, systems.Data.dataMap['units']['soldier']['image']);
-		var rl = Atlas.createRegionList(image, 32, 32);
-		var cl:Array<Component> = [new BasicAnimator(rl), new Health(), new StateAI(), new View()];
-		var act = new Actor(lvl.getNodeByGridXY(2,3), rl, cl, systems.Data.dataMap['units']['soldier']);
-		activeTeam.addUnit(act);
-		
-		rl = Atlas.createRegionList(Assets.images.redknight, 32, 32);
-		cl = [new BasicAnimator(rl), new Health(), new StateAI(), new View()];
-		data = systems.Data.dataMap['units']['enemy'];
-		var act2 = new Actor(lvl.getNodeByGridXY(0,7), rl, cl, data);
-		teams[1].addUnit(act2);
-		/*
-		rl = Atlas.createRegionList(Assets.images.tree,64,64);
-		cl = [];
-		data = ["wood" => 5];
-		var act3 = new Actor(lvl.getNodeByGridXY(5,2), rl, cl, data);
-		add(act3);
-		teams[1].addUnit(act3);//temporary
-		*/
-		add(act);
-		add(act2);
+		for(i in lvl.playerStartPos.keys())
+		{
+			var team = new Team();
+			if(activeTeam == null)//temp, make active team first team
+				activeTeam = team;
+			teams.push(team);
+			
+			var startNode = lvl.getNodeByGridXY(Std.int(lvl.playerStartPos[i].x),Std.int(lvl.playerStartPos[i].y))
+			var act = new Actor(startNode, Util.cloneStringMap(systems.Data.dataMap['units']['soldier']));
+			add(team.addUnit(act));
+		}
 		
 		var bgMap = new Fog(lvl.tileset);
 		var data:Array<Array<Int>> = [];
@@ -90,35 +69,12 @@ class PlayScreen extends Screen implements IGameScreen
 	public override function update()
 	{
 		super.update();
-		recreateFog();
-		inputSystem.update();
-	}
-
-	private function recreateFog()
-	{
-		for(i in lvl.activeNodes)
-		{
-			i.addOverlay();
-		}
+		lvl.resetFog();
 		for(i in activeTeam.units)
 		{
 			i.eventDispatcher.dispatchEvent(ClearFogEvent.CLEAR, new ClearFogEvent());
 		}
-		for(i in lvl.activeNodes)
-		{
-			if(i.removeShadow)
-			{
-				cast(fogOfWar.graphic, Tilemap).map[i.nodeY][i.nodeX] = 0;
-				if(i.occupant != null)
-					i.occupant.eventDispatcher.dispatchEvent(RevealEvent.REVEAL, new RevealEvent());
-			}
-			else
-			{
-				cast(fogOfWar.graphic, Tilemap).map[i.nodeY][i.nodeX] = 1;
-				if(i.occupant != null)
-					i.occupant.eventDispatcher.dispatchEvent(HideEvent.HIDE, new HideEvent());
-			}
-		}
-
+		lvl.recreateFog(cast(fogOfWar.graphic, Tilemap));
+		inputSystem.update();
 	}
 }

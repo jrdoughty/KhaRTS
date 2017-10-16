@@ -79,7 +79,7 @@ class View extends Component
 				{
 					n.removeOverlay();
 					clearedNodes.push(n);
-					if (distance < actor.data['viewRange'] && n.isPassible())
+					if (distance < actor.data['viewRange'] && n.canSeeOver)
 					{
 						clearFogOfWar(n);
 					}
