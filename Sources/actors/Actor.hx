@@ -1,7 +1,6 @@
 package actors;
 
 import sdg.Object;
-import sdg.components.Component;
 import sdg.graphics.Sprite;
 import sdg.atlas.Region;
 import world.Node;
@@ -10,10 +9,6 @@ import kha.Assets;
 import sdg.atlas.Atlas;
 import systems.Team;
 import sdg.components.EventDispatcher;
-import components.StateAI;
-import components.Health;
-import components.BasicAnimator;
-import components.View;
 import components.ComponentSystem;
 /**
  * @author John Doughty
@@ -27,6 +22,11 @@ class Actor extends Object
 	public var currentNodes:Array<Node> = [];
 
 	/**
+	 * Nodes surrounding actor
+	 */
+	public var neighbors:Array<Node> = [];
+
+	/**
 	 * Team Actor belongs to
 	 */
 	public var team:Team = null;
@@ -36,6 +36,12 @@ class Actor extends Object
 	 * selected state bool
 	 */
 	public var selected:Bool = false;
+
+	/**
+	* cool down time between actions in milliseconds
+	*/
+	
+	public var coolDown:Int = 100;//milliseconds 
 
 	/**
 	* data storage for sharing information between components and actors
@@ -50,6 +56,8 @@ class Actor extends Object
 		addComponent(new EventDispatcher());
 		var image:Image = Reflect.field(Assets.images, data['image']);
 		var rl:Array<Region> = Atlas.createRegionList(image, data['width'], data['height']);
+		var ims = Assets.images;
+		this.data = data;
 		data.set('rl', rl);
 		graphic = new Sprite(rl[0]);
 		setSizeAuto();
@@ -59,7 +67,6 @@ class Actor extends Object
 		{
 			addComponent(ComponentSystem.getInstance().getC(i.name));
 		}
-		this.data = data;
 	}
 	
 	/**
@@ -75,6 +82,24 @@ class Actor extends Object
 		for (i in 0...currentNodes.length)
 		{
 			currentNodes[i].occupant = this;
+		}
+		if(currentNodes.length == 1)
+		{
+			neighbors = currentNodes[0].neighbors;
+		}
+		else
+		{
+			neighbors = [];
+			for(i in currentNodes)
+			{
+				for(j in i.neighbors)
+				{
+					if(neighbors.indexOf(j) == -1 && j.occupant != this)
+					{
+						neighbors.push(j);
+					}
+				}
+			}
 		}
 	}	
 	/**

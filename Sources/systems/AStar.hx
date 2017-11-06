@@ -46,7 +46,7 @@ class AStar
 		
 		path = [];
 		end = endNode;
-		start.heiristic = calculateHeiristic(start.nodeX, start.nodeY, end.nodeX, end.nodeY);
+		start.heiristic = calculateHeiristic(start, end);
 		start.g = 0;
 		openList.push(start);
 		if (calculate() && start != endNode)
@@ -133,14 +133,14 @@ class AStar
 	
 	/**
 	 * heiristic calculation, uses Manhattin Method based on:http://homepages.abdn.ac.uk/f.guerin/pages/teaching/CS1013/practicals/aStarTutorial.htm
-	 * @param	startX		Node's X Position on the Grid
-	 * @param	startY		Node's Y Position on the Grid
-	 * @param	endX		End Node's X Position on the Grid
-	 * @param	endY		End Node's Y Position on the Grid
+	 * @param	childNode		Node being compared to the end node
+	 * @param	endNode			End/Destination Node
 	 */
-	@:extern private static inline function calculateHeiristic (startX:Int, startY:Int, endX:Int, endY:Int) 
+	@:extern private static inline function calculateHeiristic (childNode:Node, endNode:Node)//startX:Int, startY:Int, endX:Int, endY:Int) 
 	{
-        var h = Std.int(10 * Math.abs(startX - endX) + 10 * Math.abs(startY - endY));
+        var h = Std.int(10 * Math.abs(childNode.nodeX - endNode.nodeX) + 10 * Math.abs(childNode.nodeY - endNode.nodeY));
+		h += childNode.modifier;
+		h += childNode.occupant != null?10:0;
         return h;
     }
 	
@@ -155,9 +155,8 @@ class AStar
     private static function SetupChildNode(childNode:Node, parentNode:Node):Bool 
 	{
         var prospectiveG:Int;
-        var i:Int;
 
-        childNode.heiristic = calculateHeiristic(childNode.nodeX, childNode.nodeY, end.nodeX, end.nodeY);
+        childNode.heiristic = calculateHeiristic(childNode, end);
 
         if (childNode.heiristic == 0) 
 		{

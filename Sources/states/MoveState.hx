@@ -25,6 +25,12 @@ class MoveState extends MovingState
 		a.eventDispatcher.addEvent(StopEvent.STOP, resetData);
 	}
 
+	public override function enter()
+	{
+		super.enter();
+		actor.coolDown = Std.int(actor.data['moveCooldown']);
+	}
+
 	/**
 	 * moves to the next node. If a path doesn't exist to the targetNode, it creates one
 	 * It then attepts to move. if blocked a new path will be found
@@ -51,7 +57,6 @@ class MoveState extends MovingState
 		
 		if (path.length > 1 && path[1].occupant == null)
 		{
-			trace('movin');
 			moveAlongPath();
 			turnsIdle = 0;
 			if (actor.currentNodes[0] == actor.data['targetNode'])
@@ -64,7 +69,6 @@ class MoveState extends MovingState
 		else if (path.length > 1 && path[1].occupant != null)
 		{
 			newPath();
-			trace('new path');
 		}
 		else
 		{

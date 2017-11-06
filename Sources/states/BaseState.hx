@@ -5,6 +5,16 @@ import actors.Actor;
 
 class BaseState implements IState
 {
+
+	public function enter()
+	{
+
+	}
+
+	public function exit()
+	{
+		
+	}
 	private var actor:Actor;
 
 	/**
@@ -20,26 +30,6 @@ class BaseState implements IState
 	public function takeAction()
 	{
 
-	}
-	/**
-	 * checks to see if the enemy is next to the Unit, will need changed for reach
-	 * @return whether the enemy is above, below, or to the side
-	 */
-	private function isEnemyInRange():Bool
-	{
-		var inRange:Bool = false;
-		
-		for (i in 0...actor.currentNodes[0].neighbors.length)
-		{
-			if (actor.currentNodes[0].neighbors[i].occupant == actor.data['targetEnemy'] && actor.currentNodes[0].neighbors[i].occupant != null || //if your target is close
-			actor.data['targetEnemy'] == null && actor.currentNodes[0].neighbors[i].occupant != null && actor.team.isThreat(actor.currentNodes[0].neighbors[i].occupant.team.id) && actor.currentNodes[0].neighbors[i].occupant.data.exists('health')) // if you are near an enemy with no target of your own
-			{
-				inRange = true;
-				break;
-			}
-		}
-		
-		return inRange;
 	}
 
 	/**
@@ -112,22 +102,4 @@ class BaseState implements IState
 		}
 	}
 	
-	/**
-	 * checks to see which enemy is next to the Unit, will need changed for reach
-	 * @return the enemy that is above, below, or to the side
-	 */
-	private function getEnemyInRange():Actor
-	{
-		var result:Actor = null;
-		var i:Int;
-		for (i in 0...actor.currentNodes[0].neighbors.length)
-		{
-			if (actor.currentNodes[0].neighbors[i].occupant != null && actor.team.isThreat(actor.currentNodes[0].neighbors[i].occupant.team.id))
-			{
-				result = actor.currentNodes[0].neighbors[i].occupant;
-				break;
-			}
-		}
-		return result;
-	}
 }

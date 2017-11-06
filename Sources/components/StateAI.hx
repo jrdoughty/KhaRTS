@@ -36,7 +36,7 @@ class StateAI extends ActorComponent implements AI
 
 		object.eventDispatcher.addEvent(StopEvent.STOP, resetStates);
 		object.eventDispatcher.addEvent(StateChangeEvent.CHANGE, changeState);
-		object.eventDispatcher.addEvent(ChangeTimingEvent.CHANGE, newActionTime);
+		//object.eventDispatcher.addEvent(ChangeTimingEvent.CHANGE, newActionTime);
 
 		var ais:Array<Dynamic> = cast (Data.dataMap['ai'][actor.data['ai']]['states'], Array<Dynamic>);
 		for(i in ais)
@@ -46,12 +46,13 @@ class StateAI extends ActorComponent implements AI
 				key = i.name;
 			states.set(key, StateFactory.create(i.name, actor));
 		}
-		
 		state = states.get('idle');
+		currentState = 'idle';
+		state.enter();
 		//Keeps mass created units from updating at the exact same time. 
 		//Idea from: http://answers.unity3d.com/questions/419786/a-pathfinding-multiple-enemies-MOVING-target-effic.html
 
-		actionTimer = Sdg.addTimeTask(delayedStart, .3 * Math.random());
+		actionTimer = Sdg.addTimeTask(delayedStart, .2 * Math.random());
 	}
 	/**
 	* end of delay timer that starts the takeAction cycle. 
@@ -60,14 +61,7 @@ class StateAI extends ActorComponent implements AI
 	private function delayedStart()
 	{
 		Sdg.removeTimeTask(actionTimer);
-		actionTimer = Sdg.addTimeTask(takeAction, actor.data['speed']/1000, actor.data['speed']/1000);
-	}
-
-	public function newActionTime(e:ChangeTimingEvent)
-	{
-		trace('new time');
-		Sdg.removeTimeTask(actionTimer);
-		actionTimer = Sdg.addTimeTask(takeAction, e.milSec/1000, e.milSec/1000);
+		actionTimer = Sdg.addTimeTask(takeAction, actor.coolDown/1000,0,1);
 	}
 	/**
 	 * drives actions based on state
@@ -76,12 +70,16 @@ class StateAI extends ActorComponent implements AI
 	{
 		if(nextState != null)
 		{
+			if(currentState != null)
+				states[currentState].exit();
 			currentState = nextState;
 			state = states[currentState];
 			nextState = null;
+			states[currentState].enter();
 		}
 		lastState = currentState;
 		state.takeAction();
+		actionTimer = Sdg.addTimeTask(takeAction, actor.coolDown/1000,0,1);
 	}
 	
 	/**
@@ -98,15 +96,18 @@ class StateAI extends ActorComponent implements AI
 	{
 		if(states.exists(e.state))
 		{
+			states[currentState].exit();
 			if(e.immediate)
 			{
 				currentState = e.state;
-				states[currentState].takeAction();
+				state = states[currentState];
+				state.takeAction();
 			}
 			else
 			{
 				nextState = e.state;
 			}
+			states[e.state].enter();
 		}
 	}
 	/**

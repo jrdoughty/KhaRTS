@@ -13,6 +13,8 @@ import sdg.graphics.tiles.Tilemap;
 import sdg.components.Component;
 import events.ClearFogEvent;
 import sdg.atlas.Atlas;
+import sdg.graphics.text.Text;
+import kha.Assets;
 
 class PlayScreen extends Screen implements IGameScreen
 {
@@ -22,6 +24,7 @@ class PlayScreen extends Screen implements IGameScreen
 	public var dashboard(default,null):Object;
 	public var inputSystem:InputSystem;
 	public var fogOfWar:Object;
+	public var resourcesText:Text;
 	
 	public function new()
 	{
@@ -42,10 +45,22 @@ class PlayScreen extends Screen implements IGameScreen
 			if(activeTeam == null)//temp, make active team first team
 				activeTeam = team;
 			teams.push(team);
-			
-			var startNode = lvl.getNodeByGridXY(Std.int(lvl.playerStartPos[i].x),Std.int(lvl.playerStartPos[i].y));
-			var act = new Actor(startNode, Util.cloneStringMap(systems.Data.dataMap['units']['soldier']));
-			add(team.addUnit(act));
+			var startNode;
+			var act;
+			for(k in 0...1)
+			{
+				trace(k);
+				startNode = lvl.getNodeByGridXY(Std.int(lvl.playerStartPos[i].x+(k % 3)),Std.int(lvl.playerStartPos[i].y+(Math.floor(k / 3))));
+				act = new Actor(startNode, Util.cloneStringMap(systems.Data.dataMap['units']['soldier']));
+				add(team.addUnit(act));
+			}
+			for(k in 0...1)
+			{
+				trace(k);
+				startNode = lvl.getNodeByGridXY(Std.int(lvl.playerStartPos[i].x + 1 + (k % 3)),Std.int(lvl.playerStartPos[i].y + 1 + (Math.floor(k / 3))));
+				act = new Actor(startNode, Util.cloneStringMap(systems.Data.dataMap['buildings']['barracks']));
+				add(team.addUnit(act));
+			}
 		}
 		
 		var bgMap = new Fog(lvl.tileset);
@@ -64,6 +79,8 @@ class PlayScreen extends Screen implements IGameScreen
 		add(fogOfWar);
 		dashboard = new Object();
 		inputSystem = new InputSystem(this);
+		resourcesText = new Text('test', Assets.fonts.OAG, 8, 50);
+		create(4,4,resourcesText);
 	}
 
 	public override function update()
@@ -76,5 +93,6 @@ class PlayScreen extends Screen implements IGameScreen
 		}
 		lvl.recreateFog(cast(fogOfWar.graphic, Tilemap));
 		inputSystem.update();
+		resourcesText.text = activeTeam.resources+"";
 	}
 }

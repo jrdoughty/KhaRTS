@@ -19,6 +19,7 @@ class Node implements Util.ITwoD
 	public var parentNode:Node;
 	public var occupant:Actor = null;
 	public var g:Int = -1;
+	public var modifier:Int = 0;
 	public var heiristic:Int = -1;
 	public var nodeX:Int;
 	public var nodeY:Int;

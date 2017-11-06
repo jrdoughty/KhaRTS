@@ -14,6 +14,8 @@ import events.CenterOnUnitEvent;
 import events.AttackInputEvent;
 import events.StopInputEvent;
 import events.MoveInputEvent;
+import events.QueueEvent;
+import world.Node;
 
 class UI extends SimpleEventDispatcher
 {
@@ -30,7 +32,7 @@ class UI extends SimpleEventDispatcher
 	{
 		super();
 		uiElements = new ObjectList(0,0);
-		dashboard = new Dashboard(0,592, new Sprite(Assets.images.dashui));
+		dashboard = new Dashboard(0,184, new Sprite(Assets.images.dashui));
 		uiElements.add(dashboard);
 		uiElements.apply(Sdg.screen.add);
 
@@ -58,28 +60,69 @@ class UI extends SimpleEventDispatcher
 		units = [];
 		controls = [];
 		focusUnit = null;
-
-		for(i in 0...actors.length)
+		var isUnits = false;
+		for(i in actors)
 		{
-			units.push(new ActorRepresentative((i * actors[i].width) % (actors[i].width * 6) + dashboard.x, Math.floor(i / 6) * actors[i].height + dashboard.y, actors[i]));
-			uiElements.add(units[i]);
-			if(actors[i].data['mobile'])
+			if(i.data['mobile'])
 			{
-				controls.push(new UIElement(dashboard.width - 96, dashboard.y, new Sprite(new Region(Assets.images.controls,0,0,32,32))));
-				controls[controls.length-1].leftClick = function(x:Float,y:Float){dispatchEvent(MoveInputEvent.MOVE, new MoveInputEvent());};
-				uiElements.add(controls[controls.length-1]);
+				isUnits = true;
 			}
-			if(actors[i].data['mobile'] || actors[i].data.exists('damage'))
+		}
+		if(isUnits)
+		{
+			for(i in 0...actors.length)
 			{
-				controls.push(new UIElement(dashboard.width - 64, dashboard.y, new Sprite(new Region(Assets.images.controls,32,0,32,32))));
-				controls[controls.length-1].leftClick = function(x:Float,y:Float){dispatchEvent(StopInputEvent.STOP, new StopInputEvent());};
-				uiElements.add(controls[controls.length-1]);
+				if(actors[i].data['mobile'])
+				{
+					units.push(new ActorRepresentative((units.length * actors[i].width) % (actors[i].width * 6) + dashboard.x, Math.floor(units.length / 6) * actors[i].height + dashboard.y, actors[i]));
+					uiElements.add(units[units.length-1]);
+					if(actors[i].data['mobile'])
+					{
+						controls.push(new UIElement(dashboard.width - 96, dashboard.y, new Sprite(new Region(Assets.images.controls,0,0,32,32))));
+						controls[controls.length-1].leftClick = function(x:Float,y:Float){dispatchEvent(MoveInputEvent.MOVE, new MoveInputEvent());};
+						uiElements.add(controls[controls.length-1]);
+					}
+					if(actors[i].data['mobile'] || actors[i].data.exists('attacks') && actors[i].data.get('attacks').length > 0)
+					{
+						controls.push(new UIElement(dashboard.width - 64, dashboard.y, new Sprite(new Region(Assets.images.controls,32,0,32,32))));
+						controls[controls.length-1].leftClick = function(x:Float,y:Float){dispatchEvent(StopInputEvent.STOP, new StopInputEvent());};
+						uiElements.add(controls[controls.length-1]);
+					}
+					if(actors[i].data.exists('attacks') && actors[i].data.get('attacks').length > 0)
+					{
+						controls.push(new UIElement(dashboard.width - 32, dashboard.y, new Sprite(new Region(Assets.images.controls,64,0,32,32))));
+						controls[controls.length-1].leftClick = function(x:Float,y:Float){dispatchEvent(AttackInputEvent.ATTACK, new AttackInputEvent());};
+						uiElements.add(controls[controls.length-1]);
+					}
+				}
 			}
-			if(actors[i].data.exists('damage'))
+		}
+		else //buildings
+		{
+			for(i in 0...actors.length)
 			{
-				controls.push(new UIElement(dashboard.width - 32, dashboard.y, new Sprite(new Region(Assets.images.controls,64,0,32,32))));
-				controls[controls.length-1].leftClick = function(x:Float,y:Float){dispatchEvent(AttackInputEvent.ATTACK, new AttackInputEvent());};
-				uiElements.add(controls[controls.length-1]);
+				units.push(new ActorRepresentative((i * actors[i].width) % (actors[i].width * 6) + dashboard.x, Math.floor(i / 6) * actors[i].height + dashboard.y, actors[i]));
+				uiElements.add(units[i]);
+					
+				if(actors[i].data['units'])
+				{
+					var dataArray:Array<Dynamic> = actors[i].data['units'];
+					for(j in dataArray)
+					{
+						var d:Map<String, Dynamic> = Data.dataMap['units'][j.name];
+						var s = new Sprite(new Region(Reflect.field(Assets.images, d['image']),0,0,d['width'],d['height']));
+						var scaleDelta = 16/s.width;
+						s.setScale(scaleDelta);
+						controls.push(new UIElement(dashboard.width - 96 + controls.length % 3 * 16, dashboard.y + Math.floor(controls.length / 3) * 16, s));
+						controls[controls.length-1].setSizeAuto();
+						
+						controls[controls.length - 1].leftClick = function(x:Float,y:Float) 
+						{
+							actors[i].eventDispatcher.dispatchEvent(QueueEvent.QUEUE, new QueueEvent(j));
+						};
+						uiElements.add(controls[controls.length-1]);
+					}
+				}
 			}
 		}
 		if(units.length > 0)

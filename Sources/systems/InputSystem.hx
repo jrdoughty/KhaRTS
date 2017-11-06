@@ -1,5 +1,6 @@
 package systems;
 import actors.Actor;
+import actors.ActorList;
 import events.MoveEvent;
 import screens.IGameScreen;
 import world.Node;
@@ -15,6 +16,7 @@ import events.AttackInputEvent;
 import events.MoveInputEvent;
 import events.StopInputEvent;
 import kha.input.KeyCode;
+
 /**
  * ...
  * @author ...
@@ -27,7 +29,7 @@ enum InputState
 	MOVING;
 	CASTING;
 }
- 
+
 class InputSystem extends SimpleEventDispatcher
 {
 	public var ui:UI;
@@ -37,7 +39,7 @@ class InputSystem extends SimpleEventDispatcher
 	private var relativeMouseY:Float;
 	private var activeScreen:IGameScreen;
 	
-	private var selectedActors:Array<Actor> = [];
+	private var selectedActors:ActorList = new ActorList();
 	private var activeNodes:Array<Node> = [];
 	private var selector:Object;
 	
@@ -213,7 +215,7 @@ class InputSystem extends SimpleEventDispatcher
 		}
 		else if(inputState == SELECTING)
 		{
-			selectedActors = [];
+			selectedActors.list = [];
 			for(i in activeNodes)
 			{
 				if(Util.doObjectandITwoDOverlap(selector, i) && 
@@ -223,38 +225,29 @@ class InputSystem extends SimpleEventDispatcher
 					selectedActors.push(i.occupant);
 				}
 			}
-			ui.setUnits(selectedActors);
+			ui.setUnits(selectedActors.list);
 			selector.visible = false;
 		}
 		else if(inputState == MOVING)
 		{
 
 			node = activeNodes[Math.floor(relativeMouseX / activeScreen.lvl.tileset.tileWidth) + Math.floor(relativeMouseY / activeScreen.lvl.tileset.tileWidth)*activeScreen.lvl.levelWidth];
-			var j = 0;
-			for(i in selectedActors) 
-			{
-				i.eventDispatcher.dispatchEvent(MoveEvent.MOVE, new MoveEvent(activeScreen.lvl.getNodeByGridXY(node.nodeX + Math.floor(j % Math.sqrt(selectedActors.length))-Math.floor(Math.sqrt(selectedActors.length)/2), node.nodeY + Math.floor(j/Math.sqrt(selectedActors.length))-Math.floor(Math.sqrt(selectedActors.length)/2)), false));
-				j++;
-			}
+			selectedActors.moveTo(node);
 			inputState = SELECTING;
 		}
 		else if(inputState == ATTACKING)
 		{
 			node = activeNodes[Math.floor(relativeMouseX / activeScreen.lvl.tileset.tileWidth) + Math.floor(relativeMouseY / activeScreen.lvl.tileset.tileWidth)*activeScreen.lvl.levelWidth];
 			var j = 0;
-			for(i in selectedActors) 
+			if(node.occupant == null)
 			{
-				if(node.occupant == null)
-				{
-					i.eventDispatcher.dispatchEvent(MoveEvent.MOVE, new MoveEvent(activeScreen.lvl.getNodeByGridXY(node.nodeX + Math.floor(j % Math.sqrt(selectedActors.length))-Math.floor(Math.sqrt(selectedActors.length)/2), node.nodeY + Math.floor(j/Math.sqrt(selectedActors.length))-Math.floor(Math.sqrt(selectedActors.length)/2)), false));
-				}
-				else
-				{
-					i.eventDispatcher.dispatchEvent(TargetEvent.ATTACK_ACTOR, new TargetEvent(activeScreen.lvl.getNodeByGridXY(node.nodeX + j, node.nodeY).occupant));
-				}
-				j++;
-				inputState = SELECTING;
+				selectedActors.moveTo(node);
 			}
+			else
+			{
+				selectedActors.target(node.occupant);
+			}
+			inputState = SELECTING;
 		}
 	}
 
@@ -302,22 +295,19 @@ class InputSystem extends SimpleEventDispatcher
 
 	public function rightDown()
 	{
-		if(selectedActors.length != 0)
+		if(selectedActors.list.length != 0)
 		{
 			for(i in activeNodes)
 			{
 				if(relativeMouseX >= i.x && relativeMouseX <= i.x + i.width && relativeMouseY >= i.y && relativeMouseY <= i.y + i.height)
 				{
-					var k = 0;
-					for(j in selectedActors) 
+					if(i.occupant != null && i.occupant.team != selectedActors.list[0].team)
 					{
-						if(i.occupant != null && i.occupant.team != j.team)
-							j.eventDispatcher.dispatchEvent(TargetEvent.ATTACK_ACTOR, new TargetEvent(i.occupant));
-						else
-						{
-							j.eventDispatcher.dispatchEvent(MoveEvent.MOVE, new MoveEvent(activeScreen.lvl.getNodeByGridXY(i.nodeX + Math.floor(k % Math.sqrt(selectedActors.length))-Math.floor(Math.sqrt(selectedActors.length)/2), i.nodeY + Math.floor(k/Math.sqrt(selectedActors.length))-Math.floor(Math.sqrt(selectedActors.length)/2)), false));
-						}
-						k++;
+						selectedActors.target(i.occupant);
+					}
+					else
+					{
+						selectedActors.moveTo(i);
 					}
 				}
 			}

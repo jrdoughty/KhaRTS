@@ -4,7 +4,7 @@
 			"name": "units",
 			"columns": [
 				{
-					"typeStr": "1",
+					"typeStr": "0",
 					"name": "name"
 				},
 				{
@@ -37,19 +37,34 @@
 					"opt": true
 				},
 				{
+					"typeStr": "8",
+					"name": "buildings",
+					"display": null
+				},
+				{
+					"typeStr": "8",
+					"name": "resources",
+					"display": null
+				},
+				{
+					"typeStr": "8",
+					"name": "attacks",
+					"opt": true
+				},
+				{
 					"typeStr": "3",
 					"name": "viewRange",
 					"opt": true
 				},
 				{
 					"typeStr": "3",
-					"name": "speed",
+					"name": "moveCooldown",
 					"opt": true
 				},
 				{
 					"typeStr": "3",
-					"name": "damage",
-					"opt": true
+					"name": "idleCoolDown",
+					"display": null
 				},
 				{
 					"typeStr": "4",
@@ -76,16 +91,14 @@
 					"name": "soldier",
 					"health": 1,
 					"threatRange": 3,
-					"speed": 500,
 					"aggressive": false,
-					"damage": 2,
 					"viewRange": 6,
-					"image": "knight",
+					"image": "swordSoldier",
 					"healthMax": 5,
 					"mobile": true,
 					"ai": "soldier",
-					"width": 32,
-					"height": 32,
+					"width": 8,
+					"height": 8,
 					"comps": [
 						{
 							"name": "BasicAnimator"
@@ -98,23 +111,44 @@
 						},
 						{
 							"name": "View"
+						}
+					],
+					"moveCooldown": 500,
+					"idleCoolDown": 250,
+					"attacks": [
+						{
+							"name": "sword",
+							"damage": 1,
+							"minRange": 0,
+							"maxRange": 1,
+							"coolDown": 700
+						}
+					],
+					"resources": [
+						{
+							"name": "wood",
+							"harvet": 1,
+							"coolDown": 700
+						}
+					],
+					"buildings": [
+						{
+							"name": "barracks"
 						}
 					]
 				},
 				{
 					"name": "enemy",
 					"health": 1,
-					"image": "redknight",
+					"image": "lizardspear",
 					"threatRange": 3,
-					"speed": 500,
 					"aggressive": false,
-					"damage": 2,
 					"viewRange": 6,
 					"healthMax": 5,
 					"mobile": true,
 					"ai": "wanderer",
-					"width": 32,
-					"height": 32,
+					"width": 8,
+					"height": 8,
 					"comps": [
 						{
 							"name": "BasicAnimator"
@@ -128,7 +162,97 @@
 						{
 							"name": "View"
 						}
-					]
+					],
+					"moveCooldown": 500,
+					"idleCoolDown": 250,
+					"resources": [],
+					"buildings": []
+				}
+			],
+			"separators": [],
+			"props": {}
+		},
+		{
+			"name": "buildings",
+			"columns": [
+				{
+					"typeStr": "0",
+					"name": "name",
+					"display": null
+				},
+				{
+					"typeStr": "1",
+					"name": "image",
+					"display": null
+				},
+				{
+					"typeStr": "8",
+					"name": "attacks",
+					"display": null
+				},
+				{
+					"typeStr": "3",
+					"name": "width",
+					"display": null
+				},
+				{
+					"typeStr": "3",
+					"name": "height",
+					"display": null
+				},
+				{
+					"typeStr": "8",
+					"name": "units",
+					"display": null
+				},
+				{
+					"typeStr": "3",
+					"name": "healthMax",
+					"display": null
+				},
+				{
+					"typeStr": "4",
+					"name": "health",
+					"display": 1
+				},
+				{
+					"typeStr": "8",
+					"name": "comps",
+					"display": null
+				}
+			],
+			"lines": [
+				{
+					"name": "barracks",
+					"units": [
+						{
+							"name": "soldier",
+							"cost": 50,
+							"coolDown": 1000
+						},
+						{
+							"name": "enemy",
+							"cost": 50,
+							"coolDown": 750
+						}
+					],
+					"comps": [
+						{
+							"name": "View"
+						},
+						{
+							"name": "Health"
+						},
+						{
+							"name": "Building"
+						}
+					],
+					"image": "building",
+					"width": 16,
+					"height": 16,
+					"attacks": [],
+					"healthMax": 0,
+					"health": 1
 				}
 			],
 			"separators": [],
@@ -241,8 +365,8 @@
 			"lines": [
 				{
 					"name": "demo",
-					"tmxFile": "level",
-					"tsxFile": "tiles"
+					"tmxFile": "verytinylevel",
+					"tsxFile": "tinytileset"
 				}
 			],
 			"separators": [],
@@ -286,10 +410,154 @@
 				},
 				{
 					"name": "StateAI"
+				},
+				{
+					"name": "Building"
 				}
 			],
 			"separators": [],
 			"props": {}
+		},
+		{
+			"name": "units@attacks",
+			"props": {
+				"hide": true
+			},
+			"separators": [],
+			"lines": [],
+			"columns": [
+				{
+					"typeStr": "0",
+					"name": "name",
+					"display": null
+				},
+				{
+					"typeStr": "3",
+					"name": "damage",
+					"display": null
+				},
+				{
+					"typeStr": "3",
+					"name": "maxRange"
+				},
+				{
+					"typeStr": "3",
+					"name": "minRange"
+				},
+				{
+					"typeStr": "3",
+					"name": "coolDown"
+				}
+			]
+		},
+		{
+			"name": "units@resources",
+			"props": {
+				"hide": true
+			},
+			"separators": [],
+			"lines": [],
+			"columns": [
+				{
+					"typeStr": "6:Resources",
+					"name": "name",
+					"display": null
+				},
+				{
+					"typeStr": "3",
+					"name": "harvet",
+					"display": null
+				},
+				{
+					"typeStr": "3",
+					"name": "coolDown",
+					"display": null
+				}
+			]
+		},
+		{
+			"name": "units@buildings",
+			"props": {
+				"hide": true
+			},
+			"separators": [],
+			"lines": [],
+			"columns": [
+				{
+					"typeStr": "6:buildings",
+					"name": "name",
+					"display": null
+				}
+			]
+		},
+		{
+			"name": "buildings@units",
+			"props": {
+				"hide": true
+			},
+			"separators": [],
+			"lines": [],
+			"columns": [
+				{
+					"typeStr": "6:units",
+					"name": "name",
+					"display": null
+				},
+				{
+					"typeStr": "3",
+					"name": "cost",
+					"display": null
+				},
+				{
+					"typeStr": "3",
+					"name": "coolDown",
+					"display": null
+				}
+			]
+		},
+		{
+			"name": "buildings@comps",
+			"props": {
+				"hide": true
+			},
+			"separators": [],
+			"lines": [],
+			"columns": [
+				{
+					"typeStr": "6:comps",
+					"name": "name",
+					"display": null
+				}
+			]
+		},
+		{
+			"name": "Resources",
+			"columns": [
+				{
+					"typeStr": "0",
+					"name": "name",
+					"display": null
+				}
+			],
+			"lines": [
+				{
+					"name": "wood"
+				},
+				{
+					"name": "gold"
+				}
+			],
+			"separators": [],
+			"props": {}
+		},
+		{
+			"name": "buildings@attacks",
+			"props": {
+				"hide": true
+			},
+			"separators": [],
+			"lines": [],
+			"columns": []
 		}
 	],
 	"customTypes": [],

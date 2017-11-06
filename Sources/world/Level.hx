@@ -63,7 +63,6 @@ class Level extends Object
 									if(layer.data.tiles[i].gid - 1 == k.id && k.type == 'water')
 									{
 										shouldPass = false;
-										trace(++count + " " + x + " " + y + " " + layer.data.tiles[i].gid);
 									}
 								} 
 								activeNodes.push(new Node(layer.data.tiles[i].gid - 1, t.tileWidth, t.tileHeight, x, y, shouldPass, canSee));
@@ -95,17 +94,14 @@ class Level extends Object
 							if(tile.gid>0)
 							{
 								if(!playerStartPos.exists(player))//forces single start point
+								{
 									playerStartPos.set(player, new Vector2(i%levelWidth,Std.int(i/levelWidth)));
+								}
 							}
 						}
 					}
-					
 				default:
-					//trace(layer);
-					
-
 			}
-
 		}
 	}
 	

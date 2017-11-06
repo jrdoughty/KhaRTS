@@ -8,7 +8,7 @@ import systems.AStar;
 import tween.Delta;
 import events.MoveEvent;
 import events.StopEvent;
-
+import events.ChangeTimingEvent;
 class MovingState extends BaseState
 {
 	private var path:Array<Node> = [];
@@ -28,7 +28,7 @@ class MovingState extends BaseState
 	{
 		failedToMove = false;
 		if(diag == true)
-			actor.eventDispatcher.dispatchEvent(events.ChangeTimingEvent.CHANGE, new events.ChangeTimingEvent(actor.data['speed']*1));
+			actor.eventDispatcher.dispatchEvent(events.ChangeTimingEvent.CHANGE, new events.ChangeTimingEvent(actor.data['moveCooldown']*1));
 	}
 	
 	/**
@@ -47,7 +47,6 @@ class MovingState extends BaseState
 		else
 		{
 			failedToMove = true;
-			trace('fail');
 		}
 	}
 	
@@ -63,17 +62,17 @@ class MovingState extends BaseState
 		actor.currentNodes[0].occupant = actor;
 		if(diag)
 		{
-			trace('diag');
-			actor.eventDispatcher.dispatchEvent(events.ChangeTimingEvent.CHANGE, new events.ChangeTimingEvent(Math.round(actor.data['speed']*1.4)));
+			actor.coolDown = Math.round(actor.data['moveCooldown'] * 1.4);
 			Delta.tween(actor)
-				.prop("x",actor.currentNodes[0].x, actor.data['speed']*1.4/1000)
-				.prop("y",actor.currentNodes[0].y, actor.data['speed']*1.4/1000);
+				.prop("x",actor.currentNodes[0].x, actor.data['moveCooldown'] * 1.4 / 1000)
+				.prop("y",actor.currentNodes[0].y, actor.data['moveCooldown'] * 1.4 / 1000);
 		}
 		else
 		{
+			actor.coolDown = Math.round(actor.data['moveCooldown']);
 			Delta.tween(actor)
-				.prop("x",actor.currentNodes[0].x, actor.data['speed']/1000)
-				.prop("y",actor.currentNodes[0].y, actor.data['speed']/1000);
+				.prop("x",actor.currentNodes[0].x, actor.data['moveCooldown'] / 1000)
+				.prop("y",actor.currentNodes[0].y, actor.data['moveCooldown'] / 1000);
 		}
 	}
 }

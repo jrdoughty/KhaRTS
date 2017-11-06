@@ -25,9 +25,9 @@ class WanderState extends BaseState
 		} 
 		else
 		{
-			if(Math.random() <.5)
+			if(Math.random() < .5)
 			{
-				actor.data['targetNode'] = actor.currentNodes[0].neighbors[Math.floor(Math.random() * actor.currentNodes[0].neighbors.length)];
+				actor.data['targetNode'] = actor.neighbors[Math.floor(Math.random() * actor.neighbors.length)];
 				actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('moving', true));
 			}
 			else

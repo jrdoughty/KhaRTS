@@ -11,4 +11,13 @@ class EmptyClassState implements IState
 	{
 
 	}
+	public function enter()
+	{
+
+	}
+
+	public function exit()
+	{
+		
+	}
 }
