@@ -46,9 +46,8 @@ class StateAI extends ActorComponent implements AI
 				key = i.name;
 			states.set(key, StateFactory.create(i.name, actor));
 		}
-		state = states.get('idle');
 		currentState = 'idle';
-		state.enter();
+		states[currentState].enter();
 		//Keeps mass created units from updating at the exact same time. 
 		//Idea from: http://answers.unity3d.com/questions/419786/a-pathfinding-multiple-enemies-MOVING-target-effic.html
 
@@ -73,12 +72,11 @@ class StateAI extends ActorComponent implements AI
 			if(currentState != null)
 				states[currentState].exit();
 			currentState = nextState;
-			state = states[currentState];
 			nextState = null;
 			states[currentState].enter();
 		}
 		lastState = currentState;
-		state.takeAction();
+		states[currentState].takeAction();
 		actionTimer = Sdg.addTimeTask(takeAction, actor.coolDown/1000,0,1);
 	}
 	
@@ -94,14 +92,13 @@ class StateAI extends ActorComponent implements AI
 
 	private function changeState(e:StateChangeEvent)
 	{
-		if(states.exists(e.state))
+		if(states.exists(e.state) && e.state != currentState)
 		{
 			states[currentState].exit();
 			if(e.immediate)
 			{
 				currentState = e.state;
-				state = states[currentState];
-				state.takeAction();
+				states[currentState].takeAction();
 			}
 			else
 			{

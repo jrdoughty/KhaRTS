@@ -181,6 +181,7 @@ class AttackState extends MovingState
 	{
 		actor.eventDispatcher.dispatchEvent(StopEvent.STOP, new StopEvent());
 		actor.data['targetEnemy'] = aEvent.target;
+		actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('attacking'));
 	}
 	
 	

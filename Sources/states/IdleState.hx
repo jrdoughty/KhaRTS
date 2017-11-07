@@ -21,19 +21,7 @@ class IdleState extends BaseState
 			checkView();
 			actor.data['targetEnemy'] = getEnemyInThreat();
 		}
-
-		if (actor.data['targetNode'] != null && actor.data['mobile'])
-		{
-			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('moving', true));
-		}
-		else if (actor.data['targetEnemy'] != null && actor.data['targetEnemy'].data.exists('health'))
-		{
-			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('attacking'));
-		} 
-		else
-		{
-			actor.eventDispatcher.dispatchEvent(IdleAnimationEvent.IDLE, new IdleAnimationEvent());
-		}
+		actor.eventDispatcher.dispatchEvent(IdleAnimationEvent.IDLE, new IdleAnimationEvent());
 	}
 	
 }

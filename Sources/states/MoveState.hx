@@ -100,6 +100,7 @@ class MoveState extends MovingState
 		actor.eventDispatcher.dispatchEvent(StopEvent.STOP, new StopEvent());
 		actor.data['targetNode'] = moveEvent.node;
 		actor.data['aggressive'] = moveEvent.aggressive;
+		actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('moving'));
 	}
 	
 	/**
