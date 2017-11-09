@@ -46,7 +46,7 @@ class AttackState extends MovingState
 		if (actor.data['targetEnemy'] != null && actor.data['targetEnemy'].alive )
 		{
 			if(isEnemyInRange())
-				true;
+				actor.coolDown = getAvailableAttack().coolDown;
 			else
 				actor.coolDown = Std.int(actor.data['moveCooldown']);
 		}
@@ -113,7 +113,7 @@ class AttackState extends MovingState
 				x2 = a.currentNodes[0].nodeX;
 				y1 = actor.currentNodes[0].nodeY;
 				y2 = a.currentNodes[0].nodeY;
-				dist = Math.sqrt(Math.abs(x1 - x2) + Math.abs(y1 - y2));
+				dist = Util.getPythagoreanCFromXY(x1, y1, x2, y2);
 				
 				if(dist > i.minRange && dist < (i.maxRange==1?i.maxRange*1.42:i.maxRange))
 				{
@@ -145,6 +145,7 @@ class AttackState extends MovingState
 	 */
 	private function chase()
 	{		
+		actor.coolDown = actor.data['moveCooldown'];
 		if (path.length == 0 || path[path.length - 1] != actor.data['targetEnemy'].currentNodes[0])
 		{
 			path = AStar.newPath(actor.currentNodes[0], actor.data['targetEnemy'].currentNodes[0]);

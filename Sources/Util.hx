@@ -110,4 +110,9 @@ class Util
 		}
 		return resultMap;
 	}
+
+	public static function getPythagoreanCFromXY(x1:Float,y1:Float,x2:Float,y2:Float):Float
+	{
+		return Math.sqrt(Math.abs(x1 - x2) * Math.abs(x1 - x2) + Math.abs(y1 - y2) * Math.abs(y1 - y2));
+	}
 }
