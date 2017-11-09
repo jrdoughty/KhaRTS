@@ -13,7 +13,8 @@ class ComponentSystem
 		View,
 		BasicAnimator,
 		UIHealth,
-		Building];
+		Building,
+		ResourceHealth];
 	private var componentMap:Map<String, Class<Component>> = new Map();
 	
 	public function new() 

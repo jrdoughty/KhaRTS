@@ -109,7 +109,8 @@ class Actor extends Object
 	public function kill()
 	{
 		alive = false;
-		team.units.remove(this);
+		if(team != null)
+			team.units.remove(this);
 		for(i in currentNodes)
 		{
 			i.occupant = null;

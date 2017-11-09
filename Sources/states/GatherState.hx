@@ -10,6 +10,7 @@ import events.StopEvent;
 import tween.Delta;
 import events.AnimateAttackEvent;
 import events.HurtEvent;
+import events.KillEvent;
 import events.GatherEvent;
 
 
@@ -25,6 +26,7 @@ class GatherState extends MovingState
 		else
 			trace('can\'t harvest');
 		a.eventDispatcher.addEvent(StopEvent.STOP, resetData);
+		actor.data['currentResource'] = null;
 	}
 
 	public override function enter()
@@ -35,9 +37,10 @@ class GatherState extends MovingState
 
 	public override function takeAction()
 	{	
+		var tRes = cast(actor.data['targetResource'], Actor);
 		if (actor.data['targetResource'] != null)
 		{
-			if (Util.getPythagoreanCFromXY(cast(actor.data['targetResource'], Actor).currentNodes[0].nodeX,cast(actor.data['targetResource'], Actor).currentNodes[0].nodeY, actor.currentNodes[0].nodeX, actor.currentNodes[0].nodeY)<=Math.sqrt(2))
+			if (Util.getPythagoreanCFromXY(tRes.currentNodes[0].nodeX,tRes.currentNodes[0].nodeY, actor.currentNodes[0].nodeX, actor.currentNodes[0].nodeY)<=Math.sqrt(2))
 			{
 				gather();
 			}
@@ -90,11 +93,39 @@ class GatherState extends MovingState
 	
 	private function gather()
 	{
-		trace('collecting');
+		var tRes:Actor = cast(actor.data['targetResource'], Actor);
+		if(actor.data['currentResource'] == null || actor.data['currentResource'] != tRes.data['resource'])
+		{
+			actor.data['resourcesCollected'] = 0;
+			actor.data['currentResource'] = tRes.data['resource'];
+		}
+		var resources:Array<Dynamic> = actor.data['resources'];
+		for(i in resources)
+		{
+			if(actor.data['currentResource'] == i.name)
+			{
+				if(i.harvest >= tRes.data['resourceValue'])
+				{
+					actor.data['resourcesCollected'] += tRes.data['resourceValue'];
+					tRes.data['resourceValue'] = 0; 
+				}
+				else
+				{
+					actor.data['resourcesCollected'] += i.harvest;
+					tRes.data['resourceValue'] -= i.harvest;
+				}
+				if(tRes.data['resourceValue'] == 0)
+				{
+					actor.data['targetResource'].eventDispatcher.dispatchEvent(KillEvent.KILL, new KillEvent(actor));
+				}
+				actor.coolDown = i.coolDown;
+			}
+		}
+		
 	}
 	
 	/**
-	 * sets target to start either attack or chase sequence
+	 * sets target to start either gather or chase sequence
 	 * @param	aEvent 	holds target Actor, may need qualifier eventually
 	 */
 	public function TargetActor(gEvent:GatherEvent)
@@ -112,5 +143,28 @@ class GatherState extends MovingState
 	public function resetData(eO:StopEvent = null):Void 
 	{
 		actor.data.set('targetResource', null);
+	}
+
+	private function returnResources()
+	{
+		var pathsToReturn:Array<Array<Node>> = [];
+		for(i in actor.team.units)
+		{
+			if(i.data['resourcesAccepted'] != null)
+			{
+				var rA:Array<Dynamic> = i.data['resourcesAccepted'];
+				for(i in rA)
+				{
+					var resources:Array<Dynamic> = actor.data['resources'];
+					for(j in resources)
+					{
+						if(i.name == j.name)
+						{
+
+						}
+					}
+				}
+			}
+		}
 	}
 }

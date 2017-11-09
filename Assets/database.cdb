@@ -127,8 +127,8 @@
 					"resources": [
 						{
 							"name": "wood",
-							"harvet": 1,
-							"coolDown": 700
+							"coolDown": 700,
+							"harvest": 1
 						}
 					],
 					"buildings": [
@@ -219,6 +219,11 @@
 					"typeStr": "8",
 					"name": "comps",
 					"display": null
+				},
+				{
+					"typeStr": "8",
+					"name": "resourcesAccepted",
+					"display": null
 				}
 			],
 			"lines": [
@@ -252,7 +257,12 @@
 					"height": 16,
 					"attacks": [],
 					"healthMax": 5,
-					"health": 1
+					"health": 1,
+					"resourcesAccepted": [
+						{
+							"name": "wood"
+						}
+					]
 				}
 			],
 			"separators": [],
@@ -423,6 +433,9 @@
 					"name": "Health"
 				},
 				{
+					"name": "ResourceHealth"
+				},
+				{
 					"name": "UIHealth"
 				},
 				{
@@ -485,8 +498,7 @@
 				},
 				{
 					"typeStr": "3",
-					"name": "harvet",
-					"display": null
+					"name": "harvest"
 				},
 				{
 					"typeStr": "3",
@@ -638,7 +650,11 @@
 					"resourceValue": 10,
 					"health": 1,
 					"healthMax": 12,
-					"comps": []
+					"comps": [
+						{
+							"name": "ResourceHealth"
+						}
+					]
 				}
 			],
 			"separators": [],
@@ -651,7 +667,28 @@
 			},
 			"separators": [],
 			"lines": [],
-			"columns": []
+			"columns": [
+				{
+					"typeStr": "6:comps",
+					"name": "name",
+					"display": null
+				}
+			]
+		},
+		{
+			"name": "buildings@resourcesAccepted",
+			"props": {
+				"hide": true
+			},
+			"separators": [],
+			"lines": [],
+			"columns": [
+				{
+					"typeStr": "6:resourceTypes",
+					"name": "name",
+					"display": null
+				}
+			]
 		}
 	],
 	"customTypes": [],
