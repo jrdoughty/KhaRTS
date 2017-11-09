@@ -96,7 +96,7 @@
 					"image": "swordSoldier",
 					"healthMax": 5,
 					"mobile": true,
-					"ai": "soldier",
+					"ai": "jackOfAll",
 					"width": 8,
 					"height": 8,
 					"comps": [
@@ -121,7 +121,7 @@
 							"damage": 1,
 							"minRange": 0,
 							"maxRange": 1,
-							"coolDown": 700
+							"coolDown": 200
 						}
 					],
 					"resources": [
@@ -251,7 +251,7 @@
 					"width": 16,
 					"height": 16,
 					"attacks": [],
-					"healthMax": 0,
+					"healthMax": 5,
 					"health": 1
 				}
 			],
@@ -299,6 +299,23 @@
 							"name": "main_wander"
 						}
 					]
+				},
+				{
+					"name": "jackOfAll",
+					"states": [
+						{
+							"name": "attacking"
+						},
+						{
+							"name": "main_idle"
+						},
+						{
+							"name": "moving"
+						},
+						{
+							"name": "gathering"
+						}
+					]
 				}
 			],
 			"separators": [],
@@ -335,6 +352,9 @@
 				},
 				{
 					"name": "main_wander"
+				},
+				{
+					"name": "gathering"
 				},
 				{
 					"name": "main_idle"
@@ -459,7 +479,7 @@
 			"lines": [],
 			"columns": [
 				{
-					"typeStr": "6:Resources",
+					"typeStr": "6:resourceTypes",
 					"name": "name",
 					"display": null
 				},
@@ -531,7 +551,7 @@
 			]
 		},
 		{
-			"name": "Resources",
+			"name": "resourceTypes",
 			"columns": [
 				{
 					"typeStr": "0",
@@ -552,6 +572,80 @@
 		},
 		{
 			"name": "buildings@attacks",
+			"props": {
+				"hide": true
+			},
+			"separators": [],
+			"lines": [],
+			"columns": []
+		},
+		{
+			"name": "resources",
+			"columns": [
+				{
+					"typeStr": "0",
+					"name": "name",
+					"display": null
+				},
+				{
+					"typeStr": "1",
+					"name": "image",
+					"display": null
+				},
+				{
+					"typeStr": "3",
+					"name": "width",
+					"display": null
+				},
+				{
+					"typeStr": "3",
+					"name": "height",
+					"display": null
+				},
+				{
+					"typeStr": "6:resourceTypes",
+					"name": "resource",
+					"display": null
+				},
+				{
+					"typeStr": "3",
+					"name": "resourceValue",
+					"display": null
+				},
+				{
+					"typeStr": "4",
+					"name": "health",
+					"display": 1
+				},
+				{
+					"typeStr": "3",
+					"name": "healthMax",
+					"display": null
+				},
+				{
+					"typeStr": "8",
+					"name": "comps",
+					"display": null
+				}
+			],
+			"lines": [
+				{
+					"name": "tree",
+					"image": "tree",
+					"width": 8,
+					"height": 8,
+					"resource": "wood",
+					"resourceValue": 10,
+					"health": 1,
+					"healthMax": 12,
+					"comps": []
+				}
+			],
+			"separators": [],
+			"props": {}
+		},
+		{
+			"name": "resources@comps",
 			"props": {
 				"hide": true
 			},

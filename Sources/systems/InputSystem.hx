@@ -301,7 +301,11 @@ class InputSystem extends SimpleEventDispatcher
 			{
 				if(relativeMouseX >= i.x && relativeMouseX <= i.x + i.width && relativeMouseY >= i.y && relativeMouseY <= i.y + i.height)
 				{
-					if(i.occupant != null && i.occupant.team != selectedActors.list[0].team)
+					if(i.occupant != null && i.occupant.team != selectedActors.list[0].team && i.occupant.data['resource'] != null)
+					{
+						selectedActors.gather(i.occupant);
+					}
+					else if(i.occupant != null && i.occupant.team != selectedActors.list[0].team)
 					{
 						selectedActors.target(i.occupant);
 					}

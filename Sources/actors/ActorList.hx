@@ -6,6 +6,7 @@ import haxe.Constraints.Function;
 import sdg.event.EventSystem;
 import sdg.event.EventObject;
 import events.TargetEvent;
+import events.GatherEvent;
 import events.MoveEvent;
 
 class ActorList
@@ -26,6 +27,26 @@ class ActorList
 		for(actor in list)
 		{
 			actor.eventDispatcher.dispatchEvent(TargetEvent.ATTACK_ACTOR, new TargetEvent(a));
+		}
+	}
+
+	public function gather(a:Actor)
+	{
+		for(actor in list)
+		{
+			var gathering:Bool = false;
+			var resources:Array<Dynamic> = actor.data['resources'];
+			for(i in resources)
+			{
+				if(i.name == a.data['resource'])
+				{
+					actor.eventDispatcher.dispatchEvent(GatherEvent.GATHER, new GatherEvent(a));
+					gathering = true;
+					break;
+				}
+			}
+			if(!gathering)
+				actor.eventDispatcher.dispatchEvent(MoveEvent.MOVE, new MoveEvent(a.currentNodes[0], false));
 		}
 	}
 

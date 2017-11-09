@@ -64,7 +64,7 @@ class BaseState implements IState
 		var result:Actor = null;
 		for (i in 0...threatNodes.length)
 		{
-			if (threatNodes[i].occupant != null && actor.team.isThreat(threatNodes[i].occupant.team.id) && threatNodes[i].occupant.data.exists('health'))
+			if (threatNodes[i].occupant != null && (threatNodes[i].occupant.team != null && actor.team.isThreat(threatNodes[i].occupant.team.id)) && threatNodes[i].occupant.data.exists('health'))
 			{
 				result = threatNodes[i].occupant;
 				break;

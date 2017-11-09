@@ -10,6 +10,7 @@ import events.StopEvent;
 import tween.Delta;
 import events.AnimateAttackEvent;
 import events.HurtEvent;
+import events.GatherEvent;
 
 
 class GatherState extends MovingState
@@ -20,7 +21,7 @@ class GatherState extends MovingState
 		super(a);
 		
 		if(a.data.exists('resources'))
-			true;//a.eventDispatcher.addEvent(MoveEvent.MOVE, MoveToNode);
+			a.eventDispatcher.addEvent(GatherEvent.GATHER, TargetActor);
 		else
 			trace('can\'t harvest');
 		a.eventDispatcher.addEvent(StopEvent.STOP, resetData);
@@ -58,6 +59,7 @@ class GatherState extends MovingState
 	private function chase()
 	{		
 		actor.coolDown = actor.data['moveCooldown'];
+
 		if (path.length == 0 || path[path.length - 1] != actor.data['targetResource'].currentNodes[0])
 		{
 			path = AStar.newPath(actor.currentNodes[0], actor.data['targetResource'].currentNodes[0]);
@@ -88,7 +90,18 @@ class GatherState extends MovingState
 	
 	private function gather()
 	{
-
+		trace('collecting');
+	}
+	
+	/**
+	 * sets target to start either attack or chase sequence
+	 * @param	aEvent 	holds target Actor, may need qualifier eventually
+	 */
+	public function TargetActor(gEvent:GatherEvent)
+	{
+		actor.eventDispatcher.dispatchEvent(StopEvent.STOP, new StopEvent());
+		actor.data['targetResource'] = gEvent.target;
+		actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('gathering'));
 	}
 	
 	/**

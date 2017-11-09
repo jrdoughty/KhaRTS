@@ -120,7 +120,7 @@ class AStar
 
 			for (i in 0...openList[closestIndex].neighbors.length) 
 			{
-				if (SetupChildNode(openList[closestIndex].neighbors[i], openList[closestIndex]))
+				if (setupChildNode(openList[closestIndex].neighbors[i], openList[closestIndex]))
 				{
 					return true;
 				}
@@ -140,7 +140,6 @@ class AStar
 	{
         var h = Std.int(10 * Math.abs(childNode.nodeX - endNode.nodeX) + 10 * Math.abs(childNode.nodeY - endNode.nodeY));
 		h += childNode.modifier;
-		h += childNode.occupant != null?10:0;
         return h;
     }
 	
@@ -152,11 +151,12 @@ class AStar
 	 * @param	parentNode to be added to the child if a better parent doesn't exist
 	 * @return	whether or not it is the end
 	 */
-    private static function SetupChildNode(childNode:Node, parentNode:Node):Bool 
+    private static function setupChildNode(childNode:Node, parentNode:Node):Bool 
 	{
         var prospectiveG:Int;
 
         childNode.heiristic = calculateHeiristic(childNode, end);
+
 
         if (childNode.heiristic == 0) 
 		{
@@ -171,15 +171,17 @@ class AStar
         if (parentNode.nodeX == childNode.nodeX || parentNode.nodeY == childNode.nodeY) 
 		{
             prospectiveG = parentNode.g + 10;
-			if (childNode.occupant != null)
-			{
-				prospectiveG += 100;
-			}
         } 
 		else 
 		{
             prospectiveG = parentNode.g + 14;
         }
+
+		if (childNode.occupant != null)
+		{
+			prospectiveG += 100;
+		}
+
         if (prospectiveG + childNode.heiristic < childNode.getFinal() || childNode.g == -1) 
 		{
             childNode.parentNode = parentNode;
