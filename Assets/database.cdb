@@ -266,6 +266,9 @@
 						},
 						{
 							"name": "StateAI"
+						},
+						{
+							"name": "BuildingAnimator"
 						}
 					],
 					"image": "building",
@@ -470,6 +473,9 @@
 			"lines": [
 				{
 					"name": "BasicAnimator"
+				},
+				{
+					"name": "BuildingAnimator"
 				},
 				{
 					"name": "Health"

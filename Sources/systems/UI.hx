@@ -15,6 +15,7 @@ import events.AttackInputEvent;
 import events.StopInputEvent;
 import events.MoveInputEvent;
 import events.QueueEvent;
+import events.BuildEvent;
 import world.Node;
 
 class UI extends SimpleEventDispatcher
@@ -126,6 +127,7 @@ class UI extends SimpleEventDispatcher
 									var startNode = actors[i].currentNodes[0].rightNode;// lvl.getNodeByGridXY(Std.int(lvl.playerStartPos[i].x + 1 + (k % 3)),Std.int(lvl.playerStartPos[i].y + 1 + (Math.floor(k / 3))));
 									var act = new Actor(startNode, Util.cloneStringMap(d));
 									actors[i].screen.add(actors[i].team.addUnit(act));
+									act.eventDispatcher.dispatchEvent(BuildEvent.BUILD, new BuildEvent());
 								}
 							};
 							uiElements.add(controls[controls.length-1]);
