@@ -122,8 +122,14 @@ class UI extends SimpleEventDispatcher
 							controls[controls.length-1].setSizeAuto();
 							
 							controls[controls.length - 1].leftClick = function(x:Float,y:Float) 
-							{
-								trace('click');
+							{		
+								if(actors[i].team.resources >= d['cost'])
+								{
+									actors[i].team.resources -= d['cost'];
+									var startNode = actors[i].currentNodes[0].rightNode;// lvl.getNodeByGridXY(Std.int(lvl.playerStartPos[i].x + 1 + (k % 3)),Std.int(lvl.playerStartPos[i].y + 1 + (Math.floor(k / 3))));
+									var act = new Actor(startNode, Util.cloneStringMap(d));
+									actors[i].screen.add(actors[i].team.addUnit(act));
+								}
 							};
 							uiElements.add(controls[controls.length-1]);
 						}

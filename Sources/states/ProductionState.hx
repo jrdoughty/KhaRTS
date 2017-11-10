@@ -1,27 +1,33 @@
-package components;
+package states;
 
-import sdg.components.Component;
+import events.IdleAnimationEvent;
 import actors.Actor;
+import events.StateChangeEvent;
 import events.QueueEvent;
 import systems.Data;
 import world.Node;
 
-class Building extends Component
-{
-	private var actor:Actor;
 
-	public override function init()
+class ProductionState extends BaseState
+{
+
+	public function new(a:Actor)
 	{
-		super.init();
-		if(Type.getClass(object) == Actor)
-			actor = cast(object, Actor);
-		else
-		{
-			destroy();
-			return;
-		}
+		super(a);
+		
 		actor.data['queue'] = new Array<UnitData>();
 		actor.eventDispatcher.addEvent(QueueEvent.QUEUE, QueueUnitAction);
+		//a.eventDispatcher.addEvent(StopEvent.STOP, resetData);
+	}
+
+	public override function enter()
+	{
+		actor.coolDown = 250;//displays such as meters will be updated every quarter sec
+	}
+
+	public override function takeAction()
+	{	
+		trace('wat');
 	}
 
 	private function QueueUnitAction(e:QueueEvent)
@@ -31,9 +37,9 @@ class Building extends Component
 		{
 			actor.team.resources -= Std.int(e.uData.cost);
 			produceNextUnit();
+			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('producing'));
 		}
 	}
-
 	private function produceNextUnit(bProducingNext:Bool = false)
 	{
 		if(actor.data['queue'].length == 1 || bProducingNext)
@@ -51,8 +57,12 @@ class Building extends Component
 				actor.screen.add(act);
 				actor.data['queue'].splice(0,1);
 				produceNextUnit(actor.data['queue'].length > 0);
-			}, actor.data['queue'][0].coolDown/1000, 0, 1);
-			trace(actor.data['queue'][0].coolDown);
+			}, actor.data['queue'][0].produceTime/1000, 0, 1);
+			trace(actor.data['queue'][0].produceTime);
+		}
+		else
+		{
+			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('idle'));
 		}
 	}
 }

@@ -54,9 +54,9 @@ class PlayScreen extends Screen implements IGameScreen
 				act = new Actor(startNode, Util.cloneStringMap(systems.Data.dataMap['units']['soldier']));
 				add(team.addUnit(act));
 
-				startNode = lvl.getNodeByGridXY(Std.int(lvl.playerStartPos[i].x + 1 + (k % 3)),Std.int(lvl.playerStartPos[i].y + 1 + (Math.floor(k / 3))));
-				act = new Actor(startNode, Util.cloneStringMap(systems.Data.dataMap['buildings']['barracks']));
-				add(team.addUnit(act));
+				//startNode = lvl.getNodeByGridXY(Std.int(lvl.playerStartPos[i].x + 1 + (k % 3)),Std.int(lvl.playerStartPos[i].y + 1 + (Math.floor(k / 3))));
+				//act = new Actor(startNode, Util.cloneStringMap(systems.Data.dataMap['buildings']['barracks']));
+				//add(team.addUnit(act));
 			}				
 			
 			for(k in 0...9)

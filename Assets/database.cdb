@@ -193,6 +193,11 @@
 				},
 				{
 					"typeStr": "3",
+					"name": "viewRange",
+					"display": null
+				},
+				{
+					"typeStr": "3",
 					"name": "width",
 					"display": null
 				},
@@ -225,6 +230,16 @@
 					"typeStr": "8",
 					"name": "resourcesAccepted",
 					"display": null
+				},
+				{
+					"typeStr": "3",
+					"name": "cost",
+					"display": null
+				},
+				{
+					"typeStr": "6:ai",
+					"name": "ai",
+					"display": null
 				}
 			],
 			"lines": [
@@ -234,12 +249,12 @@
 						{
 							"name": "soldier",
 							"cost": 50,
-							"coolDown": 1000
+							"produceTime": 1000
 						},
 						{
 							"name": "enemy",
 							"cost": 50,
-							"coolDown": 750
+							"produceTime": 750
 						}
 					],
 					"comps": [
@@ -250,7 +265,7 @@
 							"name": "Health"
 						},
 						{
-							"name": "Building"
+							"name": "StateAI"
 						}
 					],
 					"image": "building",
@@ -263,7 +278,10 @@
 						{
 							"name": "wood"
 						}
-					]
+					],
+					"cost": 100,
+					"ai": "productionBuilding",
+					"viewRange": 5
 				}
 			],
 			"separators": [],
@@ -330,6 +348,17 @@
 							"name": "returning"
 						}
 					]
+				},
+				{
+					"name": "productionBuilding",
+					"states": [
+						{
+							"name": "main_building_idle"
+						},
+						{
+							"name": "producing"
+						}
+					]
 				}
 			],
 			"separators": [],
@@ -374,7 +403,13 @@
 					"name": "returning"
 				},
 				{
+					"name": "main_building_idle"
+				},
+				{
 					"name": "main_idle"
+				},
+				{
+					"name": "producing"
 				}
 			],
 			"separators": [],
@@ -554,8 +589,7 @@
 				},
 				{
 					"typeStr": "3",
-					"name": "coolDown",
-					"display": null
+					"name": "produceTime"
 				}
 			]
 		},
