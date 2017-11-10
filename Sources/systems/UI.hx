@@ -82,24 +82,21 @@ class UI extends SimpleEventDispatcher
 					units.push(new ActorRepresentative((units.length * actors[i].width) % (actors[i].width * 6) + dashboard.x, Math.floor(units.length / 6) * actors[i].height + dashboard.y, actors[i]));
 					uiElements.add(units[units.length-1]);
 					
-					if(actors[i].data['mobile'])
-					{
-						s = new Sprite(new Region(Assets.images.controls,16,0,8,8));
-						scaleDelta = buttonWidth/s.width;
-						s.setScale(scaleDelta);
-						controls.push(new UIElement(dashboard.width - buttonWidth*5, dashboard.y, s));
-						controls[controls.length-1].leftClick = function(x:Float,y:Float){dispatchEvent(MoveInputEvent.MOVE, new MoveInputEvent());};
-						uiElements.add(controls[controls.length-1]);
-					}
-					if(actors[i].data['mobile'] || actors[i].data.exists('attacks') && actors[i].data.get('attacks').length > 0)
-					{
-						s = new Sprite(new Region(Assets.images.controls,8,0,8,8));
-						scaleDelta = buttonWidth/s.width;
-						s.setScale(scaleDelta);
-						controls.push(new UIElement(dashboard.width - buttonWidth*4, dashboard.y, s));
-						controls[controls.length-1].leftClick = function(x:Float,y:Float){dispatchEvent(StopInputEvent.STOP, new StopInputEvent());};
-						uiElements.add(controls[controls.length-1]);
-					}
+					
+					s = new Sprite(new Region(Assets.images.controls,16,0,8,8));
+					scaleDelta = buttonWidth/s.width;
+					s.setScale(scaleDelta);
+					controls.push(new UIElement(dashboard.width - buttonWidth*5, dashboard.y, s));
+					controls[controls.length-1].leftClick = function(x:Float,y:Float){dispatchEvent(MoveInputEvent.MOVE, new MoveInputEvent());};
+					uiElements.add(controls[controls.length-1]);
+					
+					s = new Sprite(new Region(Assets.images.controls,8,0,8,8));
+					scaleDelta = buttonWidth/s.width;
+					s.setScale(scaleDelta);
+					controls.push(new UIElement(dashboard.width - buttonWidth*4, dashboard.y, s));
+					controls[controls.length-1].leftClick = function(x:Float,y:Float){dispatchEvent(StopInputEvent.STOP, new StopInputEvent());};
+					uiElements.add(controls[controls.length-1]);
+					
 					if(actors[i].data.exists('attacks') && actors[i].data.get('attacks').length > 0)
 					{
 						s = new Sprite(new Region(Assets.images.controls,0,0,8,8));
