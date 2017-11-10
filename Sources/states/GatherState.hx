@@ -11,12 +11,16 @@ import tween.Delta;
 import events.AnimateAttackEvent;
 import events.HurtEvent;
 import events.KillEvent;
+import events.ReturnEvent;
 import events.GatherEvent;
+import screens.IGameScreen;
 
 
 class GatherState extends MovingState
 {
 	var finishedResource:Bool = false;
+	var lastResourceX:Int = -1;
+	var lastResourceY:Int = -1;
 	public function new(a:Actor)
 	{
 		super(a);
@@ -33,13 +37,25 @@ class GatherState extends MovingState
 	{
 		if(actor.coolDown != actor.data['moveCoolDown'])
 			actor.coolDown = actor.data['moveCoolDown'];
+		if(!cast(actor.data['targetResource'], Actor).alive)
+		{
+			actor.data['targetResource'] = findNewResource();
+		}
+		if(actor.data['targetResource'] == null)
+		{
+			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('idle'));
+		}
 	}
 
 	public override function takeAction()
 	{	
-		var tRes = cast(actor.data['targetResource'], Actor);
+		if(!cast(actor.data['targetResource'], Actor).alive)
+		{
+			actor.data['targetResource'] = findNewResource();
+		}
 		if (actor.data['targetResource'] != null)
 		{
+			var tRes = cast(actor.data['targetResource'], Actor);
 			if (Util.getPythagoreanCFromXY(tRes.currentNodes[0].nodeX,tRes.currentNodes[0].nodeY, actor.currentNodes[0].nodeX, actor.currentNodes[0].nodeY)<=Math.sqrt(2))
 			{
 				gather();
@@ -51,7 +67,12 @@ class GatherState extends MovingState
 		}
 		else
 		{
-			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('idle', true));
+			if(actor.data['resourcesCollected'])
+			{
+				actor.eventDispatcher.dispatchEvent(ReturnEvent.RETURN, new ReturnEvent());
+			}
+			else
+				actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('idle', true));
 		}
 	}
 
@@ -61,7 +82,7 @@ class GatherState extends MovingState
 	 */
 	private function chase()
 	{		
-		actor.coolDown = actor.data['moveCooldown'];
+		actor.coolDown = actor.data['moveCoolDown'];
 
 		if (path.length == 0 || path[path.length - 1] != actor.data['targetResource'].currentNodes[0])
 		{
@@ -94,6 +115,7 @@ class GatherState extends MovingState
 	private function gather()
 	{
 		var tRes:Actor = cast(actor.data['targetResource'], Actor);
+		actor.eventDispatcher.dispatchEvent(AnimateAttackEvent.ATTACK, new AnimateAttackEvent());
 		if(actor.data['currentResource'] == null || actor.data['currentResource'] != tRes.data['resource'])
 		{
 			actor.data['resourcesCollected'] = 0;
@@ -104,21 +126,34 @@ class GatherState extends MovingState
 		{
 			if(actor.data['currentResource'] == i.name)
 			{
-				if(i.harvest >= tRes.data['resourceValue'])
+				var amtToHarvest = i.harvest + actor.data['resourcesCollected'] > i.harvestMax ? i.harvestmax - actor.data['resourcesCollected']:i.harvest;
+				if(amtToHarvest >= tRes.data['resourceValue'])
 				{
 					actor.data['resourcesCollected'] += tRes.data['resourceValue'];
 					tRes.data['resourceValue'] = 0; 
 				}
 				else
 				{
-					actor.data['resourcesCollected'] += i.harvest;
-					tRes.data['resourceValue'] -= i.harvest;
+					actor.data['resourcesCollected'] += amtToHarvest;
+					tRes.data['resourceValue'] -= amtToHarvest;
 				}
 				if(tRes.data['resourceValue'] == 0)
 				{
-					actor.data['targetResource'].eventDispatcher.dispatchEvent(KillEvent.KILL, new KillEvent(actor));
+					var e = new KillEvent(actor);
+					e.bubble = false;
+					actor.data['targetResource'].eventDispatcher.dispatchEvent(KillEvent.KILL, e);
 				}
-				actor.coolDown = i.coolDown;
+				trace('collect '+actor.data['resourcesCollected']);
+				trace(i.maxHarvest);
+				if(actor.data['resourcesCollected'] == i.maxHarvest)
+				{
+					actor.eventDispatcher.dispatchEvent(ReturnEvent.RETURN, new ReturnEvent());
+				}
+				else
+				{
+					actor.coolDown = i.coolDown;
+				}
+				break;
 			}
 		}
 		
@@ -131,8 +166,26 @@ class GatherState extends MovingState
 	public function TargetActor(gEvent:GatherEvent)
 	{
 		actor.eventDispatcher.dispatchEvent(StopEvent.STOP, new StopEvent());
-		actor.data['targetResource'] = gEvent.target;
-		actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('gathering'));
+		
+		if(gEvent.target == null)
+		{
+			actor.data['targetResource'] = findNewResource();
+		}
+		else
+		{
+			actor.data['targetResource'] = gEvent.target;
+		}
+		if(actor.data['targetResource'] != null)
+		{
+			lastResourceX = gEvent.target.currentNodes[0].nodeX;
+			lastResourceY = gEvent.target.currentNodes[0].nodeY;
+			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('gathering'));
+		}
+		else
+		{
+			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('idle'));
+		}
+		
 	}
 	
 	/**
@@ -145,26 +198,36 @@ class GatherState extends MovingState
 		actor.data.set('targetResource', null);
 	}
 
-	private function returnResources()
+	private function findNewResource():Actor
 	{
-		var pathsToReturn:Array<Array<Node>> = [];
-		for(i in actor.team.units)
+		var openList:Array<Node> = cast(actor.screen, IGameScreen).lvl.getNodeByGridXY(lastResourceX, lastResourceY).neighbors;
+		var closeList:Array<Node> = [];
+		var iterationsAllowed = 5;
+		var i = 0;
+		while(openList.length > 0 && i < iterationsAllowed)
 		{
-			if(i.data['resourcesAccepted'] != null)
+			i++;
+			for(i in openList)
 			{
-				var rA:Array<Dynamic> = i.data['resourcesAccepted'];
-				for(i in rA)
+				if(i.occupant != null && i.occupant.data['resource'] != null && i.occupant.data['resource'] == actor.data['currentResource'])
 				{
-					var resources:Array<Dynamic> = actor.data['resources'];
-					for(j in resources)
-					{
-						if(i.name == j.name)
-						{
-
-						}
-					}
+					return i.occupant;
 				}
 			}
+			var nextOpenList:Array<Node> = [];
+			for(i in openList)
+			{
+				for(j in i.neighbors)
+				{
+					if(openList.indexOf(j) == -1 && closeList.indexOf(j) == -1)
+					{
+						nextOpenList.push(j);
+					}
+				}
+				closeList.push(i);
+			}
+			openList = nextOpenList;
 		}
+		return null;
 	}
 }

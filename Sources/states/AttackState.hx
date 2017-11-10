@@ -48,11 +48,11 @@ class AttackState extends MovingState
 			if(isEnemyInRange())
 				actor.coolDown = getAvailableAttack().coolDown;
 			else
-				actor.coolDown = Std.int(actor.data['moveCooldown']);
+				actor.coolDown = Std.int(actor.data['moveCoolDown']);
 		}
 		else
 		{
-			actor.coolDown = Std.int(actor.data['moveCooldown']);
+			actor.coolDown = Std.int(actor.data['moveCoolDown']);
 		}
 	}
 
@@ -145,7 +145,7 @@ class AttackState extends MovingState
 	 */
 	private function chase()
 	{		
-		actor.coolDown = actor.data['moveCooldown'];
+		actor.coolDown = actor.data['moveCoolDown'];
 		if (path.length == 0 || path[path.length - 1] != actor.data['targetEnemy'].currentNodes[0])
 		{
 			path = AStar.newPath(actor.currentNodes[0], actor.data['targetEnemy'].currentNodes[0]);

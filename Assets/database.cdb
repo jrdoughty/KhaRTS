@@ -58,7 +58,7 @@
 				},
 				{
 					"typeStr": "3",
-					"name": "moveCooldown",
+					"name": "moveCoolDown",
 					"opt": true
 				},
 				{
@@ -113,7 +113,6 @@
 							"name": "View"
 						}
 					],
-					"moveCooldown": 500,
 					"idleCoolDown": 250,
 					"attacks": [
 						{
@@ -128,14 +127,16 @@
 						{
 							"name": "wood",
 							"coolDown": 700,
-							"harvest": 1
+							"harvest": 1,
+							"maxHarvest": 6
 						}
 					],
 					"buildings": [
 						{
 							"name": "barracks"
 						}
-					]
+					],
+					"moveCoolDown": 500
 				},
 				{
 					"name": "enemy",
@@ -163,10 +164,10 @@
 							"name": "View"
 						}
 					],
-					"moveCooldown": 500,
 					"idleCoolDown": 250,
 					"resources": [],
-					"buildings": []
+					"buildings": [],
+					"moveCoolDown": 500
 				}
 			],
 			"separators": [],
@@ -324,6 +325,9 @@
 						},
 						{
 							"name": "gathering"
+						},
+						{
+							"name": "returning"
 						}
 					]
 				}
@@ -365,6 +369,9 @@
 				},
 				{
 					"name": "gathering"
+				},
+				{
+					"name": "returning"
 				},
 				{
 					"name": "main_idle"
@@ -499,6 +506,11 @@
 				{
 					"typeStr": "3",
 					"name": "harvest"
+				},
+				{
+					"typeStr": "3",
+					"name": "maxHarvest",
+					"display": null
 				},
 				{
 					"typeStr": "3",

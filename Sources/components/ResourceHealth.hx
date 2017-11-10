@@ -53,6 +53,7 @@ class ResourceHealth extends ActorComponent
 		actor.kill();
 		if(e==null)
 			actor.eventDispatcher.dispatchEvent(KillEvent.KILL, new KillEvent(actor));
+		actor.alive = false;
 		actor.screen.remove(object, true);
 	}
 }

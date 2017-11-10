@@ -28,7 +28,7 @@ class MoveState extends MovingState
 	public override function enter()
 	{
 		super.enter();
-		actor.coolDown = Std.int(actor.data['moveCooldown']);
+		actor.coolDown = Std.int(actor.data['moveCoolDown']);
 	}
 
 	/**
