@@ -59,13 +59,13 @@ class PlayScreen extends Screen implements IGameScreen
 				add(team.addUnit(act));
 			}				
 			
-			startNode = lvl.getNodeByGridXY(Std.int(lvl.playerStartPos[i].x + 7), Std.int(lvl.playerStartPos[i].y+1));
-			act = new Actor(startNode, Util.cloneStringMap(systems.Data.dataMap['resources']['tree']));
-			add(act);		
-			
-			startNode = lvl.getNodeByGridXY(Std.int(lvl.playerStartPos[i].x + 8), Std.int(lvl.playerStartPos[i].y+1));
-			act = new Actor(startNode, Util.cloneStringMap(systems.Data.dataMap['resources']['tree']));
-			add(act);
+			for(k in 0...9)
+			{
+				trace(k);
+				startNode = lvl.getNodeByGridXY(Std.int(lvl.playerStartPos[i].x +(k % 3)+8), Std.int(lvl.playerStartPos[i].y+Math.floor(k / 3)));
+				act = new Actor(startNode, Util.cloneStringMap(systems.Data.dataMap['resources']['tree']));
+				add(act);
+			}	
 		}
 		
 		var bgMap = new Fog(lvl.tileset);

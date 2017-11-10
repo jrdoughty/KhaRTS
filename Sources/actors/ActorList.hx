@@ -143,4 +143,25 @@ class ActorList
 		return list.remove(a);
 	}
 
+	public function purgeBuildings()
+	{
+		var bldings:Array<Actor> = [];
+		for(i in list)
+		{
+			if(i.data['mobile'] == null)
+			{
+				bldings.push(i);
+			}
+		}
+		if(bldings.length != list.length)
+		{
+			for(i in list)
+			{
+				if(i.data['mobile'] == null)
+				{
+					list.splice(list.indexOf(i),1);
+				}
+			}
+		}
+	}
 }

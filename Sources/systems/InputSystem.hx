@@ -28,6 +28,7 @@ enum InputState
 	ATTACKING;
 	MOVING;
 	CASTING;
+	BUILDING;
 }
 
 class InputSystem extends SimpleEventDispatcher
@@ -224,6 +225,7 @@ class InputSystem extends SimpleEventDispatcher
 				{
 					selectedActors.push(i.occupant);
 				}
+				selectedActors.purgeBuildings();
 			}
 			ui.setUnits(selectedActors.list);
 			selector.visible = false;

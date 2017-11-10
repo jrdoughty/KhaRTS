@@ -27,6 +27,7 @@ class UI extends SimpleEventDispatcher
 	private var units:Array<ActorRepresentative> = [];
 	private var focusUnit:ActorRepresentative;
 	private var controls:Array<UIElement> = [];
+	private inline static var buttonWidth:Int = 16;
 
 	public function new()
 	{
@@ -42,6 +43,10 @@ class UI extends SimpleEventDispatcher
 
 	public function setUnits(actors:Array<Actor>)
 	{
+		var dataArray:Array<Dynamic> = [];
+		var d:Map<String, Dynamic>;
+		var s:Sprite;
+		var scaleDelta:Float;
 		for(i in units)
 		{
 			uiElements.remove(i);
@@ -76,23 +81,52 @@ class UI extends SimpleEventDispatcher
 				{
 					units.push(new ActorRepresentative((units.length * actors[i].width) % (actors[i].width * 6) + dashboard.x, Math.floor(units.length / 6) * actors[i].height + dashboard.y, actors[i]));
 					uiElements.add(units[units.length-1]);
+					
 					if(actors[i].data['mobile'])
 					{
-						controls.push(new UIElement(dashboard.width - 96, dashboard.y, new Sprite(new Region(Assets.images.controls,0,0,32,32))));
+						s = new Sprite(new Region(Assets.images.controls,16,0,8,8));
+						scaleDelta = buttonWidth/s.width;
+						s.setScale(scaleDelta);
+						controls.push(new UIElement(dashboard.width - buttonWidth*5, dashboard.y, s));
 						controls[controls.length-1].leftClick = function(x:Float,y:Float){dispatchEvent(MoveInputEvent.MOVE, new MoveInputEvent());};
 						uiElements.add(controls[controls.length-1]);
 					}
 					if(actors[i].data['mobile'] || actors[i].data.exists('attacks') && actors[i].data.get('attacks').length > 0)
 					{
-						controls.push(new UIElement(dashboard.width - 64, dashboard.y, new Sprite(new Region(Assets.images.controls,32,0,32,32))));
+						s = new Sprite(new Region(Assets.images.controls,8,0,8,8));
+						scaleDelta = buttonWidth/s.width;
+						s.setScale(scaleDelta);
+						controls.push(new UIElement(dashboard.width - buttonWidth*4, dashboard.y, s));
 						controls[controls.length-1].leftClick = function(x:Float,y:Float){dispatchEvent(StopInputEvent.STOP, new StopInputEvent());};
 						uiElements.add(controls[controls.length-1]);
 					}
 					if(actors[i].data.exists('attacks') && actors[i].data.get('attacks').length > 0)
 					{
-						controls.push(new UIElement(dashboard.width - 32, dashboard.y, new Sprite(new Region(Assets.images.controls,64,0,32,32))));
+						s = new Sprite(new Region(Assets.images.controls,0,0,8,8));
+						scaleDelta = buttonWidth/s.width;
+						s.setScale(scaleDelta);
+						controls.push(new UIElement(dashboard.width - buttonWidth*3, dashboard.y, s));
 						controls[controls.length-1].leftClick = function(x:Float,y:Float){dispatchEvent(AttackInputEvent.ATTACK, new AttackInputEvent());};
 						uiElements.add(controls[controls.length-1]);
+					}
+					if(actors[i].data.exists('buildings') && actors[i].data.get('buildings').length > 0)
+					{
+						dataArray = actors[i].data['buildings'];
+						for(j in dataArray)
+						{
+							d = Data.dataMap['buildings'][j.name];
+							s = new Sprite(new Region(Reflect.field(Assets.images, d['image']),0,0,d['width'],d['height']));
+							scaleDelta = buttonWidth/s.width;
+							s.setScale(scaleDelta);
+							controls.push(new UIElement(dashboard.width - buttonWidth*5 + (controls.length) % 4 * buttonWidth, dashboard.y + Math.floor((controls.length) / 4) * buttonWidth, s));
+							controls[controls.length-1].setSizeAuto();
+							
+							controls[controls.length - 1].leftClick = function(x:Float,y:Float) 
+							{
+								trace('click');
+							};
+							uiElements.add(controls[controls.length-1]);
+						}
 					}
 				}
 			}
@@ -106,14 +140,14 @@ class UI extends SimpleEventDispatcher
 					
 				if(actors[i].data['units'])
 				{
-					var dataArray:Array<Dynamic> = actors[i].data['units'];
+					dataArray = actors[i].data['units'];
 					for(j in dataArray)
 					{
-						var d:Map<String, Dynamic> = Data.dataMap['units'][j.name];
-						var s = new Sprite(new Region(Reflect.field(Assets.images, d['image']),0,0,d['width'],d['height']));
-						var scaleDelta = 16/s.width;
+						d = Data.dataMap['units'][j.name];
+						s = new Sprite(new Region(Reflect.field(Assets.images, d['image']),0,0,d['width'],d['height']));
+						scaleDelta = buttonWidth/s.width;
 						s.setScale(scaleDelta);
-						controls.push(new UIElement(dashboard.width - 96 + controls.length % 3 * 16, dashboard.y + Math.floor(controls.length / 3) * 16, s));
+						controls.push(new UIElement(dashboard.width - buttonWidth*5 + controls.length % 4 * buttonWidth, dashboard.y + Math.floor(controls.length / 4) * buttonWidth, s));
 						controls[controls.length-1].setSizeAuto();
 						
 						controls[controls.length - 1].leftClick = function(x:Float,y:Float) 
