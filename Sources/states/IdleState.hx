@@ -3,6 +3,7 @@ package states;
 import events.IdleAnimationEvent;
 import actors.Actor;
 import events.StateChangeEvent;
+import events.TargetEvent;
 
 
 class IdleState extends BaseState
@@ -16,12 +17,11 @@ class IdleState extends BaseState
 	}
 
 	public override function takeAction()
-	{	
-		if(actor.data['targetNode'] == null && actor.data['targetEnemy'] == null)
-		{
+	{
 			checkView();
-			actor.data['targetEnemy'] = getEnemyInThreat();
-		}
+			var enemy = getEnemyInThreat();
+			if(enemy != null)
+				actor.eventDispatcher.dispatchEvent(TargetEvent.ATTACK_ACTOR, new TargetEvent(enemy));
 	}
 	
 }
