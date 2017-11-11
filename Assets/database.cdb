@@ -96,7 +96,7 @@
 					"image": "swordSoldier",
 					"healthMax": 5,
 					"mobile": true,
-					"ai": "jackOfAll",
+					"ai": "soldier",
 					"width": 8,
 					"height": 8,
 					"comps": [
@@ -120,23 +120,55 @@
 							"damage": 1,
 							"minRange": 0,
 							"maxRange": 1,
-							"coolDown": 200
+							"coolDown": 500
 						}
 					],
-					"resources": [
-						{
-							"name": "wood",
-							"coolDown": 700,
-							"harvest": 1,
-							"maxHarvest": 6
-						}
-					],
+					"resources": [],
+					"buildings": [],
+					"moveCoolDown": 500
+				},
+				{
+					"name": "worker",
+					"image": "worker",
+					"width": 8,
+					"height": 8,
+					"mobile": true,
 					"buildings": [
 						{
 							"name": "barracks"
 						}
 					],
-					"moveCoolDown": 500
+					"resources": [
+						{
+							"name": "wood",
+							"harvest": 1,
+							"maxHarvest": 6,
+							"coolDown": 700
+						}
+					],
+					"idleCoolDown": 250,
+					"health": 1,
+					"healthMax": 4,
+					"ai": "worker",
+					"aggressive": false,
+					"threatRange": 3,
+					"viewRange": 5,
+					"moveCoolDown": 500,
+					"comps": [
+						{
+							"name": "BasicAnimator"
+						},
+						{
+							"name": "StateAI"
+						},
+						{
+							"name": "Health"
+						},
+						{
+							"name": "View"
+						}
+					],
+					"attacks": []
 				},
 				{
 					"name": "enemy",
@@ -167,7 +199,16 @@
 					"idleCoolDown": 250,
 					"resources": [],
 					"buildings": [],
-					"moveCoolDown": 500
+					"moveCoolDown": 500,
+					"attacks": [
+						{
+							"name": "spear",
+							"damage": 2,
+							"maxRange": 1,
+							"minRange": 0,
+							"coolDown": 1000
+						}
+					]
 				}
 			],
 			"separators": [],
@@ -252,8 +293,8 @@
 							"produceTime": 1000
 						},
 						{
-							"name": "enemy",
-							"cost": 50,
+							"name": "worker",
+							"cost": 25,
 							"produceTime": 750
 						}
 					],
@@ -265,10 +306,10 @@
 							"name": "Health"
 						},
 						{
-							"name": "StateAI"
+							"name": "BuildingAnimator"
 						},
 						{
-							"name": "BuildingAnimator"
+							"name": "StateAI"
 						}
 					],
 					"image": "building",
@@ -360,6 +401,26 @@
 						},
 						{
 							"name": "producing"
+						},
+						{
+							"name": "being_built"
+						}
+					]
+				},
+				{
+					"name": "worker",
+					"states": [
+						{
+							"name": "gathering"
+						},
+						{
+							"name": "main_idle"
+						},
+						{
+							"name": "moving"
+						},
+						{
+							"name": "returning"
 						}
 					]
 				}
@@ -412,6 +473,9 @@
 					"name": "main_idle"
 				},
 				{
+					"name": "being_built"
+				},
+				{
 					"name": "producing"
 				}
 			],
@@ -440,7 +504,7 @@
 			"lines": [
 				{
 					"name": "demo",
-					"tmxFile": "verytinylevel",
+					"tmxFile": "demolevel",
 					"tsxFile": "tinytileset"
 				}
 			],
@@ -508,9 +572,8 @@
 			"lines": [],
 			"columns": [
 				{
-					"typeStr": "0",
-					"name": "name",
-					"display": null
+					"typeStr": "1",
+					"name": "name"
 				},
 				{
 					"typeStr": "3",

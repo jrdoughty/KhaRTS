@@ -13,7 +13,7 @@ class KillEvent extends EventObject
 	public function new(a:Actor) 
 	{
 		actor = a;
-		super(true);
+		super(false);
 		
 	}
 	

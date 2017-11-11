@@ -305,6 +305,7 @@ class InputSystem extends SimpleEventDispatcher
 				{
 					if(i.occupant != null && i.occupant.team != selectedActors.list[0].team && i.occupant.data['resource'] != null)
 					{
+						
 						selectedActors.gather(i.occupant);
 					}
 					else if(i.occupant != null && i.occupant.team != selectedActors.list[0].team)

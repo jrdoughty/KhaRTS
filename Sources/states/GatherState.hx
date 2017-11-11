@@ -49,7 +49,7 @@ class GatherState extends MovingState
 
 	public override function takeAction()
 	{	
-		if(!cast(actor.data['targetResource'], Actor).alive)
+		if(actor.data['targetResource'] == null || !cast(actor.data['targetResource'], Actor).alive)
 		{
 			actor.data['targetResource'] = findNewResource();
 		}

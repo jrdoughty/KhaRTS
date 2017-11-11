@@ -60,7 +60,7 @@ class ProductionState extends BaseState
 			}, actor.data['queue'][0].produceTime/1000, 0, 1);
 			trace(actor.data['queue'][0].produceTime);
 		}
-		else
+		else if(actor.data['queue'].length == 0)
 		{
 			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('idle'));
 		}

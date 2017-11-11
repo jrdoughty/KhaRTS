@@ -4,6 +4,7 @@ import sdg.components.Animator;
 import sdg.atlas.Region;
 import events.QueueEvent;
 import events.IdleAnimationEvent;
+import events.BuildEvent;
 import actors.Actor;
 
 class BuildingAnimator extends Animator
@@ -20,19 +21,19 @@ class BuildingAnimator extends Animator
 		var a = cast (object, Actor);
 		regionList = a.data['rl'];
 		a.eventDispatcher.addEvent(QueueEvent.QUEUE, produceAnim);
-		//a.eventDispatcher.addEvent(AnimateAttackEvent.ATTACK, attackAnim);
+		a.eventDispatcher.addEvent(BuildEvent.BUILD, buildAnim);
 		a.eventDispatcher.addEvent(IdleAnimationEvent.IDLE, idleAnim);
 		addAnimation("idle", [regionList[0]], 5);
 		addAnimation("producing", [regionList[2]], 5);
-		//addAnimation("building", [regionList[1]], 5);
+		addAnimation("building", [regionList[1]], 5);
 		play('idle', true);
 	}
-	/*
-	public function moveAnim(e:BuildingEvent)
+	
+	public function buildAnim(e:BuildEvent)
 	{
 		play('building', true);
 	}
-	*/
+	
 	public function produceAnim(e:QueueEvent)
 	{
 		play('producing', false);

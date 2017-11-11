@@ -36,6 +36,7 @@ class ActorList
 		{
 			var gathering:Bool = false;
 			var resources:Array<Dynamic> = actor.data['resources'];
+			if(resources == null) resources = [];//HACK for demo
 			for(i in resources)
 			{
 				if(i.name == a.data['resource'])

@@ -22,6 +22,8 @@ class Level extends Object
 	public var levelWidth:Int;
 	public var levelHeight:Int;
 	public var playerStartPos:Map<Int, Vector2> = new Map<Int, Vector2>();
+	public var neutralEnemyPos:Array<Vector2> = [];
+	public var resourcePos:Array<Vector2> = [];
 
 	private var diagonal:Bool = true;
 	public function new(tmxFileName:String, tilesetTSXFileName:String) 
@@ -73,17 +75,6 @@ class Level extends Object
 						bgMap.loadFrom2DArray(data);
 						graphic = bgMap;
 					}
-					else if (layer.name == 'EnemyLayer')
-					{
-						i = -1;
-						for(tile in layer.data.tiles)
-						{
-							i++;
-							if(tile.gid>0)
-							{
-							}
-						}
-					}
 					else if (layer.name.indexOf('Player') != -1)
 					{
 						var player = Std.parseInt(layer.name.substr(6,2));
@@ -98,6 +89,32 @@ class Level extends Object
 									playerStartPos.set(player, new Vector2(i%levelWidth,Std.int(i/levelWidth)));
 								}
 							}
+						}
+					}
+					else if (layer.name.indexOf('Enemy') != -1)
+					{
+						i = 0;
+						for(y in 0...layer.height)	
+						{						
+							for (x in 0...layer.width)
+							{
+								if(layer.data.tiles[i].gid > 0)
+									neutralEnemyPos.push(new Vector2(x,y));
+								i++;
+							} 
+						}
+					}
+					else if (layer.name.indexOf('Wood') != -1)
+					{
+						i = 0;
+						for(y in 0...layer.height)	
+						{						
+							for (x in 0...layer.width)
+							{
+								if(layer.data.tiles[i].gid > 0)
+									resourcePos.push(new Vector2(x,y));
+								i++;
+							} 
 						}
 					}
 				default:

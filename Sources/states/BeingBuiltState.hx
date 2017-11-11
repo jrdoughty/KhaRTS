@@ -18,8 +18,7 @@ class BeingBuiltState extends BaseState
 	public override function enter()
 	{
 		actor.coolDown = 1000;
-		Scheduler.addTimeTask(finishBuild,1000,0,1);//actor.data['buildTime']);
-
+		Scheduler.addTimeTask(finishBuild,1,0,1);//actor.data['buildTime']);
 	}
 
 	private function build(e:BuildEvent)
@@ -29,6 +28,7 @@ class BeingBuiltState extends BaseState
 
 	private function finishBuild()
 	{
+		trace('finished');
 		actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('idle',true));
 	}
 }

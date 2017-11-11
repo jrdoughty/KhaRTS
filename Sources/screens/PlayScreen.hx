@@ -34,37 +34,39 @@ class PlayScreen extends Screen implements IGameScreen
 	{
 		super.init();
 
+		var startNode;
+		var act;
+		var team;
 		lvl = new Level(systems.Data.dataMap['levels']['demo']['tmxFile'], systems.Data.dataMap['levels']['demo']['tsxFile']);
 		AStar.setLevel(lvl);
 		add(lvl);
 		lvl.setSizeAuto();
 		setWorldSize(lvl.width,lvl.height);
+		for(i in lvl.resourcePos)
+		{
+			startNode = lvl.getNodeByGridXY(Std.int(i.x), Std.int(i.y));
+			act = new Actor(startNode, Util.cloneStringMap(systems.Data.dataMap['resources']['tree']));
+			add(act);
+		}
+		for(i in lvl.neutralEnemyPos)
+		{
+			team = new Team();
+			startNode = lvl.getNodeByGridXY(Std.int(i.x), Std.int(i.y));
+			act = new Actor(startNode, Util.cloneStringMap(systems.Data.dataMap['units']['enemy']));
+			add(team.addUnit(act));
+		}
 		for(i in lvl.playerStartPos.keys())
 		{
-			var team = new Team();
+			team = new Team();
 			if(activeTeam == null)//temp, make active team first team
 				activeTeam = team;
 			teams.push(team);
-			var startNode;
-			var act;
 			for(k in 0...1)
 			{
 				trace(k);
 				startNode = lvl.getNodeByGridXY(Std.int(lvl.playerStartPos[i].x+(k % 3)),Std.int(lvl.playerStartPos[i].y+(Math.floor(k / 3))));
-				act = new Actor(startNode, Util.cloneStringMap(systems.Data.dataMap['units']['soldier']));
+				act = new Actor(startNode, Util.cloneStringMap(systems.Data.dataMap['units']['worker']));
 				add(team.addUnit(act));
-
-				//startNode = lvl.getNodeByGridXY(Std.int(lvl.playerStartPos[i].x + 1 + (k % 3)),Std.int(lvl.playerStartPos[i].y + 1 + (Math.floor(k / 3))));
-				//act = new Actor(startNode, Util.cloneStringMap(systems.Data.dataMap['buildings']['barracks']));
-				//add(team.addUnit(act));
-			}				
-			
-			for(k in 0...9)
-			{
-				trace(k);
-				startNode = lvl.getNodeByGridXY(Std.int(lvl.playerStartPos[i].x +(k % 3)+8), Std.int(lvl.playerStartPos[i].y+Math.floor(k / 3)));
-				act = new Actor(startNode, Util.cloneStringMap(systems.Data.dataMap['resources']['tree']));
-				add(act);
 			}	
 		}
 		
@@ -85,7 +87,9 @@ class PlayScreen extends Screen implements IGameScreen
 		dashboard = new Object();
 		inputSystem = new InputSystem(this);
 		resourcesText = new Text('test', Assets.fonts.OAG, 8, 50);
-		create(4,4,resourcesText);
+		var o = create(4,4,resourcesText);
+		o.fixed.x = true;
+		o.fixed.y = true;
 	}
 
 	public override function update()
@@ -99,5 +103,6 @@ class PlayScreen extends Screen implements IGameScreen
 		lvl.recreateFog(cast(fogOfWar.graphic, Tilemap));
 		inputSystem.update();
 		resourcesText.text = activeTeam.resources+"";
+		
 	}
 }

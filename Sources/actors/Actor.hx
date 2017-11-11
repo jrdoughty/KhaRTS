@@ -56,7 +56,6 @@ class Actor extends Object
 		addComponent(new EventDispatcher());
 		var image:Image = Reflect.field(Assets.images, data['image']);
 		var rl:Array<Region> = Atlas.createRegionList(image, data['width'], data['height']);
-		var ims = Assets.images;
 		this.data = data;
 		data.set('rl', rl);
 		graphic = new Sprite(rl[0]);
