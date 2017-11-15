@@ -243,7 +243,7 @@ class InputSystem extends SimpleEventDispatcher
 			var j = 0;
 			if(node.occupant == null)
 			{
-				selectedActors.moveTo(node);
+				selectedActors.moveTo(node, true);
 			}
 			else
 			{

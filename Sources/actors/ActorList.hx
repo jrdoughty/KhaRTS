@@ -51,7 +51,7 @@ class ActorList
 		}
 	}
 
-	public function moveTo(node:Node)
+	public function moveTo(node:Node, bAgressive:Bool = false)
 	{
 		var nodes:Array<Node> = [node];
 		var lastLength:Int = 1;
@@ -72,7 +72,7 @@ class ActorList
 		i = 0;
 		for(actor in list)
 		{
-			actor.eventDispatcher.dispatchEvent(MoveEvent.MOVE, new MoveEvent(nodes[i], false));
+			actor.eventDispatcher.dispatchEvent(MoveEvent.MOVE, new MoveEvent(nodes[i], bAgressive));
 			i++;
 			if(i == nodes.length)
 				break;
