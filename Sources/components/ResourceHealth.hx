@@ -26,7 +26,11 @@ class ResourceHealth extends ActorComponent
 	{
 		super.init();
 		object.eventDispatcher.addEvent(HurtEvent.HURT, hurt);
-		object.eventDispatcher.addEvent(KillEvent.KILL, kill);
+		object.eventDispatcher.addEvent(KillEvent.KILL, kill);	
+		for(i in actor.currentNodes)
+		{
+			i.hasResource = true;
+		}
 	}
 	
 	public function hurt(e:HurtEvent)
@@ -50,10 +54,15 @@ class ResourceHealth extends ActorComponent
 	
 	public function kill(e:EventObject = null)
 	{		
+		for(i in actor.currentNodes)
+		{
+			i.hasResource = false;
+		}
 		actor.kill();
 		if(e==null)
 			actor.eventDispatcher.dispatchEvent(KillEvent.KILL, new KillEvent(actor));
 		actor.alive = false;
 		actor.screen.remove(object, true);
+		
 	}
 }

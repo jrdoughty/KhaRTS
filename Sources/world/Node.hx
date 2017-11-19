@@ -31,6 +31,14 @@ class Node implements Util.ITwoD
 	public var removeShadow:Bool = false;
 	public var canSeeOver:Bool = false;
 	public var shadowHasBeenRemoved:Bool = false;
+	/**
+	* Resources, unlike units should be considered impassible vs temporary blocks
+	*/
+	public var hasResource:Bool = false;
+	/**
+	* Concrete var for setting passibility. Once set, actors shouldn't be able to ever tread over it. 
+	* Use for say the invisble border around the edge of the map, or indestructable walls
+	*/
 	private var isPassable:Bool = true;
 	
 	public function new(frame:Int, width:Int, height, X:Int = 0, Y:Int = 0, pass:Bool = true, canSeeOver:Bool = true ) 
@@ -52,7 +60,7 @@ class Node implements Util.ITwoD
 	
 	public function isPassible():Bool
 	{
-		return (isPassable);
+		return (isPassable && !hasResource);
 	}
 	
 	public function getFinal():Int

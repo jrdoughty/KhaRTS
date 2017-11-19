@@ -152,7 +152,7 @@
 					"ai": "worker",
 					"aggressive": false,
 					"threatRange": 3,
-					"viewRange": 5,
+					"viewRange": 25,
 					"moveCoolDown": 500,
 					"comps": [
 						{
@@ -174,9 +174,9 @@
 					"name": "enemy",
 					"health": 1,
 					"image": "lizardspear",
-					"threatRange": 3,
+					"threatRange": 7,
 					"aggressive": false,
-					"viewRange": 6,
+					"viewRange": 8,
 					"healthMax": 5,
 					"mobile": true,
 					"ai": "wanderer",
