@@ -207,7 +207,7 @@ class InputSystem extends SimpleEventDispatcher
 				intersetingUIElements.push(i); 
 			}
 		}
-		if (intersetingUIElements.length != 0)
+		if (intersetingUIElements.length != 0 && !selector.visible)
 		{
 			for(i in intersetingUIElements)
 			{
