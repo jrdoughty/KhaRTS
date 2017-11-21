@@ -152,7 +152,7 @@
 					"ai": "worker",
 					"aggressive": false,
 					"threatRange": 3,
-					"viewRange": 25,
+					"viewRange": 8,
 					"moveCoolDown": 500,
 					"comps": [
 						{

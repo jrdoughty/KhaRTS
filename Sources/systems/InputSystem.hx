@@ -47,9 +47,8 @@ class InputSystem extends SimpleEventDispatcher
 	private var selectorStartX:Float;
 	private var selectorStartY:Float;
 	
-	private var newLeftClick:Bool = true;
-	private var wasRightMouseDown:Bool = false;
-	private var wasLeftMouseDown:Bool = false;
+	private var recentlyLeftClicked:Bool = false;
+	private var clickTimerID:Int = -1;
 	
 	private var clickSprites: Array<Object> = [];
 	
@@ -216,6 +215,14 @@ class InputSystem extends SimpleEventDispatcher
 		}
 		else if(inputState == SELECTING)
 		{
+			var double = recentlyLeftClicked;
+			recentlyLeftClicked = true;
+			if(clickTimerID != -1)
+			{
+				Sdg.removeTimeTask(clickTimerID);
+			}
+			clickTimerID = Sdg.addTimeTask(function(){recentlyLeftClicked = false;trace('over');}, .3, 0, 1);
+			
 			selectedActors.list = [];
 			for(i in activeNodes)
 			{
@@ -224,8 +231,22 @@ class InputSystem extends SimpleEventDispatcher
 				selectedActors.indexOf(i.occupant) == -1)
 				{
 					selectedActors.push(i.occupant);
+					if(double) break;//only need one for a double click
 				}
+
 				selectedActors.purgeBuildings();
+			}
+			if(double && selectedActors.list.length != 0)
+			{
+				for(i in selectedActors.list[0].team.units)
+				{
+					if(i.x + i.width >= Sdg.screen.camera.x && i.y + i.height >= Sdg.screen.camera.y &&
+					i.x <= Sdg.screen.camera.x + Sdg.screen.camera.width && i.y <= Sdg.screen.camera.y + Sdg.screen.camera.height &&
+					i.data['name'] == selectedActors.list[0].data['name'] && selectedActors.indexOf(i) == -1)
+					{
+						selectedActors.push(i);
+					}
+				}
 			}
 			ui.setUnits(selectedActors.list);
 			selector.visible = false;
