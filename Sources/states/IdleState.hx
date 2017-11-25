@@ -1,6 +1,6 @@
 package states;
 
-import events.IdleAnimationEvent;
+import events.AnimateEvent;
 import actors.Actor;
 import events.StateChangeEvent;
 import events.TargetEvent;
@@ -13,7 +13,7 @@ class IdleState extends BaseState
 	{
 		if(actor.coolDown != actor.data['idleCoolDown'])
 			actor.coolDown = actor.data['idleCoolDown'];
-		actor.eventDispatcher.dispatchEvent(IdleAnimationEvent.IDLE, new IdleAnimationEvent());
+		actor.eventDispatcher.dispatchEvent(AnimateEvent.ANIMATE, new AnimateEvent('idle',true));
 	}
 
 	public override function takeAction()

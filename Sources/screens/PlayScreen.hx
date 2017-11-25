@@ -50,6 +50,7 @@ class PlayScreen extends Screen implements IGameScreen
 		}
 		for(i in lvl.neutralEnemyPos)
 		{
+			break;
 			team = new Team();
 			startNode = lvl.getNodeByGridXY(Std.int(i.x), Std.int(i.y));
 			act = new Actor(startNode, Util.cloneStringMap(systems.Data.dataMap['units']['enemy']));

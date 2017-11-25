@@ -8,7 +8,7 @@ import world.Node;
 import systems.AStar;
 import events.StopEvent;
 import tween.Delta;
-import events.AnimateAttackEvent;
+import events.AnimateEvent;
 import events.HurtEvent;
 import events.KillEvent;
 import events.ReturnEvent;
@@ -72,7 +72,9 @@ class GatherState extends MovingState
 				actor.eventDispatcher.dispatchEvent(ReturnEvent.RETURN, new ReturnEvent());
 			}
 			else
+			{
 				actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('idle', true));
+			}
 		}
 	}
 
@@ -100,22 +102,21 @@ class GatherState extends MovingState
 				actor.data['targetNode'] = cast(actor.data['targetResource'], Actor).currentNodes[0];
 			}
 			newPath();
+			if(failedToMove)
+			{
+				failedToMove = false;
+				actor.data['targetResource'] = findNewResource();
+				newPath();
+			}
 		}
-
-		if (failedToMove)
-		{
-			actor.eventDispatcher.dispatchEvent(IdleAnimationEvent.IDLE, new IdleAnimationEvent());
-		}
-		else
-		{
-			actor.eventDispatcher.dispatchEvent(MoveAnimEvent.MOVE, new MoveAnimEvent());
-		}
+		
+		animateMove();
 	}
 	
 	private function gather()
 	{
 		var tRes:Actor = cast(actor.data['targetResource'], Actor);
-		actor.eventDispatcher.dispatchEvent(AnimateAttackEvent.ATTACK, new AnimateAttackEvent());
+		actor.eventDispatcher.dispatchEvent(AnimateEvent.ANIMATE, new AnimateEvent('gather',false));
 		if(actor.data['currentResource'] == null || actor.data['currentResource'] != tRes.data['resource'])
 		{
 			actor.data['resourcesCollected'] = 0;
@@ -169,7 +170,7 @@ class GatherState extends MovingState
 		
 		if(gEvent.target == null)
 		{
-			actor.data['targetResource'] = findNewResource();
+			trace('targetting a null resource');
 		}
 		else
 		{
@@ -209,7 +210,7 @@ class GatherState extends MovingState
 			i++;
 			for(i in openList)
 			{
-				if(i.occupant != null && i.occupant.data['resource'] != null && i.occupant.data['resource'] == actor.data['currentResource'])
+				if(i.occupant != null && i.occupant.data['resource'] != null && i.occupant.data['resource'] == actor.data['currentResource'] && i.occupant.alive)
 				{
 					return i.occupant;
 				}
@@ -228,6 +229,7 @@ class GatherState extends MovingState
 			}
 			openList = nextOpenList;
 		}
+		trace('nulled');
 		return null;
 	}
 }

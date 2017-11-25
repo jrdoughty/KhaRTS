@@ -14,7 +14,8 @@ class ComponentSystem
 		BasicAnimator,
 		UIHealth,
 		ResourceHealth,
-		BuildingAnimator];
+		BuildingAnimator,
+		DynamicAnimator];
 	private var componentMap:Map<String, Class<Component>> = new Map();
 	
 	public function new() 

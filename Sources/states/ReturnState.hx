@@ -1,5 +1,6 @@
 package states;
 
+import events.AnimateEvent;
 import events.IdleAnimationEvent;
 import actors.Actor;
 import events.StateChangeEvent;
@@ -31,9 +32,16 @@ class ReturnState extends MovingState
 	public override function enter()
 	{
 		path = findClosestBuilding();
-		actor.data['targetNode'] = path[path.length-1];
-		if(actor.coolDown != actor.data['moveCoolDown'])
-			actor.coolDown = actor.data['moveCoolDown'];
+		if(path.length == 0)
+		{
+			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('idle', true));
+		}
+		else
+		{
+			actor.data['targetNode'] = path[path.length-1];
+			if(actor.coolDown != actor.data['moveCoolDown'])
+				actor.coolDown = actor.data['moveCoolDown'];
+		}
 	}
 
 	public override function takeAction()
@@ -77,15 +85,8 @@ class ReturnState extends MovingState
 			}
 			newPath();
 		}
-
-		if (failedToMove)
-		{
-			actor.eventDispatcher.dispatchEvent(IdleAnimationEvent.IDLE, new IdleAnimationEvent());
-		}
-		else
-		{
-			actor.eventDispatcher.dispatchEvent(MoveAnimEvent.MOVE, new MoveAnimEvent());
-		}
+		
+		animateMove();
 	}
 	
 	/**

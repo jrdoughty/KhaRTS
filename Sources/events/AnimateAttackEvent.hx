@@ -2,7 +2,7 @@ package events;
 import sdg.event.EventObject;
 
 /**
- * ...
+ * Depricated
  * @author John Doughty
  */
 class AnimateAttackEvent extends EventObject

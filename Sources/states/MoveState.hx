@@ -1,8 +1,7 @@
 package states;
 import actors.Actor;
 import events.StateChangeEvent;
-import events.MoveAnimEvent;
-import events.IdleAnimationEvent;
+import events.AnimateEvent;
 import world.Node;
 import systems.AStar;
 import tween.Delta;
@@ -80,14 +79,8 @@ class MoveState extends MovingState
 			}
 		}
 		lastTargetNode = actor.data['targetNode'];
-		if (failedToMove)
-		{
-			actor.eventDispatcher.dispatchEvent(IdleAnimationEvent.IDLE, new IdleAnimationEvent());
-		}
-		else
-		{
-			actor.eventDispatcher.dispatchEvent(MoveAnimEvent.MOVE, new MoveAnimEvent());
-		}
+		
+		animateMove();
 	}
 
 	/**

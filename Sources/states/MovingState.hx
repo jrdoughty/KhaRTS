@@ -1,13 +1,10 @@
 package states;
 import actors.Actor;
 import events.StateChangeEvent;
-import events.MoveAnimEvent;
-import events.IdleAnimationEvent;
+import events.AnimateEvent;
 import world.Node;
 import systems.AStar;
 import tween.Delta;
-import events.MoveEvent;
-import events.StopEvent;
 import events.ChangeTimingEvent;
 class MovingState extends BaseState
 {
@@ -73,6 +70,18 @@ class MovingState extends BaseState
 			Delta.tween(actor)
 				.prop("x",actor.currentNodes[0].x, actor.data['moveCoolDown'] / 1000)
 				.prop("y",actor.currentNodes[0].y, actor.data['moveCoolDown'] / 1000);
+		}
+	}
+
+	function animateMove()
+	{
+		if (failedToMove)
+		{
+			actor.eventDispatcher.dispatchEvent(AnimateEvent.ANIMATE, new AnimateEvent('idle', true));
+		}
+		else
+		{
+			actor.eventDispatcher.dispatchEvent(AnimateEvent.ANIMATE, new AnimateEvent('move', true));
 		}
 	}
 }

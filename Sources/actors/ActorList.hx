@@ -32,26 +32,15 @@ class ActorList
 
 	public function gather(a:Actor)
 	{
-		var resourcesList = [a];
-		for(i in a.neighbors)
-		{
-			if(i.occupant != null && i.occupant.data['resource'] == a.data['resource'])
-			{
-				resourcesList.push(i.occupant);
-			}
-		}
-		var numResources = 0;
 		for(actor in list)
 		{
 			var gathering:Bool = false;
 			var resources:Array<Dynamic> = actor.data['resources'];
-			if(resources == null) resources = [];//HACK for demo
 			for(i in resources)
 			{
 				if(i.name == a.data['resource'])
 				{
-					actor.eventDispatcher.dispatchEvent(GatherEvent.GATHER, new GatherEvent(resourcesList[numResources]));
-					numResources++;
+					actor.eventDispatcher.dispatchEvent(GatherEvent.GATHER, new GatherEvent(a));
 					gathering = true;
 					break;
 				}
@@ -61,7 +50,7 @@ class ActorList
 		}
 	}
 
-	public function moveTo(node:Node, bAgressive:Bool = false)
+	public function moveTo(node:Node, aggressive:Bool = false)
 	{
 		var nodes:Array<Node> = [node];
 		var lastLength:Int = 1;
@@ -82,7 +71,7 @@ class ActorList
 		i = 0;
 		for(actor in list)
 		{
-			actor.eventDispatcher.dispatchEvent(MoveEvent.MOVE, new MoveEvent(nodes[i], bAgressive));
+			actor.eventDispatcher.dispatchEvent(MoveEvent.MOVE, new MoveEvent(nodes[i], aggressive));
 			i++;
 			if(i == nodes.length)
 				break;

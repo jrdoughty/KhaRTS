@@ -1,10 +1,8 @@
 package states;
 import actors.Actor;
 import events.StateChangeEvent;
-import events.AnimateAttackEvent;
 import events.HurtEvent;
-import events.MoveAnimEvent;
-import events.IdleAnimationEvent;
+import events.AnimateEvent;
 import world.Node;
 import systems.AStar;
 import tween.Delta;
@@ -131,7 +129,7 @@ class AttackState extends MovingState
 	{
 		var ed = actor.data['targetEnemy'].eventDispatcher;//hack to deal with js error, js gets confusted as to what 'this' should be
 		ed.dispatchEvent(HurtEvent.HURT, new HurtEvent(attack.damage));
-		actor.eventDispatcher.dispatchEvent(AnimateAttackEvent.ATTACK, new AnimateAttackEvent());
+		actor.eventDispatcher.dispatchEvent(AnimateEvent.ANIMATE, new AnimateEvent('attack',false));
 		actor.coolDown = attack.coolDown;
 		if (actor.data['targetEnemy'].alive == false)
 		{
@@ -164,14 +162,8 @@ class AttackState extends MovingState
 			}
 			newPath();
 		}
-		if (failedToMove)
-		{
-			actor.eventDispatcher.dispatchEvent(IdleAnimationEvent.IDLE, new IdleAnimationEvent());
-		}
-		else
-		{
-			actor.eventDispatcher.dispatchEvent(MoveAnimEvent.MOVE, new MoveAnimEvent());
-		}
+		
+		animateMove();
 	}
 	
 	/**

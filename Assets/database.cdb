@@ -84,6 +84,10 @@
 					"typeStr": "8",
 					"name": "comps",
 					"opt": true
+				},
+				{
+					"typeStr": "8",
+					"name": "animations"
 				}
 			],
 			"lines": [
@@ -101,7 +105,7 @@
 					"height": 8,
 					"comps": [
 						{
-							"name": "BasicAnimator"
+							"name": "DynamicAnimator"
 						},
 						{
 							"name": "Health"
@@ -125,7 +129,42 @@
 					],
 					"resources": [],
 					"buildings": [],
-					"moveCoolDown": 500
+					"moveCoolDown": 500,
+					"animations": [
+						{
+							"name": "idle",
+							"frames": [
+								{
+									"id": 0
+								}
+							],
+							"fps": 5
+						},
+						{
+							"name": "attack",
+							"frames": [
+								{
+									"id": 0
+								},
+								{
+									"id": 2
+								}
+							],
+							"fps": 5
+						},
+						{
+							"name": "move",
+							"frames": [
+								{
+									"id": 0
+								},
+								{
+									"id": 1
+								}
+							],
+							"fps": 5
+						}
+					]
 				},
 				{
 					"name": "worker",
@@ -168,7 +207,8 @@
 							"name": "View"
 						}
 					],
-					"attacks": []
+					"attacks": [],
+					"animations": []
 				},
 				{
 					"name": "enemy",
@@ -208,7 +248,8 @@
 							"minRange": 0,
 							"coolDown": 1000
 						}
-					]
+					],
+					"animations": []
 				}
 			],
 			"separators": [],
@@ -558,6 +599,9 @@
 				},
 				{
 					"name": "Building"
+				},
+				{
+					"name": "DynamicAnimator"
 				}
 			],
 			"separators": [],
@@ -801,6 +845,46 @@
 				{
 					"typeStr": "6:resourceTypes",
 					"name": "name",
+					"display": null
+				}
+			]
+		},
+		{
+			"name": "units@animations",
+			"props": {
+				"hide": true
+			},
+			"separators": [],
+			"lines": [],
+			"columns": [
+				{
+					"typeStr": "1",
+					"name": "name",
+					"display": null
+				},
+				{
+					"typeStr": "8",
+					"name": "frames",
+					"display": null
+				},
+				{
+					"typeStr": "3",
+					"name": "fps",
+					"display": null
+				}
+			]
+		},
+		{
+			"name": "units@animations@frames",
+			"props": {
+				"hide": true
+			},
+			"separators": [],
+			"lines": [],
+			"columns": [
+				{
+					"typeStr": "3",
+					"name": "id",
 					"display": null
 				}
 			]
