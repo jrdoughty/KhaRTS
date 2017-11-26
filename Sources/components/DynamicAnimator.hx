@@ -20,12 +20,10 @@ class DynamicAnimator extends Animator
 		regionList = a.data['rl'];
 		a.eventDispatcher.addEvent(AnimateEvent.ANIMATE, anim);
 		var animList: Array<Dynamic> = a.data['animations'];
-		trace(animList);
 		for(i in animList)
 		{
 			var frames:Array<Region> = [];
 			var listFrames:Array<Dynamic> = i.frames;
-			trace(listFrames);
 			var test:Array<Int> = [];
 			for(j in listFrames)
 			{
