@@ -114,7 +114,14 @@ class GatherState extends MovingState
 				actor.data['targetResource'] = findNewResource();
 				if(actor.data['targetResource'] == null)
 				{
-					trace('resources too far away or gone');
+					if(actor.data['resourcesCollected']>0)
+					{
+						actor.eventDispatcher.dispatchEvent(ReturnEvent.RETURN, new ReturnEvent());
+					}
+					else
+					{
+						actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('idle'));
+					}
 				}
 				else
 				{
@@ -170,8 +177,7 @@ class GatherState extends MovingState
 					e.bubble = false;
 					actor.data['targetResource'].eventDispatcher.dispatchEvent(KillEvent.KILL, e);
 				}
-				trace('collect '+actor.data['resourcesCollected']);
-				trace(i.maxHarvest);
+				
 				if(actor.data['resourcesCollected'] == i.maxHarvest)
 				{
 					actor.eventDispatcher.dispatchEvent(ReturnEvent.RETURN, new ReturnEvent());
@@ -242,10 +248,6 @@ class GatherState extends MovingState
 				if(i.occupant != null && i.occupant.data['resource'] != null && i.occupant.data['resource'] == actor.data['currentResource'])
 				{
 					return i.occupant;
-				}
-				else if( i.occupant != null && i.occupant.data['resource'])
-				{
-					trace(i.occupant.data['resource'] + " ? "+ actor.data['currentResource']);
 				}
 			}
 			var nextOpenList:Array<Node> = [];
