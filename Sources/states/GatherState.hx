@@ -31,6 +31,7 @@ class GatherState extends MovingState
 			trace('can\'t harvest');
 		a.eventDispatcher.addEvent(StopEvent.STOP, resetData);
 		actor.data['currentResource'] = null;
+		actor.data['resourcesCollected'] = 0;
 	}
 
 	public override function enter()
@@ -44,6 +45,15 @@ class GatherState extends MovingState
 		if(actor.data['targetResource'] == null)
 		{
 			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('idle'));
+		}
+		else
+		{
+			actor.data['targetNode'] = cast(actor.data['targetResource'], Actor).currentNodes[0];
+			if(actor.data['currentResource'] != cast(actor.data['targetResource'], Actor).data['resource'])
+			{
+				actor.data['resourcesCollected'] = 0;
+			}
+			actor.data['currentResource'] = cast(actor.data['targetResource'], Actor).data['resource'];
 		}
 	}
 
@@ -97,27 +107,43 @@ class GatherState extends MovingState
 		}
 		else
 		{
-			if(actor.data['targetNode'] == null && actor.data['targetResource'] != null)
-			{
-				actor.data['targetNode'] = cast(actor.data['targetResource'], Actor).currentNodes[0];
-			}
 			newPath();
 			if(failedToMove)
 			{
 				failedToMove = false;
 				actor.data['targetResource'] = findNewResource();
-				newPath();
+				if(actor.data['targetResource'] == null)
+				{
+					trace('broke');
+				}
+				else
+				{
+					newPath();
+				}
 			}
 		}
 		
 		animateMove();
 	}
-	
+	private override function newPath()
+	{
+		var nextMove = path[1];
+		path = AStar.newPath(actor.currentNodes[0], actor.data['targetResource'].currentNodes[0]);
+		if (path.length > 1 && nextMove != path[1])//In Plain english, if the new path is indeed a new path
+		{
+			takeAction();//try again
+		}
+		else
+		{
+			failedToMove = true;
+		}
+	}
+
 	private function gather()
 	{
 		var tRes:Actor = cast(actor.data['targetResource'], Actor);
 		actor.eventDispatcher.dispatchEvent(AnimateEvent.ANIMATE, new AnimateEvent('gather',false));
-		if(actor.data['currentResource'] == null || actor.data['currentResource'] != tRes.data['resource'])
+		if(actor.data['currentResource'] == null)
 		{
 			actor.data['resourcesCollected'] = 0;
 			actor.data['currentResource'] = tRes.data['resource'];
@@ -201,18 +227,22 @@ class GatherState extends MovingState
 
 	private function findNewResource():Actor
 	{
-		var openList:Array<Node> = cast(actor.screen, IGameScreen).lvl.getNodeByGridXY(lastResourceX, lastResourceY).neighbors;
-		var closeList:Array<Node> = [];
-		var iterationsAllowed = 5;
+		var openList:Array<Node> = actor.currentNodes[0].neighbors;
+		var closeList:Array<Node> = [actor.currentNodes[0]];
+		var iterationsAllowed = 8;
 		var i = 0;
 		while(openList.length > 0 && i < iterationsAllowed)
 		{
 			i++;
 			for(i in openList)
 			{
-				if(i.occupant != null && i.occupant.data['resource'] != null && i.occupant.data['resource'] == actor.data['currentResource'] && i.occupant.alive)
+				if(i.occupant != null && i.occupant.data['resource'] != null && i.occupant.data['resource'] == actor.data['currentResource'])
 				{
 					return i.occupant;
+				}
+				else if( i.occupant != null && i.occupant.data['resource'])
+				{
+					trace(i.occupant.data['resource'] + " ? "+ actor.data['currentResource']);
 				}
 			}
 			var nextOpenList:Array<Node> = [];
@@ -220,7 +250,7 @@ class GatherState extends MovingState
 			{
 				for(j in i.neighbors)
 				{
-					if(openList.indexOf(j) == -1 && closeList.indexOf(j) == -1)
+					if(openList.indexOf(j) == -1 && closeList.indexOf(j) == -1 && nextOpenList.indexOf(j) == -1)
 					{
 						nextOpenList.push(j);
 					}

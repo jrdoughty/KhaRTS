@@ -195,7 +195,7 @@
 					"moveCoolDown": 500,
 					"comps": [
 						{
-							"name": "BasicAnimator"
+							"name": "DynamicAnimator"
 						},
 						{
 							"name": "StateAI"
@@ -208,7 +208,41 @@
 						}
 					],
 					"attacks": [],
-					"animations": []
+					"animations": [
+						{
+							"name": "idle",
+							"frames": [
+								{
+									"id": 0
+								}
+							],
+							"fps": 5
+						},
+						{
+							"name": "gather",
+							"frames": [
+								{
+									"id": 0
+								},
+								{
+									"id": 2
+								}
+							],
+							"fps": 5
+						},
+						{
+							"name": "move",
+							"frames": [
+								{
+									"id": 0
+								},
+								{
+									"id": 1
+								}
+							],
+							"fps": 5
+						}
+					]
 				},
 				{
 					"name": "enemy",
@@ -224,7 +258,7 @@
 					"height": 8,
 					"comps": [
 						{
-							"name": "BasicAnimator"
+							"name": "DynamicAnimator"
 						},
 						{
 							"name": "Health"
@@ -249,7 +283,41 @@
 							"coolDown": 1000
 						}
 					],
-					"animations": []
+					"animations": [
+						{
+							"name": "idle",
+							"frames": [
+								{
+									"id": 0
+								}
+							],
+							"fps": 5
+						},
+						{
+							"name": "attack",
+							"frames": [
+								{
+									"id": 0
+								},
+								{
+									"id": 2
+								}
+							],
+							"fps": 5
+						},
+						{
+							"name": "move",
+							"frames": [
+								{
+									"id": 0
+								},
+								{
+									"id": 1
+								}
+							],
+							"fps": 5
+						}
+					]
 				}
 			],
 			"separators": [],

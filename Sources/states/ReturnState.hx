@@ -131,7 +131,8 @@ class ReturnState extends MovingState
 				bestIndex = i;
 			}
 		}
-
+		if(pathsToReturn[bestIndex] == null)
+			return [];
 		return pathsToReturn[bestIndex];
 	}
 	
