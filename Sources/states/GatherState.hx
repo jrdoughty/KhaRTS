@@ -114,7 +114,7 @@ class GatherState extends MovingState
 				actor.data['targetResource'] = findNewResource();
 				if(actor.data['targetResource'] == null)
 				{
-					trace('broke');
+					trace('resources too far away or gone');
 				}
 				else
 				{
@@ -225,11 +225,14 @@ class GatherState extends MovingState
 		actor.data.set('targetResource', null);
 	}
 
+	/**
+	* could use some efficiency by only scanning the perimiter
+	*/
 	private function findNewResource():Actor
 	{
 		var openList:Array<Node> = actor.currentNodes[0].neighbors;
 		var closeList:Array<Node> = [actor.currentNodes[0]];
-		var iterationsAllowed = 8;
+		var iterationsAllowed = 6;
 		var i = 0;
 		while(openList.length > 0 && i < iterationsAllowed)
 		{
