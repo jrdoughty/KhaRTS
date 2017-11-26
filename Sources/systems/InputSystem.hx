@@ -223,7 +223,11 @@ class InputSystem extends SimpleEventDispatcher
 			}
 			clickTimerID = Sdg.addTimeTask(function(){recentlyLeftClicked = false;trace('over');}, .3, 0, 1);
 			
-			selectedActors.list = [];
+			if(!Keyboard.isHeld(KeyCode.Shift))
+			{
+				trace('unshifted');
+				selectedActors.list = [];
+			}
 			for(i in activeNodes)
 			{
 				if(Util.doObjectandITwoDOverlap(selector, i) && 
