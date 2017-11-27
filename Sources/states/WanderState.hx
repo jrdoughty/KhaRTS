@@ -1,6 +1,6 @@
 package states;
 
-import events.IdleAnimationEvent;
+import events.AnimateEvent;
 import events.StateChangeEvent;
 
 
@@ -31,7 +31,7 @@ class WanderState extends BaseState
 				actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('moving', true));
 			}
 			else
-				actor.eventDispatcher.dispatchEvent(IdleAnimationEvent.IDLE, new IdleAnimationEvent());
+				actor.eventDispatcher.dispatchEvent(AnimateEvent.ANIMATE, new AnimateEvent('idle', true));
 		}
 	}
 	

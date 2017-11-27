@@ -1,10 +1,10 @@
 package states;
 
-import events.IdleAnimationEvent;
 import actors.Actor;
 import events.StateChangeEvent;
 import events.BuildEvent;
 import kha.Scheduler;
+import events.AnimateEvent;
 
 
 class BeingBuiltState extends BaseState
@@ -18,6 +18,8 @@ class BeingBuiltState extends BaseState
 	public override function enter()
 	{
 		actor.coolDown = 1000;
+		
+		actor.eventDispatcher.dispatchEvent(AnimateEvent.ANIMATE, new AnimateEvent('building', true));
 		Scheduler.addTimeTask(finishBuild,1,0,1);//actor.data['buildTime']);
 	}
 

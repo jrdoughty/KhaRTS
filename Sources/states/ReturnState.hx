@@ -1,15 +1,12 @@
 package states;
 
 import events.AnimateEvent;
-import events.IdleAnimationEvent;
 import actors.Actor;
 import events.StateChangeEvent;
-import events.MoveAnimEvent;
 import world.Node;
 import systems.AStar;
 import events.StopEvent;
 import tween.Delta;
-import events.AnimateAttackEvent;
 import events.GatherEvent;
 import events.ReturnEvent;
 

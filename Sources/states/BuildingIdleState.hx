@@ -1,6 +1,6 @@
 package states;
 
-import events.IdleAnimationEvent;
+import events.AnimateEvent;
 import events.BuildEvent;
 
 
@@ -18,7 +18,7 @@ class BuildingIdleState extends BaseState
 		else
 		{
 			actor.coolDown = 1000;
-			actor.eventDispatcher.dispatchEvent(IdleAnimationEvent.IDLE, new IdleAnimationEvent());
+			actor.eventDispatcher.dispatchEvent(AnimateEvent.ANIMATE, new AnimateEvent('idle', true));
 		}
 	}
 

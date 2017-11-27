@@ -1,6 +1,5 @@
 package states;
 
-import events.IdleAnimationEvent;
 import actors.Actor;
 import events.StateChangeEvent;
 import events.QueueEvent;
@@ -40,6 +39,7 @@ class ProductionState extends BaseState
 			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('producing'));
 		}
 	}
+
 	private function produceNextUnit(bProducingNext:Bool = false)
 	{
 		if(actor.data['queue'].length == 1 || bProducingNext)

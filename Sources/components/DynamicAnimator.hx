@@ -30,7 +30,6 @@ class DynamicAnimator extends Animator
 				frames.push(regionList[j.id]);
 				test.push(j.id);
 			}
-			trace(i.name + " " +test);
 			addAnimation(i.name, frames,i.fps);
 		}
 		play('idle', true);

@@ -11,7 +11,6 @@ class ComponentSystem
 	public static var components:Array<Class<Component>> = [StateAI,
 		Health,
 		View,
-		BasicAnimator,
 		UIHealth,
 		ResourceHealth,
 		BuildingAnimator,

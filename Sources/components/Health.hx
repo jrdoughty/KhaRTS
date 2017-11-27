@@ -8,7 +8,6 @@ import events.RevealEvent;
 import events.HideEvent;
 import events.KillEvent;
 import events.HurtEvent;
-import events.GetSpriteEvent;
 import sdg.graphics.shapes.Polygon;
 import kha.Color;
 /**
