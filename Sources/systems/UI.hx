@@ -15,7 +15,6 @@ import events.AttackInputEvent;
 import events.StopInputEvent;
 import events.MoveInputEvent;
 import events.QueueEvent;
-import events.BuildEvent;
 import world.Node;
 
 class UI extends SimpleEventDispatcher

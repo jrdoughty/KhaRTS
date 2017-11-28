@@ -6,7 +6,8 @@ import events.AnimateEvent;
 import world.Node;
 import systems.AStar;
 import tween.Delta;
-import events.StopEvent;
+import events.SimpleEvents;
+import sdg.event.EventObject;
 import events.TargetEvent;
 
 typedef AttackData = {
@@ -35,7 +36,7 @@ class AttackState extends MovingState
 			a.eventDispatcher.addEvent(TargetEvent.ATTACK_ACTOR, TargetActor);
 		else
 			trace('attacking unit created without an attack');
-		a.eventDispatcher.addEvent(StopEvent.STOP, resetData);
+		a.eventDispatcher.addEvent(SimpleEvents.STOP, resetData);
 	}
 
 	public override function enter()
@@ -172,7 +173,7 @@ class AttackState extends MovingState
 	 */
 	public function TargetActor(aEvent:TargetEvent)
 	{
-		actor.eventDispatcher.dispatchEvent(StopEvent.STOP, new StopEvent());
+		actor.eventDispatcher.dispatchEvent(SimpleEvents.STOP, new EventObject());
 		actor.data['targetEnemy'] = aEvent.target;
 		actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('attacking'));
 	}
@@ -183,7 +184,7 @@ class AttackState extends MovingState
 	 * 
 	 * @param	eO		EventObject is required for listenerCallbacks
 	 */
-	public function resetData(eO:StopEvent = null):Void 
+	public function resetData(eO:EventObject = null):Void 
 	{
 		actor.data.set('targetEnemy', null);
 		actor.data.set('aggressive', false);

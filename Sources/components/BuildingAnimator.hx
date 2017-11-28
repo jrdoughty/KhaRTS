@@ -4,7 +4,6 @@ import sdg.components.Animator;
 import events.AnimateEvent;
 import sdg.atlas.Region;
 import events.QueueEvent;
-import events.BuildEvent;
 import actors.Actor;
 
 class BuildingAnimator extends Animator

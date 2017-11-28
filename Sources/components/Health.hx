@@ -4,8 +4,8 @@ import sdg.event.EventObject;
 import sdg.components.Component;
 import sdg.Object;
 import actors.Actor;
-import events.RevealEvent;
-import events.HideEvent;
+import sdg.event.EventObject;
+import events.SimpleEvents;
 import events.KillEvent;
 import events.HurtEvent;
 import sdg.graphics.shapes.Polygon;
@@ -37,8 +37,8 @@ class Health extends ActorComponent
 	{
 		super.init();
 		
-		object.eventDispatcher.addEvent(RevealEvent.REVEAL, makeVisible);
-		object.eventDispatcher.addEvent(HideEvent.HIDE, killVisibility);
+		object.eventDispatcher.addEvent(SimpleEvents.REVEAL, makeVisible);
+		object.eventDispatcher.addEvent(SimpleEvents.HIDE, killVisibility);
 		object.eventDispatcher.addEvent(HurtEvent.HURT, hurt);
 		createSprite();
 
@@ -56,7 +56,7 @@ class Health extends ActorComponent
 	/**
 	 * sets itself and the health bars to no longer be visible
 	 */
-	public function killVisibility(e:HideEvent = null)
+	public function killVisibility(e:EventObject = null)
 	{
 		healthBar.visible = false;
 		healthBarFill.visible = false;
@@ -66,7 +66,7 @@ class Health extends ActorComponent
 	/**
 	 * Sets itself and the health bars to be visible
 	 */
-	public function makeVisible(e:RevealEvent = null)
+	public function makeVisible(e:EventObject = null)
 	{
 		healthBar.visible = true;
 		healthBarFill.visible = true;

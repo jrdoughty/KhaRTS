@@ -6,7 +6,8 @@ import world.Node;
 import systems.AStar;
 import tween.Delta;
 import events.MoveEvent;
-import events.StopEvent;
+import events.SimpleEvents;
+import sdg.event.EventObject;
 
 class MoveState extends MovingState
 {
@@ -21,7 +22,7 @@ class MoveState extends MovingState
 			a.eventDispatcher.addEvent(MoveEvent.MOVE, MoveToNode);
 		else
 			trace('mobile unit created without mobile flag');
-		a.eventDispatcher.addEvent(StopEvent.STOP, resetData);
+		a.eventDispatcher.addEvent(SimpleEvents.STOP, resetData);
 	}
 
 	public override function enter()
@@ -90,7 +91,7 @@ class MoveState extends MovingState
 	 */
 	public function MoveToNode(moveEvent:MoveEvent)
 	{
-		actor.eventDispatcher.dispatchEvent(StopEvent.STOP, new StopEvent());
+		actor.eventDispatcher.dispatchEvent(SimpleEvents.STOP, new EventObject());
 		actor.data['targetNode'] = moveEvent.node;
 		actor.data['aggressive'] = moveEvent.aggressive;
 		actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('moving'));
@@ -101,7 +102,7 @@ class MoveState extends MovingState
 	 * 
 	 * @param	eO		EventObject is required for listenerCallbacks
 	 */
-	public function resetData(eO:StopEvent = null):Void 
+	public function resetData(eO:EventObject = null):Void 
 	{
 		actor.data.set('targetNode', null);
 		actor.data.set('aggressive', false);

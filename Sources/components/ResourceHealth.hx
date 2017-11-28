@@ -1,15 +1,8 @@
 package components;
 
 import sdg.event.EventObject;
-import sdg.components.Component;
-import sdg.Object;
-import actors.Actor;
-import events.RevealEvent;
-import events.HideEvent;
 import events.KillEvent;
 import events.HurtEvent;
-import sdg.graphics.shapes.Polygon;
-import kha.Color;
 /**
  * ...
  * @author ...

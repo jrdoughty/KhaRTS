@@ -4,7 +4,8 @@ import actors.ActorList;
 import events.MoveEvent;
 import screens.IGameScreen;
 import world.Node;
-import events.StopEvent;
+import events.SimpleEvents;
+import sdg.event.EventObject;
 import events.TargetEvent;
 import sdg.Object;
 import Util;
@@ -73,7 +74,7 @@ class InputSystem extends SimpleEventDispatcher
 		inputState = SELECTING;
 		for(i in selectedActors)
 		{
-			i.eventDispatcher.dispatchEvent(StopEvent.STOP, new StopEvent());
+			i.eventDispatcher.dispatchEvent(SimpleEvents.STOP, new EventObject());
 		}
 		selector.visible = false;
 	}

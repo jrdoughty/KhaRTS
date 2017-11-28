@@ -5,10 +5,10 @@ import actors.Actor;
 import events.StateChangeEvent;
 import world.Node;
 import systems.AStar;
-import events.StopEvent;
+import sdg.event.EventObject;
 import tween.Delta;
 import events.GatherEvent;
-import events.ReturnEvent;
+import events.SimpleEvents;
 
 
 class ReturnState extends MovingState
@@ -19,10 +19,10 @@ class ReturnState extends MovingState
 		super(a);
 		
 		if(a.data.exists('resources'))
-			a.eventDispatcher.addEvent(ReturnEvent.RETURN, returnResources);
+			a.eventDispatcher.addEvent(SimpleEvents.RETURN, returnResources);
 		else
 			trace('can\'t harvest');
-		a.eventDispatcher.addEvent(StopEvent.STOP, resetData);
+		a.eventDispatcher.addEvent(SimpleEvents.STOP, resetData);
 		actor.data['currentResource'] = null;
 	}
 
@@ -91,7 +91,7 @@ class ReturnState extends MovingState
 	 * 
 	 * @param	eO		EventObject is required for listenerCallbacks
 	 */
-	public function resetData(eO:StopEvent = null):Void 
+	public function resetData(eO:EventObject = null):Void 
 	{
 		actor.data.set('targetResource', null);
 	}
@@ -134,7 +134,7 @@ class ReturnState extends MovingState
 	}
 	
 
-	public function returnResources(e:ReturnEvent)
+	public function returnResources(e:EventObject)
 	{
 		actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('returning'));
 	}

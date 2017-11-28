@@ -4,6 +4,7 @@ import systems.InputSystem;
 import kha.Assets;
 import sdg.Screen;
 import sdg.Object;
+import sdg.event.EventObject;
 import actors.Actor;
 import world.Level;
 import systems.AStar;
@@ -11,7 +12,7 @@ import systems.Team;
 import graphics.Fog;
 import sdg.graphics.tiles.Tilemap;
 import sdg.components.Component;
-import events.ClearFogEvent;
+import events.SimpleEvents;
 import sdg.atlas.Atlas;
 import sdg.graphics.text.Text;
 import kha.Assets;
@@ -98,7 +99,7 @@ class PlayScreen extends Screen implements IGameScreen
 		lvl.resetFog();
 		for(i in activeTeam.units)
 		{
-			i.eventDispatcher.dispatchEvent(ClearFogEvent.CLEAR, new ClearFogEvent());
+			i.eventDispatcher.dispatchEvent(SimpleEvents.CLEAR, new EventObject());
 		}
 		lvl.recreateFog(cast(fogOfWar.graphic, Tilemap));
 		inputSystem.update();

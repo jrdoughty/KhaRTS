@@ -1,7 +1,8 @@
 package states;
 
 import events.AnimateEvent;
-import events.BuildEvent;
+import events.SimpleEvents;
+import sdg.event.EventObject;
 
 
 class BuildingIdleState extends BaseState
@@ -13,7 +14,7 @@ class BuildingIdleState extends BaseState
 		if(needsBuilt)
 		{
 			needsBuilt = false;
-			actor.eventDispatcher.dispatchEvent(BuildEvent.BUILD, new BuildEvent());
+			actor.eventDispatcher.dispatchEvent(SimpleEvents.BUILD, new EventObject());
 		}
 		else
 		{

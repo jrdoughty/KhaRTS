@@ -7,8 +7,8 @@ import sdg.graphics.tiles.Tilemap;
 import sdg.Object;
 import world.Node;
 import sdg.graphics.tiles.Tilemap;
-import events.HideEvent;
-import events.RevealEvent;
+import events.SimpleEvents;
+import sdg.event.EventObject;
 import kha.math.Vector2;
 /**
  * ...
@@ -202,7 +202,7 @@ class Level extends Object
 			{
 				fogOfWarGraphic.map[i.nodeY][i.nodeX] = 0;
 				if(i.occupant != null)
-					i.occupant.eventDispatcher.dispatchEvent(RevealEvent.REVEAL, new RevealEvent());
+					i.occupant.eventDispatcher.dispatchEvent(SimpleEvents.REVEAL, new EventObject());
 			}
 			else
 			{
@@ -211,7 +211,7 @@ class Level extends Object
 				else
 					fogOfWarGraphic.map[i.nodeY][i.nodeX] = 2;
 				if(i.occupant != null)
-					i.occupant.eventDispatcher.dispatchEvent(HideEvent.HIDE, new HideEvent());
+					i.occupant.eventDispatcher.dispatchEvent(SimpleEvents.HIDE, new EventObject());
 			}
 		}
 	}

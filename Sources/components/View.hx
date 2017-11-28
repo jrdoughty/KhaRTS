@@ -1,10 +1,11 @@
 package components;
 import world.Node;
-import events.ClearFogEvent;
+import events.SimpleEvents;
 import sdg.components.Component;
+import sdg.event.EventObject;
 import actors.Actor;
-import events.HideEvent;
-import events.RevealEvent;
+import events.SimpleEvents;
+import sdg.event.EventObject;
 /**
  * ...
  * @author John Doughty
@@ -39,9 +40,9 @@ class View extends Component
 				actor.data.set('viewRange', 4);
 				trace('viewRange not set');
 			}
-		 	actor.eventDispatcher.addEvent(ClearFogEvent.CLEAR, clearNodes);
-		 	actor.eventDispatcher.addEvent(HideEvent.HIDE, function(e:HideEvent){actor.visible = false;});//uproot these when final place is found
-		 	actor.eventDispatcher.addEvent(RevealEvent.REVEAL,  function(e:RevealEvent){actor.visible = true;});
+		 	actor.eventDispatcher.addEvent(SimpleEvents.CLEAR, clearNodes);
+		 	actor.eventDispatcher.addEvent(SimpleEvents.HIDE, function(e:EventObject){actor.visible = false;});//uproot these when final place is found
+		 	actor.eventDispatcher.addEvent(SimpleEvents.REVEAL,  function(e:EventObject){actor.visible = true;});
 		}
 		else
 		{
@@ -50,7 +51,7 @@ class View extends Component
 		
 	}
 	
-	public function clearNodes(e:ClearFogEvent = null)
+	public function clearNodes(e:EventObject = null)
 	{
 		clearedNodes = [];
 		clearFogOfWar();

@@ -498,6 +498,9 @@
 							"name": "gathering"
 						},
 						{
+							"name": "go_to_resource"
+						},
+						{
 							"name": "returning"
 						}
 					]
@@ -527,6 +530,9 @@
 						},
 						{
 							"name": "moving"
+						},
+						{
+							"name": "go_to_resource"
 						},
 						{
 							"name": "returning"
@@ -586,6 +592,9 @@
 				},
 				{
 					"name": "producing"
+				},
+				{
+					"name": "go_to_resource"
 				}
 			],
 			"separators": [],

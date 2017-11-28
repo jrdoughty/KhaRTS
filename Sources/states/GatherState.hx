@@ -2,37 +2,39 @@ package states;
 
 import actors.Actor;
 import events.StateChangeEvent;
-import world.Node;
 import systems.AStar;
-import events.StopEvent;
-import tween.Delta;
+import events.SimpleEvents;
 import events.AnimateEvent;
-import events.HurtEvent;
 import events.KillEvent;
-import events.ReturnEvent;
-import events.GatherEvent;
-import screens.IGameScreen;
+import events.SimpleEvents;
+import sdg.event.EventObject;
+import world.Node;
 
 
-class GatherState extends ResourceState
+class GatherState extends BaseState
 {
 	var finishedResource:Bool = false;
+
 	public function new(a:Actor)
 	{
 		super(a);
 		
-		if(a.data.exists('resources'))
-			a.eventDispatcher.addEvent(GatherEvent.GATHER, TargetActor);
-		else
-			trace('can\'t harvest');
-		a.eventDispatcher.addEvent(StopEvent.STOP, resetData);
+		a.eventDispatcher.addEvent(SimpleEvents.STOP, resetData);
 		actor.data['currentResource'] = null;
 		actor.data['resourcesCollected'] = 0;
 	}
 
 	public override function enter()
 	{
-		actor.coolDown = actor.data['moveCoolDown'];
+		var resources:Array<Dynamic> = actor.data['resources'];
+		for(i in resources)
+		{
+			if(actor.data['currentResource'] == i.name)
+			{
+				actor.coolDown = i.coolDown;
+				break;
+			}
+		}
 		if(!cast(actor.data['targetResource'], Actor).alive)
 		{
 			actor.data['targetResource'] = findNewResource();
@@ -41,15 +43,15 @@ class GatherState extends ResourceState
 		{
 			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('idle'));
 		}
-		else
-		{
-			actor.data['targetNode'] = cast(actor.data['targetResource'], Actor).currentNodes[0];
-			if(actor.data['currentResource'] != cast(actor.data['targetResource'], Actor).data['resource'])
-			{
-				actor.data['resourcesCollected'] = 0;
-			}
-			actor.data['currentResource'] = cast(actor.data['targetResource'], Actor).data['resource'];
-		}
+	}
+	/**
+	 * resets all the decision making vars to null or false
+	 * 
+	 * @param	eO		EventObject is required for listenerCallbacks
+	 */
+	public function resetData(eO:EventObject = null):Void 
+	{
+		actor.data.set('targetResource', null);
 	}
 
 	public override function takeAction()
@@ -67,33 +69,23 @@ class GatherState extends ResourceState
 			}
 			else if(actor.data['mobile'])
 			{
-				actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('gathering'));
+				actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('go_to_resource'));
+			}
+			else
+			{
+				actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('idle'));
 			}
 		}
 		else
 		{
 			if(actor.data['resourcesCollected'])
 			{
-				actor.eventDispatcher.dispatchEvent(ReturnEvent.RETURN, new ReturnEvent());
+				actor.eventDispatcher.dispatchEvent(SimpleEvents.RETURN, new EventObject());
 			}
 			else
 			{
 				actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('idle', true));
 			}
-		}
-	}
-
-	private override function newPath()
-	{
-		var nextMove = path[1];
-		path = AStar.newPath(actor.currentNodes[0], actor.data['targetResource'].currentNodes[0]);
-		if (path.length > 1 && nextMove != path[1])//In Plain english, if the new path is indeed a new path
-		{
-			takeAction();//try again
-		}
-		else
-		{
-			failedToMove = true;
 		}
 	}
 
@@ -131,7 +123,7 @@ class GatherState extends ResourceState
 				
 				if(actor.data['resourcesCollected'] == i.maxHarvest)
 				{
-					actor.eventDispatcher.dispatchEvent(ReturnEvent.RETURN, new ReturnEvent());
+					actor.eventDispatcher.dispatchEvent(SimpleEvents.RETURN, new EventObject());
 				}
 				else
 				{
@@ -141,5 +133,42 @@ class GatherState extends ResourceState
 			}
 		}
 		
+	}
+
+	/**
+	* could use some efficiency by only scanning the perimiter
+	*/
+	private function findNewResource():Actor
+	{
+		var openList:Array<Node> = actor.currentNodes[0].neighbors;
+		var closeList:Array<Node> = [actor.currentNodes[0]];
+		var iterationsAllowed = 6;
+		var i = 0;
+		while(openList.length > 0 && i < iterationsAllowed)
+		{
+			i++;
+			for(i in openList)
+			{
+				if(i.occupant != null && i.occupant.data['resource'] != null && i.occupant.data['resource'] == actor.data['currentResource'])
+				{
+					return i.occupant;
+				}
+			}
+			var nextOpenList:Array<Node> = [];
+			for(i in openList)
+			{
+				for(j in i.neighbors)
+				{
+					if(openList.indexOf(j) == -1 && closeList.indexOf(j) == -1 && nextOpenList.indexOf(j) == -1)
+					{
+						nextOpenList.push(j);
+					}
+				}
+				closeList.push(i);
+			}
+			openList = nextOpenList;
+		}
+		trace('nulled');
+		return null;
 	}
 }

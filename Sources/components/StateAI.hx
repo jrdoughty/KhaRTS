@@ -4,7 +4,7 @@ import actors.Actor;
 import states.IState;
 import events.TargetEvent;
 import events.MoveEvent;
-import events.StopEvent;
+import events.SimpleEvents;
 import events.StateChangeEvent;
 import sdg.event.EventObject;
 import components.ActorComponent;
@@ -34,7 +34,7 @@ class StateAI extends ActorComponent implements AI
 	{
 		super.init();
 
-		object.eventDispatcher.addEvent(StopEvent.STOP, resetStates);
+		object.eventDispatcher.addEvent(SimpleEvents.STOP, resetStates);
 		object.eventDispatcher.addEvent(StateChangeEvent.CHANGE, changeState);
 		//object.eventDispatcher.addEvent(ChangeTimingEvent.CHANGE, newActionTime);
 
@@ -85,7 +85,7 @@ class StateAI extends ActorComponent implements AI
 	 * 
 	 * @param	eO		EventObject is required for listenerCallbacks
 	 */
-	public function resetStates(eO:StopEvent = null):Void 
+	public function resetStates(eO:EventObject = null):Void 
 	{
 		nextState = 'idle';
 	}
