@@ -372,6 +372,20 @@
 					"display": 1
 				},
 				{
+					"typeStr": "3",
+					"name": "buildTime"
+				},
+				{
+					"typeStr": "2",
+					"name": "built",
+					"display": null
+				},
+				{
+					"typeStr": "3",
+					"name": "buildProgress",
+					"display": null
+				},
+				{
 					"typeStr": "8",
 					"name": "comps",
 					"display": null
@@ -434,7 +448,10 @@
 					],
 					"cost": 100,
 					"ai": "productionBuilding",
-					"viewRange": 5
+					"viewRange": 5,
+					"buildTime": 20,
+					"buildProgress": 0,
+					"built": false
 				}
 			],
 			"separators": [],
