@@ -231,6 +231,18 @@
 							"fps": 5
 						},
 						{
+							"name": "build",
+							"frames": [
+								{
+									"id": 0
+								},
+								{
+									"id": 2
+								}
+							],
+							"fps": 5
+						},
+						{
 							"name": "move",
 							"frames": [
 								{
