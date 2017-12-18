@@ -222,11 +222,10 @@ class InputSystem extends SimpleEventDispatcher
 			{
 				Sdg.removeTimeTask(clickTimerID);
 			}
-			clickTimerID = Sdg.addTimeTask(function(){recentlyLeftClicked = false;trace('over');}, .3, 0, 1);
+			clickTimerID = Sdg.addTimeTask(function(){recentlyLeftClicked = false;}, .3, 0, 1);
 			
 			if(!Keyboard.isHeld(KeyCode.Shift))
 			{
-				trace('unshifted');
 				selectedActors.list = [];
 			}
 			for(i in activeNodes)

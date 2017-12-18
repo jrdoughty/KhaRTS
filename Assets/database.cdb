@@ -461,7 +461,7 @@
 					"cost": 100,
 					"ai": "productionBuilding",
 					"viewRange": 5,
-					"buildTime": 20,
+					"buildTime": 3,
 					"buildProgress": 0,
 					"built": false
 				}
@@ -565,6 +565,9 @@
 						},
 						{
 							"name": "returning"
+						},
+						{
+							"name": "builder"
 						}
 					]
 				}
@@ -621,6 +624,9 @@
 				},
 				{
 					"name": "producing"
+				},
+				{
+					"name": "builder"
 				},
 				{
 					"name": "go_to_resource"
