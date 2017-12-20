@@ -64,7 +64,7 @@ class GoToResourceState extends MovingState
 			var tRes = cast(actor.data['targetResource'], Actor);
 			if (Util.getPythagoreanCFromXY(tRes.currentNodes[0].nodeX,tRes.currentNodes[0].nodeY, actor.currentNodes[0].nodeX, actor.currentNodes[0].nodeY)<=Math.sqrt(2))
 			{
-				actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('gathering'));
+				actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('gathering', true));
 			}
 			else if(actor.data['mobile'])
 			{

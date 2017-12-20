@@ -15,6 +15,7 @@ class StateFactory
 		'returning'=>ReturnState,
 		'attacking'=>AttackState,
 		'moving'=>MoveState,
+		'go_to_resource'=>GoToResourceState,
 		'terminatah'=>Terminatah];
 	public static function create(name:String, a:Actor):IState
 	{

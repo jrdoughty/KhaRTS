@@ -69,7 +69,7 @@ class GatherState extends BaseState
 			}
 			else if(actor.data['mobile'])
 			{
-				actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('go_to_resource'));
+				actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('go_to_resource', true));
 			}
 			else
 			{
