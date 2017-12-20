@@ -1,10 +1,8 @@
 package actors;
 
 import world.Node;
-import sdg.event.IEventDispatcher;
-import haxe.Constraints.Function;
-import sdg.event.EventSystem;
-import sdg.event.EventObject;
+import systems.Team;
+import events.SetBuildingEvent;
 import events.TargetEvent;
 import events.GatherEvent;
 import events.MoveEvent;
@@ -12,6 +10,10 @@ import events.MoveEvent;
 class ActorList
 {
 	public var list:Array<Actor>;
+	/**
+	 * Team Actor belongs to
+	 */
+	public var team:Team = null;
 	public function new() 
 	{
 		list = [];
@@ -49,6 +51,34 @@ class ActorList
 				actor.eventDispatcher.dispatchEvent(MoveEvent.MOVE, new MoveEvent(a.currentNodes[0], false));
 		}
 	}
+	/**
+	* does two passes, one without double booking a unit, the next replacing what ever they were working on
+	*/
+	public function build(a:Actor)
+	{
+		
+		for(i in 0...2)
+		{
+			for(actor in list)
+			{
+				if(actor.data.exists('buildings'))
+				{
+					var buildingsToBuild:Array<String> = [];
+					var bObjects:Array<Dynamic> = actor.data['buildings'];
+					for(i in bObjects)
+					{
+						buildingsToBuild.push(i.name);
+					}
+					//on second pass it doesn't matter if it was working on something else
+					if(buildingsToBuild.indexOf(a.data['name']) != -1 && (actor.data['targetBuilding'] == null || i == 1))
+					{
+						actor.eventDispatcher.dispatchEvent(SetBuildingEvent.BUILD_ACTOR, new SetBuildingEvent(a));
+						return;
+					}
+				}
+			}
+		}
+	}
 
 	public function moveTo(node:Node, aggressive:Bool = false)
 	{
@@ -80,6 +110,7 @@ class ActorList
 
 	public inline function push(a:Actor):Int
 	{
+		team = a.team;
 		return list.push(a);
 	}
 

@@ -27,7 +27,6 @@ class BuilderState extends BaseState
 
 	public override function takeAction()
 	{	
-			trace('working');
 		var tBuild:Actor = actor.data['targetBuilding'];
 		tBuild.eventDispatcher.dispatchEvent(SimpleEvents.BUILD_PROGRESS, new EventObject());
 		if(tBuild.data['built'] == true)
@@ -55,7 +54,6 @@ class BuilderState extends BaseState
 	{
 		if(!aEvent.target.data['built'])
 		{
-			trace('working');
 			actor.eventDispatcher.dispatchEvent(SimpleEvents.STOP, new EventObject());
 			actor.data['targetBuilding'] = aEvent.target;
 			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('builder'));

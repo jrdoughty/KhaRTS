@@ -242,7 +242,7 @@ class InputSystem extends SimpleEventDispatcher
 			}
 			if(double && selectedActors.list.length != 0)
 			{
-				for(i in selectedActors.list[0].team.units)
+				for(i in selectedActors.team.units)
 				{
 					if(i.x + i.width >= Sdg.screen.camera.x && i.y + i.height >= Sdg.screen.camera.y &&
 					i.x <= Sdg.screen.camera.x + Sdg.screen.camera.width && i.y <= Sdg.screen.camera.y + Sdg.screen.camera.height &&
@@ -328,12 +328,15 @@ class InputSystem extends SimpleEventDispatcher
 			{
 				if(relativeMouseX >= i.x && relativeMouseX <= i.x + i.width && relativeMouseY >= i.y && relativeMouseY <= i.y + i.height)
 				{
-					if(i.occupant != null && i.occupant.team != selectedActors.list[0].team && i.occupant.data['resource'] != null)
+					if(i.occupant != null && i.occupant.team != selectedActors.team && i.occupant.data['resource'] != null)
 					{
-						
 						selectedActors.gather(i.occupant);
 					}
-					else if(i.occupant != null && i.occupant.team != selectedActors.list[0].team)
+					else if(i.occupant != null && i.occupant.team == selectedActors.team && i.occupant.data['built'] == false)
+					{
+						selectedActors.build(i.occupant);
+					}
+					else if(i.occupant != null && i.occupant.team != selectedActors.team)
 					{
 						selectedActors.target(i.occupant);
 					}
