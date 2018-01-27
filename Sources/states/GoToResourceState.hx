@@ -34,22 +34,30 @@ class GoToResourceState extends MovingState
 	public override function enter()
 	{
 		actor.coolDown = actor.data['moveCoolDown'];
-		if(!cast(actor.data['targetResource'], Actor).alive)
-		{
-			actor.data['targetResource'] = findNewResource();
-		}
 		if(actor.data['targetResource'] == null)
 		{
-			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('idle'));
+			trace('go to resource broke');
+			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('idle', true));
 		}
 		else
 		{
-			actor.data['targetNode'] = cast(actor.data['targetResource'], Actor).currentNodes[0];
-			if(actor.data['currentResource'] != cast(actor.data['targetResource'], Actor).data['resource'])
+			if(!cast(actor.data['targetResource'], Actor).alive)
 			{
-				actor.data['resourcesCollected'] = 0;
+				actor.data['targetResource'] = findNewResource();
 			}
-			actor.data['currentResource'] = cast(actor.data['targetResource'], Actor).data['resource'];
+			if(actor.data['targetResource'] == null)
+			{
+				actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('idle'));
+			}
+			else
+			{
+				actor.data['targetNode'] = cast(actor.data['targetResource'], Actor).currentNodes[0];
+				if(actor.data['currentResource'] != cast(actor.data['targetResource'], Actor).data['resource'])
+				{
+					actor.data['resourcesCollected'] = 0;
+				}
+				actor.data['currentResource'] = cast(actor.data['targetResource'], Actor).data['resource'];
+			}
 		}
 	}
 
