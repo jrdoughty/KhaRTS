@@ -17,6 +17,8 @@ import events.AttackInputEvent;
 import events.MoveInputEvent;
 import events.StopInputEvent;
 import kha.input.KeyCode;
+import events.SelectBuildLocationEvent;
+import events.SetBuildingEvent;
 
 /**
  * ...
@@ -52,6 +54,8 @@ class InputSystem extends SimpleEventDispatcher
 	private var clickTimerID:Int = -1;
 	
 	private var clickSprites: Array<Object> = [];
+	private var buildingData:Map<String, Dynamic>;
+	private var builder:Actor;
 	
 	
 	public function new(state:IGameScreen) 
@@ -67,6 +71,7 @@ class InputSystem extends SimpleEventDispatcher
 		addEvent(AttackInputEvent.ATTACK, function(e){inputState = ATTACKING; selector.visible = false;});
 		addEvent(MoveInputEvent.MOVE, function(e){inputState = MOVING; selector.visible = false;});
 		addEvent(StopInputEvent.STOP, function(e){stopActors();});
+		addEvent(SelectBuildLocationEvent.SELECT, setBuildingToBuild);
 	}
 
 	private function stopActors()
@@ -105,6 +110,9 @@ class InputSystem extends SimpleEventDispatcher
 		{
 			rightClick();
 		}
+		
+		ui.updateMouseXY(relativeMouseX, relativeMouseY);
+
 		if(Mouse.isHeld(0) && selector.visible == true)
 		{
 			selector.width = Std.int(relativeMouseX - selector.x);
@@ -265,7 +273,6 @@ class InputSystem extends SimpleEventDispatcher
 		else if(inputState == ATTACKING)
 		{
 			node = activeNodes[Math.floor(relativeMouseX / activeScreen.lvl.tileset.tileWidth) + Math.floor(relativeMouseY / activeScreen.lvl.tileset.tileWidth)*activeScreen.lvl.levelWidth];
-			var j = 0;
 			if(node.occupant == null)
 			{
 				selectedActors.moveTo(node, true);
@@ -276,11 +283,25 @@ class InputSystem extends SimpleEventDispatcher
 			}
 			inputState = SELECTING;
 		}
-	}
+		else if(inputState == BUILDING)
+		{
+			if(builder.team.resources >= buildingData['cost'])
+			{
+				node = activeNodes[Math.floor(relativeMouseX / activeScreen.lvl.tileset.tileWidth) + Math.floor(relativeMouseY / activeScreen.lvl.tileset.tileWidth)*activeScreen.lvl.levelWidth];
+				builder.team.resources -= buildingData['cost'];
+				var act = new Actor(node, Util.cloneStringMap(buildingData));
+				builder.screen.add(builder.team.addUnit(act));
+				builder.eventDispatcher.dispatchEvent(SetBuildingEvent.BUILD_ACTOR, new SetBuildingEvent(act));
+				ui.clearBuilding();
+			}						
+			else
+			{
+				trace('not enough resources');
+			}
 
-	public function rightClick()
-	{
-		inputState = SELECTING;
+			inputState = SELECTING; 
+		}
+		
 	}
 
 	public function leftDown()
@@ -320,6 +341,11 @@ class InputSystem extends SimpleEventDispatcher
 		}
 	}
 
+	public function rightClick()
+	{
+		inputState = SELECTING;
+	}
+
 	public function rightDown()
 	{
 		if(selectedActors.list.length != 0)
@@ -347,5 +373,12 @@ class InputSystem extends SimpleEventDispatcher
 				}
 			}
 		}
+	}
+	
+	public function setBuildingToBuild(e:SelectBuildLocationEvent)
+	{
+		inputState = BUILDING;
+		buildingData = e.bData;
+		builder = e.builder;
 	}
 }

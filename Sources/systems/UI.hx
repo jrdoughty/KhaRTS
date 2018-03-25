@@ -4,6 +4,7 @@ import sdg.Object;
 import sdg.graphics.Sprite;
 import sdg.atlas.Region;
 import kha.Assets;
+import sdg.atlas.Atlas;
 import sdg.Sdg;
 import sdg.ObjectList;
 import actors.Actor;
@@ -17,10 +18,12 @@ import events.MoveInputEvent;
 import events.QueueEvent;
 import world.Node;
 import events.SetBuildingEvent;
+import events.SelectBuildLocationEvent;
 
 class UI extends SimpleEventDispatcher
 {
 	public var uiElements:ObjectList;
+	public var buildingToBeBuilt:Object;
 	/**
 	 * map of Function arrays, and the Event Constant Strings used to trigger them
 	 */
@@ -40,6 +43,7 @@ class UI extends SimpleEventDispatcher
 
 		addEvent(KillEvent.KILL, KillUnit);
 		addEvent(CenterOnUnitEvent.CENTER, centerOnActor);
+		addEvent(SelectBuildLocationEvent.SELECT, setBuildingToBuild);
 	}
 
 	public function setUnits(actors:Array<Actor>)
@@ -67,6 +71,7 @@ class UI extends SimpleEventDispatcher
 		controls = [];
 		focusUnit = null;
 		var isUnits = false;
+		var buttonNames:Array<String> = [];
 		for(i in actors)
 		{
 			if(i.data['mobile'])
@@ -113,24 +118,25 @@ class UI extends SimpleEventDispatcher
 						for(j in dataArray)
 						{
 							d = Data.dataMap['buildings'][j.name];
-							s = new Sprite(new Region(Reflect.field(Assets.images, d['image']),0,0,d['width'],d['height']));
-							scaleDelta = buttonWidth/s.width;
-							s.setScale(scaleDelta);
-							controls.push(new UIElement(dashboard.width - buttonWidth*5 + (controls.length) % 4 * buttonWidth, dashboard.y + Math.floor((controls.length) / 4) * buttonWidth, s));
-							controls[controls.length-1].setSizeAuto();
-							
-							controls[controls.length - 1].leftClick = function(x:Float,y:Float) 
-							{		
-								if(actors[i].team.resources >= d['cost'])
-								{
-									actors[i].team.resources -= d['cost'];
-									var startNode = actors[i].currentNodes[0].rightNode;// lvl.getNodeByGridXY(Std.int(lvl.playerStartPos[i].x + 1 + (k % 3)),Std.int(lvl.playerStartPos[i].y + 1 + (Math.floor(k / 3))));
-									var act = new Actor(startNode, Util.cloneStringMap(d));
-									actors[i].screen.add(actors[i].team.addUnit(act));
-									actors[i].eventDispatcher.dispatchEvent(SetBuildingEvent.BUILD_ACTOR, new SetBuildingEvent(act));
-								}
-							};
-							uiElements.add(controls[controls.length-1]);
+							if(buttonNames.indexOf(j.name) == -1)
+							{
+								buttonNames.push(j.name);
+								s = new Sprite(new Region(Reflect.field(Assets.images, d['image']),0,0,d['width'],d['height']));
+								scaleDelta = buttonWidth/s.width;
+								s.setScale(scaleDelta);
+								controls.push(new UIElement(dashboard.width - buttonWidth*5 + (controls.length) % 4 * buttonWidth, dashboard.y + Math.floor((controls.length) / 4) * buttonWidth, s));
+								controls[controls.length-1].setSizeAuto();
+								
+								controls[controls.length - 1].leftClick = function(x:Float,y:Float) 
+								{		
+									if(actors[i].team.resources >= d['cost'])
+									{
+										actors[i].eventDispatcher.dispatchEvent(SelectBuildLocationEvent.SELECT, new SelectBuildLocationEvent(actors[i],j.name));
+										
+									}
+								};
+								uiElements.add(controls[controls.length-1]);
+							}
 						}
 					}
 				}
@@ -210,5 +216,31 @@ class UI extends SimpleEventDispatcher
 			Sdg.screen.camera.y = 0; 
 		else if(Sdg.screen.camera.y > Sdg.screen.camera.height + Sdg.gameHeight) 
 			Sdg.screen.camera.y = Sdg.gameHeight - Sdg.screen.camera.width; 
+	}
+	
+	public function updateMouseXY(x:Float, y:Float)
+	{
+		if(buildingToBeBuilt != null)
+		{
+			buildingToBeBuilt.x = (x - x%8);
+			buildingToBeBuilt.y = (y - y%8);
+		}
+	}
+	
+	public function setBuildingToBuild(e:SelectBuildLocationEvent)
+	{
+		var o = new Object();
+		var a = Assets.images;
+		var image = Reflect.field(Assets.images, e.bData['image']);
+		o.graphic = new Sprite(new Region(image, 0, 0, e.bData['width'], e.bData['height']));
+		o.graphic.alpha =.5;
+		Sdg.screen.add(o);
+		buildingToBeBuilt = o;
+	}
+	
+	public function clearBuilding()
+	{
+		Sdg.screen.remove(buildingToBeBuilt);
+		buildingToBeBuilt = null;
 	}
 }

@@ -19,7 +19,7 @@ class QueueEvent extends EventObject
 
 	/**
 	 * 
-	 * @param	target		Actor to be attacked
+	 * @param	uData		Actor to be created
 	 */
 	public function new(uData:UnitData) 
 	{
