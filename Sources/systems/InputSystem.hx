@@ -19,6 +19,7 @@ import events.StopInputEvent;
 import kha.input.KeyCode;
 import events.SelectBuildLocationEvent;
 import events.SetBuildingEvent;
+import events.BuildAtEvent;
 
 /**
  * ...
@@ -289,9 +290,7 @@ class InputSystem extends SimpleEventDispatcher
 			{
 				node = activeNodes[Math.floor(relativeMouseX / activeScreen.lvl.tileset.tileWidth) + Math.floor(relativeMouseY / activeScreen.lvl.tileset.tileWidth)*activeScreen.lvl.levelWidth];
 				builder.team.resources -= buildingData['cost'];
-				var act = new Actor(node, Util.cloneStringMap(buildingData));
-				builder.screen.add(builder.team.addUnit(act));
-				builder.eventDispatcher.dispatchEvent(SetBuildingEvent.BUILD_ACTOR, new SetBuildingEvent(act));
+				builder.eventDispatcher.dispatchEvent(BuildAtEvent.BUILD, new BuildAtEvent(node, buildingData));
 				ui.clearBuilding();
 			}						
 			else

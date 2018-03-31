@@ -531,6 +531,9 @@
 						},
 						{
 							"name": "returning"
+						},
+						{
+							"name": "go_to_building"
 						}
 					]
 				},
@@ -568,6 +571,9 @@
 						},
 						{
 							"name": "builder"
+						},
+						{
+							"name": "go_to_building"
 						}
 					]
 				}
@@ -630,6 +636,9 @@
 				},
 				{
 					"name": "go_to_resource"
+				},
+				{
+					"name": "go_to_building"
 				}
 			],
 			"separators": [],

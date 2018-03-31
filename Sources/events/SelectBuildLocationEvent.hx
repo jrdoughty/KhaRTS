@@ -17,10 +17,9 @@ class SelectBuildLocationEvent extends EventObject
 
 	public function new(builder:Actor, bName:String) 
 	{
-		super();
+		super(true);
 		this.builder = builder;
 		bData = Data.dataMap['buildings'][bName];
-		bubble = true;
 	}
 	
 }

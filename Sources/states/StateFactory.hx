@@ -16,6 +16,7 @@ class StateFactory
 		'attacking'=>AttackState,
 		'moving'=>MoveState,
 		'go_to_resource'=>GoToResourceState,
+		'go_to_building'=>GoToBuildingState,
 		'terminatah'=>Terminatah];
 	public static function create(name:String, a:Actor):IState
 	{
