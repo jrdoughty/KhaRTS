@@ -23,7 +23,6 @@ class BeingBuiltState extends BaseState
 	public override function enter()
 	{
 		actor.coolDown = 1000;
-		
 		actor.eventDispatcher.dispatchEvent(AnimateEvent.ANIMATE, new AnimateEvent('building', true));
 	}
 

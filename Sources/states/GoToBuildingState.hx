@@ -39,9 +39,16 @@ class GoToBuildingState extends MovingState
 		{
 			if (Util.getPythagoreanCFromXY(actor.data['targetNode'].nodeX,actor.data['targetNode'].nodeY, actor.currentNodes[0].nodeX, actor.currentNodes[0].nodeY)<=Math.sqrt(2))
 			{
-				var act = new Actor(actor.data['buildNode'], Util.cloneStringMap(bData));
-				actor.screen.add(actor.team.addUnit(act));
-				actor.eventDispatcher.dispatchEvent(SetBuildingEvent.BUILD_ACTOR, new SetBuildingEvent(act));
+				if(cast(actor.data['buildNode'], Node).occupant != null && cast(actor.data['buildNode'], Node).occupant.data['name'] == bData['name'])
+				{
+					actor.eventDispatcher.dispatchEvent(SetBuildingEvent.BUILD_ACTOR, new SetBuildingEvent(cast(actor.data['buildNode'], Node).occupant));
+				}
+				else
+				{
+					var act = new Actor(actor.data['buildNode'], Util.cloneStringMap(bData));
+					actor.screen.add(actor.team.addUnit(act));
+					actor.eventDispatcher.dispatchEvent(SetBuildingEvent.BUILD_ACTOR, new SetBuildingEvent(act));
+				}
 			}
 			else if(actor.data['mobile'])
 			{
@@ -94,8 +101,31 @@ class GoToBuildingState extends MovingState
 		else
 		{
 			actor.eventDispatcher.dispatchEvent(SimpleEvents.STOP, new EventObject());
-			actor.data['targetNode'] = bEvent.node;
 			actor.data['buildNode'] = bEvent.node;
+			
+			var w = (Math.ceil(bEvent.bData['width']/bEvent.node.width));
+			var h = (Math.ceil(bEvent.bData['height']/bEvent.node.height));
+			var paths:Array<Array<Node>> = [];
+			for(i in 0...w)
+			{
+				for(j in 0...h)
+				{
+					var gs = cast (actor.screen, screens.IGameScreen);
+					var p = AStar.newPath(actor.currentNodes[0], gs.lvl.getNodeByGridXY(bEvent.node.nodeX + i, bEvent.node.nodeY + j));
+					if(p.length > 0)
+						paths.push(p);
+				}
+			}
+			for(i in paths)
+			{
+				if(i.length < path.length || path.length == 0)
+				{
+					path = i;
+					actor.data['targetNode'] = path[path.length-1];
+				}
+			}
+
+
 			bData = bEvent.bData;
 			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('go_to_building'));
 		}
@@ -110,5 +140,6 @@ class GoToBuildingState extends MovingState
 	{
 		actor.data.set('targetNode', null);
 		actor.data.set('buildNode', null);
+		path = [];
 	}
 }

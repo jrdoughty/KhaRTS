@@ -2,7 +2,7 @@ package actors;
 
 import world.Node;
 import systems.Team;
-import events.SetBuildingEvent;
+import events.BuildAtEvent;
 import events.TargetEvent;
 import events.GatherEvent;
 import events.MoveEvent;
@@ -56,7 +56,6 @@ class ActorList
 	*/
 	public function build(a:Actor)
 	{
-		
 		for(i in 0...2)
 		{
 			for(actor in list)
@@ -72,7 +71,8 @@ class ActorList
 					//on second pass it doesn't matter if it was working on something else
 					if(buildingsToBuild.indexOf(a.data['name']) != -1 && (actor.data['targetBuilding'] == null || i == 1))
 					{
-						actor.eventDispatcher.dispatchEvent(SetBuildingEvent.BUILD_ACTOR, new SetBuildingEvent(a));
+						//actor.eventDispatcher.dispatchEvent(SetBuildingEvent.BUILD_ACTOR, new SetBuildingEvent(a));
+						actor.eventDispatcher.dispatchEvent(BuildAtEvent.BUILD, new BuildAtEvent(a.currentNodes[0], a.data));
 						return;
 					}
 				}
