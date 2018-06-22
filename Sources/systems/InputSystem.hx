@@ -69,13 +69,13 @@ class InputSystem extends SimpleEventDispatcher
 		Sdg.screen.add(selector);
 		selector.visible = false;
 		ui = new UI();
-		addEvent(AttackInputEvent.ATTACK, function(e){inputState = ATTACKING; selector.visible = false;});
-		addEvent(MoveInputEvent.MOVE, function(e){inputState = MOVING; selector.visible = false;});
-		addEvent(StopInputEvent.STOP, function(e){stopActors();});
+		addEvent(AttackInputEvent.ATTACK, setAttack);
+		addEvent(MoveInputEvent.MOVE, setMove);
+		addEvent(StopInputEvent.STOP, stopActors);
 		addEvent(SelectBuildLocationEvent.SELECT, setBuildingToBuild);
 	}
 
-	private function stopActors()
+	private function stopActors(e:EventObject = null)
 	{
 		inputState = SELECTING;
 		for(i in selectedActors)
@@ -201,6 +201,12 @@ class InputSystem extends SimpleEventDispatcher
 		else if(Keyboard.isPressed(KeyCode.S))
 		{
 			stopActors();
+		}
+		else if(Keyboard.isPressed(KeyCode.Tab))
+		{
+			cast(activeScreen, screens.PlayScreen).close();
+			cast(activeScreen, screens.PlayScreen).init();
+			
 		}
 	}
 
@@ -379,5 +385,33 @@ class InputSystem extends SimpleEventDispatcher
 		inputState = BUILDING;
 		buildingData = e.bData;
 		builder = e.builder;
+	}
+
+	public function close()
+	{
+		ui = null;
+		activeScreen = null;
+		selectedActors = null;
+		selector = null;
+		buildingData = null;
+		clickSprites = null;
+		builder = null;
+	
+		removeEvent(AttackInputEvent.ATTACK, setAttack);
+		removeEvent(MoveInputEvent.MOVE, setMove);
+		removeEvent(StopInputEvent.STOP, stopActors);
+		removeEvent(SelectBuildLocationEvent.SELECT, setBuildingToBuild);
+	}
+
+	private function setAttack(e:EventObject)
+	{
+		inputState = ATTACKING; 
+		selector.visible = false;
+	}
+
+	private function setMove(e:EventObject)
+	{
+		inputState = MOVING; 
+		selector.visible = false;
 	}
 }

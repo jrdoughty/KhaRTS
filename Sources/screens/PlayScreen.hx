@@ -106,4 +106,17 @@ class PlayScreen extends Screen implements IGameScreen
 		resourcesText.text = activeTeam.resources+"";
 		
 	}
+
+	public override function close()
+	{
+		super.close();
+		lvl = null;
+		teams = [];
+		activeTeam = null;
+		inputSystem.close();
+		inputSystem = null;
+		fogOfWar = null;
+		resourcesText = null;
+		
+	}
 }
