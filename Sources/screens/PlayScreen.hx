@@ -102,9 +102,8 @@ class PlayScreen extends Screen implements IGameScreen
 			i.eventDispatcher.dispatchEvent(SimpleEvents.CLEAR, new EventObject());
 		}
 		lvl.recreateFog(cast(fogOfWar.graphic, Tilemap));
-		inputSystem.update();
 		resourcesText.text = activeTeam.resources+"";
-		
+		inputSystem.update();		
 	}
 
 	public override function close()

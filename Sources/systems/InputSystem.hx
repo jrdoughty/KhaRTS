@@ -202,12 +202,6 @@ class InputSystem extends SimpleEventDispatcher
 		{
 			stopActors();
 		}
-		else if(Keyboard.isPressed(KeyCode.Tab))
-		{
-			cast(activeScreen, screens.PlayScreen).close();
-			cast(activeScreen, screens.PlayScreen).init();
-			
-		}
 	}
 
 	public function leftClick()
@@ -389,6 +383,7 @@ class InputSystem extends SimpleEventDispatcher
 
 	public function close()
 	{
+		ui.close();
 		ui = null;
 		activeScreen = null;
 		selectedActors = null;

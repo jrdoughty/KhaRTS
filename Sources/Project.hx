@@ -9,6 +9,8 @@ import sdg.manager.GamePadMan;
 import sdg.Sdg;
 import screens.PlayScreen;
 import sdg.manager.Manager.*;
+import kha.input.Keyboard;
+import kha.input.KeyCode;
 import systems.Data;
 
 class Project {
@@ -25,6 +27,15 @@ class Project {
 
 		System.notifyOnRender(engine.render);
 		Scheduler.addTimeTask(engine.update, 0, 1 / 60);
-		
+		Keyboard.get(0).notify(reset, null, null);
+	}
+	function reset (kc:KeyCode)
+	{
+		if (kc == KeyCode.Tab)
+		{
+			Sdg.screen.close();
+			Sdg.removeScreen('Play', true);
+			Sdg.addScreen('Play', new PlayScreen(), true);
+		}
 	}
 }

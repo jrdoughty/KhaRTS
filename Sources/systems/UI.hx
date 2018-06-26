@@ -41,7 +41,7 @@ class UI extends SimpleEventDispatcher
 		uiElements.add(dashboard);
 		uiElements.apply(Sdg.screen.add);
 
-		addEvent(KillEvent.KILL, KillUnit);
+		addEvent(KillEvent.KILL, killUnit);
 		addEvent(CenterOnUnitEvent.CENTER, centerOnActor);
 		addEvent(SelectBuildLocationEvent.SELECT, setBuildingToBuild);
 	}
@@ -178,7 +178,7 @@ class UI extends SimpleEventDispatcher
 		uiElements.apply(Sdg.screen.add);
 	}
 
-	public function KillUnit(e:KillEvent)
+	public function killUnit(e:KillEvent)
 	{
 		var uiElemDied = false;
 		for(i in units)
@@ -242,5 +242,25 @@ class UI extends SimpleEventDispatcher
 	{
 		Sdg.screen.remove(buildingToBeBuilt);
 		buildingToBeBuilt = null;
+	}
+	
+	public function close()
+	{
+		if(buildingToBeBuilt != null) 
+			clearBuilding();
+		uiElements.removeFromScreen();
+		uiElements.objects = [];
+		Sdg.screen.remove(dashboard);
+		dashboard = null;
+		units = [];
+		focusUnit = null;
+		for(i in controls)
+		{
+			Sdg.screen.remove(i);
+		}
+		controls = [];
+		removeEvent(KillEvent.KILL, killUnit);
+		removeEvent(CenterOnUnitEvent.CENTER, centerOnActor);
+		removeEvent(SelectBuildLocationEvent.SELECT, setBuildingToBuild);
 	}
 }
