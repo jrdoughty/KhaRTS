@@ -87,7 +87,7 @@ class PlayScreen extends Screen implements IGameScreen
 		add(fogOfWar);
 		dashboard = new Object();
 		inputSystem = new InputSystem(this);
-		resourcesText = new Text('test', Assets.fonts.OAG, 8, 50);
+		resourcesText = new Text('test',Assets.fonts.OAG, 8, 50);
 		var o = create(4,4,resourcesText);
 		o.fixed.x = true;
 		o.fixed.y = true;

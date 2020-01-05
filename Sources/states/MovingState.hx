@@ -60,16 +60,20 @@ class MovingState extends BaseState
 		if(diag)
 		{
 			actor.coolDown = Math.round(actor.data['moveCoolDown'] * 1.4);
+			
 			Delta.tween(actor)
 				.prop("x",actor.currentNodes[0].x, actor.data['moveCoolDown'] * 1.4 / 1000)
 				.prop("y",actor.currentNodes[0].y, actor.data['moveCoolDown'] * 1.4 / 1000);
+			
 		}
 		else
 		{
 			actor.coolDown = Math.round(actor.data['moveCoolDown']);
+			
 			Delta.tween(actor)
 				.prop("x",actor.currentNodes[0].x, actor.data['moveCoolDown'] / 1000)
 				.prop("y",actor.currentNodes[0].y, actor.data['moveCoolDown'] / 1000);
+			
 		}
 	}
 

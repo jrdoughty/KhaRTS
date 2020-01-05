@@ -12,9 +12,7 @@ import systems.UIElement;
 import events.KillEvent;
 import systems.ActorRepresentative;
 import events.CenterOnUnitEvent;
-import events.AttackInputEvent;
-import events.StopInputEvent;
-import events.MoveInputEvent;
+import events.InputEvent;
 import events.QueueEvent;
 import world.Node;
 import events.SetBuildingEvent;
@@ -93,14 +91,14 @@ class UI extends SimpleEventDispatcher
 					scaleDelta = buttonWidth/s.width;
 					s.setScale(scaleDelta);
 					controls.push(new UIElement(dashboard.width - buttonWidth*5, dashboard.y, s));
-					controls[controls.length-1].leftClick = function(x:Float,y:Float){dispatchEvent(MoveInputEvent.MOVE, new MoveInputEvent());};
+					controls[controls.length-1].leftClick = function(x:Float,y:Float){dispatchEvent(InputEvent.MOVE, new InputEvent());};
 					uiElements.add(controls[controls.length-1]);
 					
 					s = new Sprite(new Region(Assets.images.controls,8,0,8,8));
 					scaleDelta = buttonWidth/s.width;
 					s.setScale(scaleDelta);
 					controls.push(new UIElement(dashboard.width - buttonWidth*4, dashboard.y, s));
-					controls[controls.length-1].leftClick = function(x:Float,y:Float){dispatchEvent(StopInputEvent.STOP, new StopInputEvent());};
+					controls[controls.length-1].leftClick = function(x:Float,y:Float){dispatchEvent(InputEvent.STOP, new InputEvent());};
 					uiElements.add(controls[controls.length-1]);
 					
 					if(actors[i].data.exists('attacks') && actors[i].data.get('attacks').length > 0)
@@ -109,7 +107,7 @@ class UI extends SimpleEventDispatcher
 						scaleDelta = buttonWidth/s.width;
 						s.setScale(scaleDelta);
 						controls.push(new UIElement(dashboard.width - buttonWidth*3, dashboard.y, s));
-						controls[controls.length-1].leftClick = function(x:Float,y:Float){dispatchEvent(AttackInputEvent.ATTACK, new AttackInputEvent());};
+						controls[controls.length-1].leftClick = function(x:Float,y:Float){dispatchEvent(InputEvent.ATTACK, new InputEvent());};
 						uiElements.add(controls[controls.length-1]);
 					}
 					if(actors[i].data.exists('buildings') && actors[i].data.get('buildings').length > 0)

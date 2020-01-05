@@ -1,5 +1,6 @@
 package world;
 
+import haxe.xml.Parser;
 import kha.Assets;
 import format.tmx.Reader;
 import format.tmx.Data.TmxMap;
@@ -29,8 +30,9 @@ class Level extends Object
 	public function new(tmxFileName:String, tilesetTSXFileName:String) 
 	{
 		super();
-		var r = new Reader(Xml.parse(Reflect.field(Assets.blobs,tmxFileName+"_tmx").toString()));
-		var t:TmxMap = r.read();
+		var r = new Reader();
+		//trace(Reflect.field(Assets.blobs, tmxFileName+"_tmx"));
+		var t:TmxMap = r.read(Parser.parse( Reflect.field(Assets.blobs,tmxFileName+"_tmx").toString() ));
 		levelWidth = t.width;
 		levelHeight = t.height;
 		tileset = new RTSTileset(tilesetTSXFileName);
@@ -41,7 +43,7 @@ class Level extends Object
 		{
 			switch(layer)
 			{
-				case TileLayer(layer):
+				case LTileLayer(layer):
 					if(layer.name == 'Background')
 					{
 						i = 0;

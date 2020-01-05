@@ -14,6 +14,8 @@ import kha.input.KeyCode;
 import systems.Data;
 
 class Project {
+	public static var frames:Int = 0;
+	public static var fps:Int = 0;
 	public function new() {
 		Assets.loadEverything(assetsLoaded);
 	}
@@ -25,10 +27,18 @@ class Project {
 		Data.loadData();
 		Sdg.addScreen('Play', new PlayScreen(), true);
 
-		System.notifyOnRender(engine.render);
+		//System.notifyOnRender(engine.render);
+		System.notifyOnFrames(function(a){
+			for(i in a){engine.render(i);}; 
+			frames++;});
 		Scheduler.addTimeTask(engine.update, 0, 1 / 60);
+		Scheduler.addTimeTask(function(){
+			fps = frames; 
+			frames = 0;
+			}, 0, 1);
 		Keyboard.get(0).notify(reset, null, null);
 	}
+
 	function reset (kc:KeyCode)
 	{
 		if (kc == KeyCode.Tab)
