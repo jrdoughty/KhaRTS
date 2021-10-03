@@ -10,19 +10,24 @@ import sdg.event.EventObject;
  * ...
  * @author John Doughty
  */
+
+typedef ViewData = {/**
+	* Nodes scanned to clear fog of war
+	*/
+   public var clearedNodes:Array<Node>;
+
+   /**
+   * pointer to help prevent unnecessary casting
+   */
+   public var actor:Actor;
+}
+
 class View extends Component
 {
-	/**
-	 * Nodes scanned to clear fog of war
-	 */
-	public var clearedNodes:Array<Node> = [];
-
-	/**
-	* pointer to help prevent unnecessary casting
-	*/
-	private var actor:Actor;
-	
-	
+	var data:ViewData = {
+		clearedNodes: [],
+		actor: null
+	}	
 	public function new() 
 	{
 		super();
@@ -34,15 +39,15 @@ class View extends Component
 		
 		if (Type.getClass(object) == Actor)
 		{
-			actor = cast object;
-			if(!actor.data.exists('viewRange'))
+			data.actor = cast object;
+			if(!data.actor.data.exists('viewRange'))
 			{
-				actor.data.set('viewRange', 4);
+				data.actor.data.set('viewRange', 4);
 				trace('viewRange not set');
 			}
-		 	actor.eventDispatcher.addEvent(SimpleEvents.CLEAR, clearNodes);
-		 	actor.eventDispatcher.addEvent(SimpleEvents.HIDE, function(e:EventObject){actor.visible = false;});//uproot these when final place is found
-		 	actor.eventDispatcher.addEvent(SimpleEvents.REVEAL,  function(e:EventObject){actor.visible = true;});
+			data.actor.eventDispatcher.addEvent(SimpleEvents.CLEAR, clearNodes);
+			data.actor.eventDispatcher.addEvent(SimpleEvents.HIDE, function(e:EventObject){data.actor.visible = false;});//uproot these when final place is found
+			data.actor.eventDispatcher.addEvent(SimpleEvents.REVEAL,  function(e:EventObject){data.actor.visible = true;});
 		}
 		else
 		{
@@ -53,7 +58,7 @@ class View extends Component
 	
 	public function clearNodes(e:EventObject = null)
 	{
-		clearedNodes = [];
+		data.clearedNodes = [];
 		clearFogOfWar();
 	}
 	
@@ -69,18 +74,18 @@ class View extends Component
 		var distance:Float;
 		if (node == null)
 		{
-			node = actor.currentNodes[0];
+			node = data.actor.currentNodes[0];
 		}
 		for (n in node.neighbors)
 		{
-			if (clearedNodes.indexOf(n) == -1)
+			if (data.clearedNodes.indexOf(n) == -1)
 			{
-				distance = Math.sqrt(Math.pow(Math.abs(actor.currentNodes[0].nodeX - n.nodeX), 2) + Math.pow(Math.abs(actor.currentNodes[0].nodeY - n.nodeY), 2));
-				if (distance <= actor.data['viewRange'])
+				distance = Math.sqrt(Math.pow(Math.abs(data.actor.currentNodes[0].nodeX - n.nodeX), 2) + Math.pow(Math.abs(data.actor.currentNodes[0].nodeY - n.nodeY), 2));
+				if (distance <= data.actor.data['viewRange'])
 				{
 					n.removeOverlay();
-					clearedNodes.push(n);
-					if (distance < actor.data['viewRange'] && n.canSeeOver)
+					data.clearedNodes.push(n);
+					if (distance < data.actor.data['viewRange'] && n.canSeeOver)
 					{
 						clearFogOfWar(n);
 					}

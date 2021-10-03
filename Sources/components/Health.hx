@@ -10,24 +10,19 @@ import events.KillEvent;
 import events.HurtEvent;
 import sdg.graphics.shapes.Polygon;
 import kha.Color;
+import components.UIHealth;
 /**
  * ...
  * @author ...
  */
 class Health extends ActorComponent
 {
-	/**
-	 * simple health bar sprite
-	 */
-	private var healthBar:Object;
-	
-	/**
-	 * simple health bar fill sprite
-	 */
-	private var healthBarFill:Object;
-	
-	private var p:Polygon;//shortcut
-	
+	var data:HealthData = {
+		healthBar: null,
+		healthBarFill: null,
+		actor: null,
+		p:null
+	}
 	public function new() 
 	{
 		super();
@@ -40,17 +35,18 @@ class Health extends ActorComponent
 		object.eventDispatcher.addEvent(SimpleEvents.REVEAL, makeVisible);
 		object.eventDispatcher.addEvent(SimpleEvents.HIDE, killVisibility);
 		object.eventDispatcher.addEvent(HurtEvent.HURT, hurt);
+		data.actor = this.actor;
 		createSprite();
 
-		Util.getOrInit(actor.data, 'healthMax', function(){return cast 1;});
-		Util.getOrInit(actor.data, 'health', function(){return cast 1;});
+		Util.getOrInit(data.actor.data, 'healthMax', function(){return cast 1;});
+		Util.getOrInit(data.actor.data, 'health', function(){return cast 1;});
 
 	}
 	
 	public function hurt(e:HurtEvent)
 	{
 		
-			actor.data['health'] -= e.damage / actor.data['healthMax'];
+		data.actor.data['health'] -= e.damage / actor.data['healthMax'];
 	}
 	
 	/**
@@ -58,8 +54,8 @@ class Health extends ActorComponent
 	 */
 	public function killVisibility(e:EventObject = null)
 	{
-		healthBar.visible = false;
-		healthBarFill.visible = false;
+		data.healthBar.visible = false;
+		data.healthBarFill.visible = false;
 	}
 
 	
@@ -68,8 +64,8 @@ class Health extends ActorComponent
 	 */
 	public function makeVisible(e:EventObject = null)
 	{
-		healthBar.visible = true;
-		healthBarFill.visible = true;
+		data.healthBar.visible = true;
+		data.healthBarFill.visible = true;
 	}
 	
 	/**
@@ -79,25 +75,25 @@ class Health extends ActorComponent
 	{
 		super.update();
 		
-		if (healthBarFill != null)
+		if (data.healthBarFill != null)
 		{
 			if (actor.data['health'] > 0)
 			{
-				p.points[1].x = actor.width*(actor.data['health']);
-				p.points[2].x = actor.width*(actor.data['health']);
+				data.p.points[1].x = data.actor.width*(data.actor.data['health']);
+				data.p.points[2].x = data.actor.width*(data.actor.data['health']);
 			}
 			else
 			{
-				healthBarFill.visible = false;
+				data.healthBarFill.visible = false;
 			}
-			healthBarFill.x = actor.x;
-			healthBarFill.y = actor.y - 1;
+			data.healthBarFill.x = actor.x;
+			data.healthBarFill.y = actor.y - 1;
 			
 		}
-		if (healthBar != null)
+		if (data.healthBar != null)
 		{
-			healthBar.x = actor.x;
-			healthBar.y = actor.y - 1;
+			data.healthBar.x = actor.x;
+			data.healthBar.y = actor.y - 1;
 		}
 		if (actor.data['health'] <= 0)
 		{
@@ -107,18 +103,18 @@ class Health extends ActorComponent
 	
 	public function createSprite()
 	{			
-		healthBar = new Object(object.x, object.y, Polygon.createRectangle(actor.width, 1, Color.Red, true));
-		p = Polygon.createRectangle(actor.width, 1, Color.Green,true);
-		healthBarFill = new Object(object.x, object.y, p);
-		sdg.Sdg.screen.add(healthBar);
-		sdg.Sdg.screen.add(healthBarFill);
+		data.healthBar = new Object(object.x, object.y, Polygon.createRectangle(actor.width, 1, Color.Red, true));
+		data.p = Polygon.createRectangle(data.actor.width, 1, Color.Green, true);
+		data.healthBarFill = new Object(object.x, object.y, data.p);
+		sdg.Sdg.screen.add(data.healthBar);
+		sdg.Sdg.screen.add(data.healthBarFill);
 	}
 	
 	public function kill(e:EventObject = null)
 	{
 		
-		object.screen.remove(healthBar);
-		object.screen.remove(healthBarFill);
+		object.screen.remove(data.healthBar);
+		object.screen.remove(data.healthBarFill);
 		
 		actor.kill();
 		object.eventDispatcher.dispatchEvent(KillEvent.KILL, new KillEvent(actor));

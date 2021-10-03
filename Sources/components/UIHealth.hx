@@ -7,31 +7,42 @@ import actors.Actor;
 import kha.Color;
 import sdg.math.Vector2b;
 
-class UIHealth extends Component
-{
+
+typedef HealthData = {
+	
 	/**
 	 * simple health bar sprite
 	 */
-	private var healthBar:Object;
+	 public var healthBar:Object;
 	
-	/**
-	 * simple health bar fill sprite
-	 */
-	private var healthBarFill:Object;
-	
-	private var actor:Actor;
-	private var p:Polygon;//shortcut
-	
+	 /**
+	  * simple health bar fill sprite
+	  */
+	  public var healthBarFill:Object;
+	 
+	  public var actor:Actor;
+	  public var p:Polygon;//shortcut
+}
+
+class UIHealth extends Component
+{
+	var data:HealthData = {
+		healthBar: null,
+		healthBarFill: null,
+		actor: null,
+		p:null
+	}
+
 	public function new(a:Actor) 
 	{
 		super();
-		actor = a;
+		data.actor = a;
 	}
 	
 	override public function init() 
 	{
 		super.init();
-		if(!actor.data.exists('health'))
+		if(!data.actor.data.exists('health'))
 			object.components.remove(this);
 		else
 			createSprite();
@@ -44,16 +55,16 @@ class UIHealth extends Component
 	{
 		super.update();
 		
-		if (healthBarFill != null)
+		if (data.healthBarFill != null)
 		{
-			if (actor.data['health'] > 0)
+			if (data.actor.data['health'] > 0)
 			{
-				p.points[1].x = object.width*(actor.data['health']);
-				p.points[2].x = object.width*(actor.data['health']);
+				data.p.points[1].x = object.width*(data.actor.data['health']);
+				data.p.points[2].x = object.width*(data.actor.data['health']);
 			}
 			else
 			{
-				healthBarFill.visible = false;
+				data.healthBarFill.visible = false;
 			}
 			
 		}
@@ -61,18 +72,18 @@ class UIHealth extends Component
 	
 	public function createSprite()
 	{			
-		healthBar = new Object(object.x, object.y, Polygon.createRectangle(object.width, 1, Color.Red, true));
-		p = Polygon.createRectangle(object.width, 1, Color.Green,true);
-		healthBarFill = new Object(object.x, object.y, p);
-		sdg.Sdg.screen.add(healthBar);
-		sdg.Sdg.screen.add(healthBarFill);
-		healthBar.fixed = new Vector2b(true, true);
-		healthBarFill.fixed = new Vector2b(true, true);
+		data.healthBar = new Object(object.x, object.y, Polygon.createRectangle(object.width, 1, Color.Red, true));
+		data.p = Polygon.createRectangle(object.width, 1, Color.Green,true);
+		data.healthBarFill = new Object(object.x, object.y, data.p);
+		sdg.Sdg.screen.add(data.healthBar);
+		sdg.Sdg.screen.add(data.healthBarFill);
+		data.healthBar.fixed = new Vector2b(true, true);
+		data.healthBarFill.fixed = new Vector2b(true, true);
 	}
 
 	public override function destroy()
 	{
-		sdg.Sdg.screen.remove(healthBar);
-		sdg.Sdg.screen.remove(healthBarFill);
+		sdg.Sdg.screen.remove(data.healthBar);
+		sdg.Sdg.screen.remove(data.healthBarFill);
 	}
 }
