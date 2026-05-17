@@ -1,5 +1,6 @@
 package screens;
 
+import haxe.Timer;
 import systems.InputSystem;
 import kha.Assets;
 import sdg.Screen;
@@ -16,6 +17,7 @@ import events.SimpleEvents;
 import sdg.atlas.Atlas;
 import sdg.graphics.text.Text;
 import kha.Assets;
+import sdg.Sdg;
 
 class PlayScreen extends Screen implements IGameScreen
 {
@@ -26,6 +28,9 @@ class PlayScreen extends Screen implements IGameScreen
 	public var inputSystem:InputSystem;
 	public var fogOfWar:Object;
 	public var resourcesText:Text;
+	public var fpsText:Text;
+	public var fps:Int =0;
+	public var fpsTimer:Int;
 	
 	public function new()
 	{
@@ -88,11 +93,22 @@ class PlayScreen extends Screen implements IGameScreen
 		dashboard = new Object();
 		inputSystem = new InputSystem(this);
 		resourcesText = new Text('test',Assets.fonts.OAG, 8, 50);
+		fpsText = new Text('test',Assets.fonts.OAG, 8, 50);
 		var o = create(4,4,resourcesText);
 		o.fixed.x = true;
 		o.fixed.y = true;
+		o = create(304,4,fpsText);
+		o.fixed.x = true;
+		o.fixed.y = true;
+
+		fpsTimer = Sdg.addTimeTask(fpsTick, 1,0,1);
 	}
 
+	public function fpsTick() 
+	{
+		fpsText.text = Std.string(fps);
+		fps = 0;
+	}
 	public override function update()
 	{
 		super.update();
@@ -104,6 +120,7 @@ class PlayScreen extends Screen implements IGameScreen
 		lvl.recreateFog(cast(fogOfWar.graphic, Tilemap));
 		resourcesText.text = activeTeam.resources+"";
 		inputSystem.update();		
+		fps++;
 	}
 
 	public override function close()

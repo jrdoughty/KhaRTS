@@ -114,5 +114,10 @@ class Actor extends Object
 		{
 			i.occupant = null;
 		}
+		
+		for(i in components)
+		{
+			i.destroy();
+		}
 	}
 }

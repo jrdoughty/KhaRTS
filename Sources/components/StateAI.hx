@@ -121,7 +121,7 @@ class StateAI extends ActorComponent implements AI
 	public override function destroy() 
 	{
 		Sdg.removeTimeTask(data.actionTimer);
+		actor.components.remove(this);
 		super.destroy();
-		object.components.remove(this);
 	}
 }
