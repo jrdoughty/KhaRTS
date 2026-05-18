@@ -391,11 +391,7 @@ class InputSystem extends SimpleEventDispatcher
 		buildingData = null;
 		clickSprites = null;
 		builder = null;
-	
-		removeEvent(AttackInputEvent.ATTACK, setAttack);
-		removeEvent(MoveInputEvent.MOVE, setMove);
-		removeEvent(StopInputEvent.STOP, stopActors);
-		removeEvent(SelectBuildLocationEvent.SELECT, setBuildingToBuild);
+		destroy();
 	}
 
 	private function setAttack(e:EventObject)

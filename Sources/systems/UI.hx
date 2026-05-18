@@ -257,8 +257,6 @@ class UI extends SimpleEventDispatcher
 			Sdg.screen.remove(i);
 		}
 		controls = [];
-		removeEvent(KillEvent.KILL, killUnit);
-		removeEvent(CenterOnUnitEvent.CENTER, centerOnActor);
-		removeEvent(SelectBuildLocationEvent.SELECT, setBuildingToBuild);
+		destroy();
 	}
 }

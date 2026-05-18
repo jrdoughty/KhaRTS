@@ -33,7 +33,7 @@ class Util
 		var topLeftY2:Float = object2.height >= 0 ? object2.y : object2.y + object2.height;
 		var bottomRightX2:Float = object2.width >= 0 ? object2.x + object2.width : object2.x;
 		var bottomRightY2:Float = object2.height >= 0 ? object2.y + object2.height : object2.y;
-		
+
 		if (topLeftX1 > bottomRightX2 || topLeftX2 > bottomRightX1 || topLeftY1 > bottomRightY2 || topLeftY2 > bottomRightY1)
 		{
 			return false;

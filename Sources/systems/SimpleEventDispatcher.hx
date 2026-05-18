@@ -81,4 +81,14 @@ class SimpleEventDispatcher implements IEventDispatcher
 			EventSystem.get().dispatch(name, eventObject);
 		}
 	}
+
+	public function destroy():Void	
+	{
+		for(i in listeners.keys())
+		{
+			EventSystem.get().removeEvent(i, this);
+			listeners.remove(i);
+		}
+	}
+
 }

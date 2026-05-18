@@ -27,6 +27,7 @@ class PlayScreen extends Screen implements IGameScreen
 	public var dashboard(default,null):Object;
 	public var inputSystem:InputSystem;
 	public var fogOfWar:Object;
+	public var fogGraphic:Fog;
 	public var resourcesText:Text;
 	public var fpsText:Text;
 	public var fps:Int =0;
@@ -76,7 +77,7 @@ class PlayScreen extends Screen implements IGameScreen
 			}	
 		}
 		
-		var bgMap = new Fog(lvl.tileset);
+		fogGraphic = new Fog(lvl.tileset);
 		var data:Array<Array<Int>> = [];
 
 		for(y in 0...lvl.levelHeight)
@@ -87,8 +88,8 @@ class PlayScreen extends Screen implements IGameScreen
 				data[y].push(1);
 			}
 		}
-		bgMap.loadFrom2DArray(data);
-		fogOfWar = new Object(0,0,bgMap);
+		fogGraphic.loadFrom2DArray(data);
+		fogOfWar = new Object(0,0,fogGraphic);
 		add(fogOfWar);
 		dashboard = new Object();
 		inputSystem = new InputSystem(this);
@@ -117,7 +118,7 @@ class PlayScreen extends Screen implements IGameScreen
 		{
 			i.eventDispatcher.dispatchEvent(SimpleEvents.CLEAR, new EventObject());
 		}
-		lvl.recreateFog(cast(fogOfWar.graphic, Tilemap));
+		lvl.recreateFog(fogGraphic);
 		resourcesText.text = activeTeam.resources+"";
 		inputSystem.update();		
 		fps++;
