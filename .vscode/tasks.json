@@ -1,0 +1,64 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Krom",
+            "type": "shell",
+            "command": "node",
+            "args": [
+                "Kha/make",
+                "krom"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Build Linux",
+            "type": "shell",
+            "command": "node",
+            "args": [
+                "Kha/make",
+                "linux"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Build HTML5",
+            "type": "shell",
+            "command": "node",
+            "args": [
+                "Kha/make",
+                "html5"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Build Android",
+            "type": "shell",
+            "command": "node",
+            "args": [
+                "Kha/make",
+                "android"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Serve HTML5",
+            "type": "shell",
+            "command": "python3",
+            "args": [
+                "-m",
+                "http.server",
+                "8080"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/build/html5"
+            },
+            "isBackground": true,
+            "problemMatcher": []
+        }
+    ]
+}

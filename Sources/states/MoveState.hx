@@ -55,7 +55,7 @@ class MoveState extends MovingState
 			path = AStar.newPath(actor.currentNodes[0], actor.data['targetNode']);//remember path[0] is the last 
 		}
 		
-		if (path.length > 1 && path[1].occupant == null)
+		if (path.length > 1 && path[1].isPassible())
 		{
 			moveAlongPath();
 			turnsIdle = 0;
@@ -66,7 +66,7 @@ class MoveState extends MovingState
 				actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('idle'));//Unlike other cases, this is after the action has been carried out.
 			}
 		}
-		else if (path.length > 1 && path[1].occupant != null)
+		else if (path.length > 1 && path[1].isPassible())
 		{
 			newPath();
 		}

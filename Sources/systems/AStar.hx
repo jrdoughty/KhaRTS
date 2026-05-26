@@ -1,6 +1,7 @@
 package systems ;
 import world.Node;
 import world.Level;
+import sdg.pathfinding.INode;
 
 
 /**
@@ -16,15 +17,15 @@ class AStar
 	/**
 	 * Array of Nodes in order beginning to end
 	 */
-	private static var path:Array<Node> = [];
+	private static var path:Array<INode> = [];
 	/**
 	 * possible nodes to move to
 	 */
-	private static var openList:Array<Node> = [];
+	private static var openList:Array<INode> = [];
 	/**
-	 * Nodes that have been looked into and calculated
+	 * INodes that have been looked into and calculated
 	 */
-	private static var closedList:Array<Node> = [];
+	private static var closedList:Array<INode> = [];
 	/**
 	 * Path estimate
 	 */
@@ -32,14 +33,14 @@ class AStar
 	/**
 	 * targetNode to path to
 	 */
-	private static var end:Node;
+	private static var end:INode;
 	/**
 	 * Fetches Array of Nodes that make up the route beginning to end to the endNode from the start Node
 	 * @param	start 		Path origin
 	 * @param	endNode		Desired End of Path
 	 * @return				Array of Nodes from start to endNode
 	 */
-	public static function newPath(start:Node, endNode:Node):Array<Node>
+	public static function newPath(start:INode, endNode:INode):Array<INode>
 	{
 		cleanParentNodes();//ensure everying this ready
 		cleanUp();
@@ -136,7 +137,7 @@ class AStar
 	 * @param	childNode		Node being compared to the end node
 	 * @param	endNode			End/Destination Node
 	 */
-	@:extern private static inline function calculateHeiristic (childNode:Node, endNode:Node)//startX:Int, startY:Int, endX:Int, endY:Int) 
+	extern private static inline function calculateHeiristic (childNode:INode, endNode:INode)//startX:Int, startY:Int, endX:Int, endY:Int) 
 	{
         var h = Std.int(10 * Math.abs(childNode.nodeX - endNode.nodeX) + 10 * Math.abs(childNode.nodeY - endNode.nodeY));
 		h += childNode.modifier;
@@ -151,7 +152,7 @@ class AStar
 	 * @param	parentNode to be added to the child if a better parent doesn't exist
 	 * @return	whether or not it is the end
 	 */
-    private static function setupChildNode(childNode:Node, parentNode:Node):Bool 
+    private static function setupChildNode(childNode:INode, parentNode:INode):Bool 
 	{
         var prospectiveG:Int;
 
@@ -176,11 +177,6 @@ class AStar
 		{
             prospectiveG = parentNode.g + 14;
         }
-
-		if (childNode.occupant != null)
-		{
-			prospectiveG += 100;
-		}
 
         if (prospectiveG + childNode.heiristic < childNode.getFinal() || childNode.g == -1) 
 		{

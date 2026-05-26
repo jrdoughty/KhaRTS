@@ -151,7 +151,7 @@ class AttackState extends MovingState
 		}
 		
 		
-		if (path.length > 1 && path[1].occupant == null)
+		if (path.length > 1 && path[1].isPassible())
 		{
 			moveAlongPath();
 		}

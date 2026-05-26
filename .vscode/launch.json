@@ -1,6 +1,50 @@
 {
     "configurations": [
         {
+            "name": "Krom",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/krom/Krom",
+            "cwd": "${workspaceFolder}",
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "stopAtEntry": false,
+            "preLaunchTask": "Build Krom",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty printing",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "Linux Native",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/linux-build/debug",
+            "cwd": "${workspaceFolder}",
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "stopAtEntry": false,
+            "preLaunchTask": "Build Linux",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty printing",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "HTML5 Chrome",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:8080",
+            "webRoot": "${workspaceFolder}/build/html5",
+            "preLaunchTask": "Build HTML5"
+        },
+        {
             "name": "Kha: HTML5",
             "request": "launch",
             "type": "chrome",
@@ -28,5 +72,6 @@
             "internalConsoleOptions": "openOnSessionStart"
         }
     ],
-    "compounds": []
+    "compounds": [],
+    "version": "0.2.0"
 }

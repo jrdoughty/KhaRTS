@@ -76,7 +76,7 @@ class View extends Component
 		{
 			node = data.actor.currentNodes[0];
 		}
-		for (n in node.neighbors)
+		for (n in node.getNodeNeighbors())
 		{
 			if (data.clearedNodes.indexOf(n) == -1)
 			{

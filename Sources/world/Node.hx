@@ -1,13 +1,14 @@
 package world;
 import actors.Actor;
+import sdg.pathfinding.INode;
 
 /**
  * ...
  * @author John Doughty
  */
-class Node implements Util.ITwoD
+class Node implements Util.ITwoD implements INode
 {
-	public var neighbors:Array<Node> = [];
+	public var neighbors:Array<INode> = [];
 	public var leftNode:Node;
 	public var rightNode:Node;
 	public var topNode:Node;
@@ -16,7 +17,7 @@ class Node implements Util.ITwoD
 	public var topRightNode:Node;
 	public var bottomLeftNode:Node;
 	public var bottomRightNode:Node;
-	public var parentNode:Node;
+	public var parentNode:INode;
 	public var occupant:Actor = null;
 	public var g:Int = -1;
 	public var modifier:Int = 0;
@@ -56,6 +57,12 @@ class Node implements Util.ITwoD
 		
 		isPassable = pass;
 		this.canSeeOver = canSeeOver;
+	}
+
+	public function getNodeNeighbors():Array<Node>
+	{
+		var ns:Array<Node> = cast neighbors;
+		return ns;
 	}
 	
 	public function isPassible():Bool

@@ -3,6 +3,7 @@ package states;
 import actors.Actor;
 import events.StateChangeEvent;
 import world.Node;
+import sdg.pathfinding.INode;
 import systems.AStar;
 import events.SimpleEvents;
 import tween.Delta;
@@ -75,7 +76,7 @@ class GoToBuildingState extends MovingState
 			path = AStar.newPath(actor.currentNodes[0], actor.data['targetNode']);
 		}
 		
-		if (path.length > 1 && path[1].occupant == null)
+		if (path.length > 1 && path[1].isPassible())
 		{
 			moveAlongPath();
 		}
@@ -105,7 +106,7 @@ class GoToBuildingState extends MovingState
 			
 			var w = (Math.ceil(bEvent.bData['width']/bEvent.node.width));
 			var h = (Math.ceil(bEvent.bData['height']/bEvent.node.height));
-			var paths:Array<Array<Node>> = [];
+			var paths:Array<Array<INode>> = [];
 			for(i in 0...w)
 			{
 				for(j in 0...h)

@@ -84,7 +84,7 @@ class Actor extends Object
 		}
 		if(currentNodes.length == 1)
 		{
-			neighbors = currentNodes[0].neighbors;
+			neighbors = cast currentNodes[0].neighbors;
 		}
 		else
 		{
@@ -93,9 +93,10 @@ class Actor extends Object
 			{
 				for(j in i.neighbors)
 				{
-					if(neighbors.indexOf(j) == -1 && j.occupant != this)
+					var node:Node = cast (j, Node);
+					if(neighbors.indexOf(node) == -1 && node.occupant != this)
 					{
-						neighbors.push(j);
+						neighbors.push(node);
 					}
 				}
 			}

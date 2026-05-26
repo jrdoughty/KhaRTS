@@ -23,7 +23,7 @@ class Project {
 	function assetsLoaded()
 	{
 		var engine = new Engine(320, 240, false, true, 60);
-		engine.enable(KEYBOARD | MOUSE | GAMEPAD | DELTA);
+		engine.enable(KEYBOARD | MOUSE | GAMEPAD | DELTA | AUDIO);
 		Data.loadData();
 		Sdg.addScreen('Play', new PlayScreen(), true);
 
@@ -37,6 +37,13 @@ class Project {
 			frames = 0;
 			}, 0, 1);
 		Keyboard.get(0).notify(reset, null, null);
+		// Initialize audio
+
+		var audioManager = sdg.manager.AudioManager.manager;
+		audioManager.addBank("fx");
+		audioManager.addBank("music");
+
+		sdg.manager.AudioManager.manager.playMusic("TitleScreen","music");
 	}
 
 	function reset (kc:KeyCode)

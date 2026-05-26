@@ -6,9 +6,10 @@ import world.Node;
 import systems.AStar;
 import tween.Delta;
 import events.ChangeTimingEvent;
+import sdg.pathfinding.INode;
 class MovingState extends BaseState
 {
-	private var path:Array<Node> = [];
+	private var path:Array<INode> = [];
 	private var failedToMove:Bool = false;
 	private var diag:Bool = false;
 
@@ -53,6 +54,7 @@ class MovingState extends BaseState
 	//@:extern inline 
 	function moveAlongPath()
 	{
+		var path:Array<Node> = cast this.path;
 		diag = path[0].x != path[1].x && path[0].y != path[1].y;
 		path.splice(0,1)[0].occupant = null;
 		actor.currentNodes[0] = path[0];

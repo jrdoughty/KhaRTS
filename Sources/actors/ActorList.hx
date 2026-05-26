@@ -88,7 +88,7 @@ class ActorList
 		while(nodes.length < list.length)
 		{
 			lastLength = nodes.length;
-			for(k in nodes[i].neighbors)
+			for(k in nodes[i].getNodeNeighbors())
 			{
 				if(nodes.indexOf(k) == -1 && k.isPassible())
 				{

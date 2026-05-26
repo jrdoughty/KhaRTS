@@ -109,7 +109,7 @@ class GoToResourceState extends MovingState
 			path = AStar.newPath(actor.currentNodes[0], actor.data['targetResource'].currentNodes[0]);
 		}
 		
-		if (path.length > 1 && path[1].occupant == null)
+		if (path.length > 1 && path[1].isPassible())
 		{
 			moveAlongPath();
 		}
@@ -187,7 +187,7 @@ class GoToResourceState extends MovingState
 	*/
 	private function findNewResource():Actor
 	{
-		var openList:Array<Node> = actor.currentNodes[0].neighbors;
+		var openList:Array<Node> = actor.currentNodes[0].getNodeNeighbors();
 		var closeList:Array<Node> = [actor.currentNodes[0]];
 		var iterationsAllowed = 6;
 		var i = 0;
@@ -204,7 +204,7 @@ class GoToResourceState extends MovingState
 			var nextOpenList:Array<Node> = [];
 			for(i in openList)
 			{
-				for(j in i.neighbors)
+				for(j in i.getNodeNeighbors())
 				{
 					if(openList.indexOf(j) == -1 && closeList.indexOf(j) == -1 && nextOpenList.indexOf(j) == -1)
 					{

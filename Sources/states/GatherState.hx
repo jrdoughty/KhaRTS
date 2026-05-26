@@ -140,7 +140,7 @@ class GatherState extends BaseState
 	*/
 	private function findNewResource():Actor
 	{
-		var openList:Array<Node> = actor.currentNodes[0].neighbors;
+		var openList:Array<Node> = actor.currentNodes[0].getNodeNeighbors();
 		var closeList:Array<Node> = [actor.currentNodes[0]];
 		var iterationsAllowed = 6;
 		var i = 0;
@@ -157,7 +157,7 @@ class GatherState extends BaseState
 			var nextOpenList:Array<Node> = [];
 			for(i in openList)
 			{
-				for(j in i.neighbors)
+				for(j in i.getNodeNeighbors())
 				{
 					if(openList.indexOf(j) == -1 && closeList.indexOf(j) == -1 && nextOpenList.indexOf(j) == -1)
 					{

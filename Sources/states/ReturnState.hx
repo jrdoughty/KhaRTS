@@ -3,6 +3,7 @@ package states;
 import events.AnimateEvent;
 import actors.Actor;
 import events.StateChangeEvent;
+import sdg.pathfinding.INode;
 import world.Node;
 import systems.AStar;
 import sdg.event.EventObject;
@@ -70,7 +71,7 @@ class ReturnState extends MovingState
 			actor.data['targetNode'] = path[path.length-1];
 		}
 		
-		if (path.length > 1 && path[1].occupant == null)
+		if (path.length > 1 && path[1].isPassible())
 		{
 			moveAlongPath();
 		}
@@ -98,7 +99,7 @@ class ReturnState extends MovingState
 
 	private function findClosestBuilding()
 	{
-		var pathsToReturn:Array<Array<Node>> = [];
+		var pathsToReturn:Array<Array<INode>> = [];
 
 		for(i in actor.team.units)
 		{

@@ -85,7 +85,7 @@ class BaseState implements IState
 		{
 			node = actor.currentNodes[0];
 		}
-		for (n in node.neighbors)
+		for (n in node.getNodeNeighbors())
 		{
 			if (threatNodes.indexOf(n) == -1)
 			{
