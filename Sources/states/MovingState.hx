@@ -3,7 +3,7 @@ import actors.Actor;
 import events.StateChangeEvent;
 import events.AnimateEvent;
 import world.Node;
-import systems.AStar;
+import sdg.pathfinding.AStar;
 import tween.Delta;
 import events.ChangeTimingEvent;
 import sdg.pathfinding.INode;

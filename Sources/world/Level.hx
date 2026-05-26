@@ -1,5 +1,6 @@
 package world;
 
+import sdg.pathfinding.IMap;
 import haxe.xml.Parser;
 import kha.Assets;
 import format.tmx.Reader;
@@ -11,13 +12,14 @@ import sdg.graphics.tiles.Tilemap;
 import events.SimpleEvents;
 import sdg.event.EventObject;
 import kha.math.Vector2;
+import sdg.pathfinding.INode;
 /**
  * ...
  * @author John Doughty
  */
-class Level extends Object
+class Level extends Object implements IMap
 {
-	public var activeNodes:Array<Node> = [];
+	public var activeNodes:Array<INode> = [];
 
 	public var tileset:RTSTileset;
 	public var levelWidth:Int;
@@ -130,7 +132,7 @@ class Level extends Object
 		var index:Int = x + y * levelWidth;
 		if (activeNodes.length > index)
 		{
-			result = activeNodes[index];
+			result = cast (activeNodes[index], Node);
 		}
 		return result;
 	}
@@ -141,6 +143,7 @@ class Level extends Object
 		var j:Int;
 		levelWidth = levelW;
 		levelHeight = levelH;
+		var activeNodes:Array<Node> = cast this.activeNodes;
 		for (i in 0...levelW) 
 		{
             for (j in 0...levelH) 
@@ -191,6 +194,7 @@ class Level extends Object
 
 	public function resetFog()
 	{
+		var activeNodes:Array<Node> = cast this.activeNodes;
 		for(i in activeNodes)
 		{
 			i.addOverlay();
@@ -198,6 +202,7 @@ class Level extends Object
 	}
 	public function recreateFog(fogOfWarGraphic:Tilemap)
 	{
+		var activeNodes:Array<Node> = cast this.activeNodes;
 		for(i in activeNodes)
 		{
 			if(i.removeShadow)

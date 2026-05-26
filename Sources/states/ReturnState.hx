@@ -5,7 +5,7 @@ import actors.Actor;
 import events.StateChangeEvent;
 import sdg.pathfinding.INode;
 import world.Node;
-import systems.AStar;
+import sdg.pathfinding.AStar;
 import sdg.event.EventObject;
 import tween.Delta;
 import events.GatherEvent;

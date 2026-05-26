@@ -4,7 +4,7 @@ import events.StateChangeEvent;
 import events.HurtEvent;
 import events.AnimateEvent;
 import world.Node;
-import systems.AStar;
+import sdg.pathfinding.AStar;
 import tween.Delta;
 import events.SimpleEvents;
 import sdg.event.EventObject;
@@ -219,9 +219,10 @@ class AttackState extends MovingState
 						var dy:Int = Std.int(Math.abs(j - y));
 						if(Math.sqrt(dx*dx + dy*dy) <= range && dx + dy >= attack.minRange) 
 						{
-							if(scrn.lvl.activeNodes[i + j*scrn.lvl.levelWidth].occupant != null && actor.team.isThreat(scrn.lvl.activeNodes[i + j*scrn.lvl.levelWidth].occupant.team.id))
+							var node = cast (scrn.lvl.activeNodes[i + j*scrn.lvl.levelWidth]);
+							if(node.occupant != null && actor.team.isThreat(node.occupant.team.id))
 							{
-									result = scrn.lvl.activeNodes[i + j*scrn.lvl.levelWidth].occupant;
+									result = node.occupant;
 									break;
 							}
 						}

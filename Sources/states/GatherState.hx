@@ -2,7 +2,7 @@ package states;
 
 import actors.Actor;
 import events.StateChangeEvent;
-import systems.AStar;
+import sdg.pathfinding.AStar;
 import events.SimpleEvents;
 import events.AnimateEvent;
 import events.KillEvent;

@@ -3,7 +3,7 @@ package states;
 import actors.Actor;
 import events.StateChangeEvent;
 import world.Node;
-import systems.AStar;
+import sdg.pathfinding.AStar;
 import events.SimpleEvents;
 import tween.Delta;
 import events.AnimateEvent;

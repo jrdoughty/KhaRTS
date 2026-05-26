@@ -8,7 +8,7 @@ import sdg.Object;
 import sdg.event.EventObject;
 import actors.Actor;
 import world.Level;
-import systems.AStar;
+import sdg.pathfinding.AStar;
 import systems.Team;
 import graphics.Fog;
 import sdg.graphics.tiles.Tilemap;

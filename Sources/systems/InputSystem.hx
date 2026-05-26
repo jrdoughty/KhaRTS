@@ -63,7 +63,7 @@ class InputSystem extends SimpleEventDispatcher
 	{
 		super();
 		activeScreen = state;
-		activeNodes = state.lvl.activeNodes;
+		activeNodes = cast state.lvl.activeNodes;
 		selector = new Object(0,0,Polygon.createRectangle(10,10,kha.Color.Green,true,.2));
 		selector.graphic.alpha = .3;
 		Sdg.screen.add(selector);
