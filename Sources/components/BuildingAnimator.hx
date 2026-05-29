@@ -18,6 +18,7 @@ class BuildingAnimator extends Animator
 	{
 		super.init();
 		var a = cast (object, Actor);
+		
 		regionList = a.rl;
 		a.eventDispatcher.addEvent(QueueEvent.QUEUE, produceAnim);
 		a.eventDispatcher.addEvent(AnimateEvent.ANIMATE, anim);

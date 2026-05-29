@@ -168,7 +168,7 @@ class Actor extends Object
 		}
 		if(currentNodes.length == 1)
 		{
-			neighbors = cast currentNodes[0].neighbors;
+			neighbors =  currentNodes[0].getNodeNeighbors();
 		}
 		else
 		{
