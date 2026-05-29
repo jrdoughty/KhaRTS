@@ -39,7 +39,7 @@ class MoveState extends MovingState
 	{
 		super.takeAction();
 
-		if (actor.data.aggressive)
+		if (actor.aggressive)
 		{
 			checkView();
 			actor.targetEnemy = getEnemyInThreat();	
@@ -93,8 +93,7 @@ class MoveState extends MovingState
 	{
 		actor.eventDispatcher.dispatchEvent(SimpleEvents.STOP, new EventObject());
 		actor.targetNode = moveEvent.node;
-		//TODO
-		//actor.data.aggressive = moveEvent.aggressive;
+		actor.aggressive = moveEvent.aggressive;
 		actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('moving'));
 	}
 	
@@ -106,7 +105,6 @@ class MoveState extends MovingState
 	public function resetData(eO:EventObject = null):Void 
 	{
 		actor.targetNode = null;
-		//TODO
-		//actor.data.aggressive = false;
+		actor.aggressive = false;
 	}
 }
