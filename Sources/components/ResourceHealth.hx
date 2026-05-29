@@ -27,8 +27,7 @@ class ResourceHealth extends ActorComponent
 	
 	public function hurt(e:HurtEvent)
 	{
-		
-			actor.data['health'] -= e.damage / actor.data['healthMax'];
+		actor.health -= e.damage / actor.healthMax;
 	}
 	
 	/**
@@ -38,7 +37,7 @@ class ResourceHealth extends ActorComponent
 	{
 		super.update();
 		
-		if (actor.data['health'] <= 0)
+		if (actor.resourceData.health <= 0)
 		{
 			kill();
 		}

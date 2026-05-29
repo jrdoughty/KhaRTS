@@ -9,9 +9,6 @@ class ActorComponent extends Component
 	public override function init()
 	{
 		super.init();
-		if(Type.getClass(object) == Actor)
-			actor = cast(object, Actor);
-		else
-			destroy();
+		actor = cast(object, Actor);
 	}
 }

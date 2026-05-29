@@ -24,6 +24,7 @@ class BeingBuiltState extends BaseState
 	{
 		actor.coolDown = 1000;
 		actor.eventDispatcher.dispatchEvent(AnimateEvent.ANIMATE, new AnimateEvent('building', true));
+		trace("starting build");
 	}
 
 	private function startBuild(e:EventObject)
@@ -43,7 +44,7 @@ class BeingBuiltState extends BaseState
 
 	private function finishBuild()
 	{
-		actor.data['built'] = true;
+		actor.ready = true;
 		actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('idle',true));
 		actor.eventDispatcher.removeEvent(SimpleEvents.BUILD_PROGRESS, build);
 	}

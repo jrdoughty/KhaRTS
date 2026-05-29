@@ -9,17 +9,17 @@ class WanderState extends BaseState
 
 	public override function takeAction()
 	{	
-		if(actor.data['targetNode'] == null && actor.data['targetEnemy'] == null)
+		if(actor.targetNode == null && actor.targetEnemy == null)
 		{
 			checkView();
-			actor.data['targetEnemy'] = getEnemyInThreat();
+			actor.targetEnemy = getEnemyInThreat();
 		}
 
-		if (actor.data['targetNode'] != null && actor.data['mobile'])
+		if (actor.targetNode != null && actor.data.mobile)
 		{
 			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('moving', true));
 		}
-		else if (actor.data['targetEnemy'] != null && actor.data['targetEnemy'].data.exists('health'))
+		else if (actor.targetEnemy != null && actor.targetEnemy.data != null)
 		{
 			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('attacking'));
 		} 
@@ -27,7 +27,7 @@ class WanderState extends BaseState
 		{
 			if(Math.random() < .5)
 			{
-				actor.data['targetNode'] = actor.neighbors[Math.floor(Math.random() * actor.neighbors.length)];
+				actor.targetNode = actor.neighbors[Math.floor(Math.random() * actor.neighbors.length)];
 				actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('moving', true));
 			}
 			else

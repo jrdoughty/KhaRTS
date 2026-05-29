@@ -17,6 +17,10 @@ import events.QueueEvent;
 import world.Node;
 import events.SetBuildingEvent;
 import events.SelectBuildLocationEvent;
+import systems.Data.Buildings;
+import systems.Data.BuildingsKind;
+import systems.Data.UnitsKind;
+import events.QueueEvent.UnitData;
 
 class UI extends SimpleEventDispatcher
 {
@@ -47,7 +51,6 @@ class UI extends SimpleEventDispatcher
 	public function setUnits(actors:Array<Actor>)
 	{
 		var dataArray:Array<Dynamic> = [];
-		var d:Map<String, Dynamic>;
 		var s:Sprite;
 		var scaleDelta:Float;
 		for(i in units)
@@ -72,16 +75,17 @@ class UI extends SimpleEventDispatcher
 		var buttonNames:Array<String> = [];
 		for(i in actors)
 		{
-			if(i.data['mobile'])
+			if(i.data != null)
 			{
 				isUnits = true;
 			}
 		}
 		if(isUnits)
 		{
+			var d:Buildings;
 			for(i in 0...actors.length)
 			{
-				if(actors[i].data['mobile'])
+				if(actors[i].data != null)
 				{
 					units.push(new ActorRepresentative((units.length * actors[i].width) % (actors[i].width * 6) + dashboard.x, Math.floor(units.length / 6) * actors[i].height + dashboard.y, actors[i]));
 					uiElements.add(units[units.length-1]);
@@ -101,7 +105,7 @@ class UI extends SimpleEventDispatcher
 					controls[controls.length-1].leftClick = function(x:Float,y:Float){dispatchEvent(InputEvent.STOP, new InputEvent());};
 					uiElements.add(controls[controls.length-1]);
 					
-					if(actors[i].data.exists('attacks') && actors[i].data.get('attacks').length > 0)
+					if(actors[i].data != null && actors[i].data.attacks.length > 0)
 					{
 						s = new Sprite(new Region(Assets.images.controls,0,0,8,8));
 						scaleDelta = buttonWidth/s.width;
@@ -110,16 +114,16 @@ class UI extends SimpleEventDispatcher
 						controls[controls.length-1].leftClick = function(x:Float,y:Float){dispatchEvent(InputEvent.ATTACK, new InputEvent());};
 						uiElements.add(controls[controls.length-1]);
 					}
-					if(actors[i].data.exists('buildings') && actors[i].data.get('buildings').length > 0)
+					if(actors[i].data.buildings.length > 0)
 					{
-						dataArray = actors[i].data['buildings'];
-						for(j in dataArray)
+						for(j in actors[i].data.buildings)
 						{
-							d = Data.dataMap['buildings'][j.name];
-							if(buttonNames.indexOf(j.name) == -1)
+							var rf = j.name;
+							d = Data.buildings.get(cast(rf.name, BuildingsKind));
+							if(buttonNames.indexOf(rf.name) == -1)
 							{
-								buttonNames.push(j.name);
-								s = new Sprite(new Region(Reflect.field(Assets.images, d['image']),0,0,d['width'],d['height']));
+								buttonNames.push(rf.name);
+								s = new Sprite(new Region(Reflect.field(Assets.images,d.image),0,0,d.width,d.height));
 								scaleDelta = buttonWidth/s.width;
 								s.setScale(scaleDelta);
 								controls.push(new UIElement(dashboard.width - buttonWidth*5 + (controls.length) % 4 * buttonWidth, dashboard.y + Math.floor((controls.length) / 4) * buttonWidth, s));
@@ -127,9 +131,9 @@ class UI extends SimpleEventDispatcher
 								
 								controls[controls.length - 1].leftClick = function(x:Float,y:Float) 
 								{		
-									if(actors[i].team.resources >= d['cost'])
+									if(actors[i].team.resources >= d.cost)
 									{
-										actors[i].eventDispatcher.dispatchEvent(SelectBuildLocationEvent.SELECT, new SelectBuildLocationEvent(actors[i],j.name));
+										actors[i].eventDispatcher.dispatchEvent(SelectBuildLocationEvent.SELECT, new SelectBuildLocationEvent(actors[i],rf.name));
 										
 									}
 								};
@@ -142,18 +146,19 @@ class UI extends SimpleEventDispatcher
 		}
 		else //buildings
 		{
+			var buildingD;
 			for(i in 0...actors.length)
 			{
 				units.push(new ActorRepresentative((i * actors[i].width) % (actors[i].width * 6) + dashboard.x, Math.floor(i / 6) * actors[i].height + dashboard.y, actors[i]));
 				uiElements.add(units[i]);
 					
-				if(actors[i].data['units'])
+				if(actors[i].buildingData.units.length > 0)
 				{
-					dataArray = actors[i].data['units'];
-					for(j in dataArray)
+					for(j in actors[i].buildingData.units)
 					{
-						d = Data.dataMap['units'][j.name];
-						s = new Sprite(new Region(Reflect.field(Assets.images, d['image']),0,0,d['width'],d['height']));
+						var rf = j.name;
+						buildingD = Data.units.get(cast(rf.name, UnitsKind));
+						s = new Sprite(new Region(Reflect.field(Assets.images,buildingD.image),0,0,buildingD.width,buildingD.height));
 						scaleDelta = buttonWidth/s.width;
 						s.setScale(scaleDelta);
 						controls.push(new UIElement(dashboard.width - buttonWidth*5 + controls.length % 4 * buttonWidth, dashboard.y + Math.floor(controls.length / 4) * buttonWidth, s));
@@ -161,7 +166,7 @@ class UI extends SimpleEventDispatcher
 						
 						controls[controls.length - 1].leftClick = function(x:Float,y:Float) 
 						{
-							actors[i].eventDispatcher.dispatchEvent(QueueEvent.QUEUE, new QueueEvent(j));
+							actors[i].eventDispatcher.dispatchEvent(QueueEvent.QUEUE, new QueueEvent(cast j));
 						};
 						uiElements.add(controls[controls.length-1]);
 					}
@@ -229,8 +234,8 @@ class UI extends SimpleEventDispatcher
 	{
 		var o = new Object();
 		var a = Assets.images;
-		var image = Reflect.field(Assets.images, e.bData['image']);
-		o.graphic = new Sprite(new Region(image, 0, 0, e.bData['width'], e.bData['height']));
+		var image = Reflect.field(Assets.images, e.bData.image);
+		o.graphic = new Sprite(new Region(image, 0, 0, e.bData.width, e.bData.height));
 		o.graphic.alpha =.5;
 		Sdg.screen.add(o);
 		buildingToBeBuilt = o;

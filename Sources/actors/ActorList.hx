@@ -37,10 +37,9 @@ class ActorList
 		for(actor in list)
 		{
 			var gathering:Bool = false;
-			var resources:Array<Dynamic> = actor.data['resources'];
-			for(i in resources)
+			for(i in actor.data.resources)
 			{
-				if(i.name == a.data['resource'])
+				if(i.name == a.resourceData.resource)
 				{
 					actor.eventDispatcher.dispatchEvent(GatherEvent.GATHER, new GatherEvent(a));
 					gathering = true;
@@ -60,19 +59,18 @@ class ActorList
 		{
 			for(actor in list)
 			{
-				if(actor.data.exists('buildings'))
+				if(actor.data.buildings.length > 0)
 				{
 					var buildingsToBuild:Array<String> = [];
-					var bObjects:Array<Dynamic> = actor.data['buildings'];
-					for(i in bObjects)
+					for(i in actor.data.buildings)
 					{
-						buildingsToBuild.push(i.name);
+						buildingsToBuild.push(cast(i.name,String));
 					}
 					//on second pass it doesn't matter if it was working on something else
-					if(buildingsToBuild.indexOf(a.data['name']) != -1 && (actor.data['targetBuilding'] == null || i == 1))
+					if(buildingsToBuild.indexOf(a.data.name) != -1 && (actor.targetBuilding == null || i == 1))
 					{
 						//actor.eventDispatcher.dispatchEvent(SetBuildingEvent.BUILD_ACTOR, new SetBuildingEvent(a));
-						actor.eventDispatcher.dispatchEvent(BuildAtEvent.BUILD, new BuildAtEvent(a.currentNodes[0], a.data));
+						actor.eventDispatcher.dispatchEvent(BuildAtEvent.BUILD, new BuildAtEvent(a.currentNodes[0], a.buildingData));
 						return;
 					}
 				}
@@ -179,7 +177,7 @@ class ActorList
 		var bldings:Array<Actor> = [];
 		for(i in list)
 		{
-			if(i.data['mobile'] == null)
+			if(i.data == null)
 			{
 				bldings.push(i);
 			}
@@ -188,7 +186,7 @@ class ActorList
 		{
 			for(i in list)
 			{
-				if(i.data['mobile'] == null)
+				if(i.data == null)
 				{
 					list.splice(list.indexOf(i),1);
 				}

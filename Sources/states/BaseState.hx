@@ -43,8 +43,8 @@ class BaseState implements IState
 		
 		for (i in 0...threatNodes.length)
 		{
-			if (threatNodes[i].occupant == actor.data['targetEnemy'] && threatNodes[i].occupant != null || //if your target is close
-			actor.data['targetEnemy'] == null && threatNodes[i].occupant != null && actor.team.isThreat(threatNodes[i].occupant.team.id) && threatNodes[i].occupant.data.exists('health')) // if you are near an enemy with no target of your own
+			if (threatNodes[i].occupant == actor.targetEnemy && threatNodes[i].occupant != null || //if your target is close
+			actor.targetEnemy == null && threatNodes[i].occupant != null && actor.team.isThreat(threatNodes[i].occupant.team.id) && threatNodes[i].occupant.data != null) // if you are near an enemy with no target of your own
 			{
 				inRange = true;
 				break;
@@ -64,7 +64,7 @@ class BaseState implements IState
 		var result:Actor = null;
 		for (i in 0...threatNodes.length)
 		{
-			if (threatNodes[i].occupant != null && (threatNodes[i].occupant.team != null && actor.team.isThreat(threatNodes[i].occupant.team.id)) && threatNodes[i].occupant.data.exists('health'))
+			if (threatNodes[i].occupant != null && (threatNodes[i].occupant.team != null && actor.team.isThreat(threatNodes[i].occupant.team.id)) && threatNodes[i].occupant.data != null)
 			{
 				result = threatNodes[i].occupant;
 				break;
@@ -90,10 +90,10 @@ class BaseState implements IState
 			if (threatNodes.indexOf(n) == -1)
 			{
 				distance = Math.sqrt(Math.pow(Math.abs(actor.currentNodes[0].nodeX - n.nodeX), 2) + Math.pow(Math.abs(actor.currentNodes[0].nodeY - n.nodeY), 2));
-				if (distance <= actor.data['threatRange'])
+				if (actor.data != null && distance <= actor.data.threatRange)
 				{
 					threatNodes.push(n);
-					if (distance < actor.data['threatRange'] && n.isPassible())
+					if (distance < actor.data.threatRange && n.isPassible())
 					{
 						checkView(n);
 					}

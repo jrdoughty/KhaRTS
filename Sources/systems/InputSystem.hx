@@ -20,6 +20,7 @@ import kha.input.KeyCode;
 import events.SelectBuildLocationEvent;
 import events.SetBuildingEvent;
 import events.BuildAtEvent;
+import systems.Data.Buildings;
 
 /**
  * ...
@@ -55,7 +56,7 @@ class InputSystem extends SimpleEventDispatcher
 	private var clickTimerID:Int = -1;
 	
 	private var clickSprites: Array<Object> = [];
-	private var buildingData:Map<String, Dynamic>;
+	private var buildingData:Buildings;
 	private var builder:Actor;
 	
 	
@@ -255,7 +256,8 @@ class InputSystem extends SimpleEventDispatcher
 				{
 					if(i.x + i.width >= Sdg.screen.camera.x && i.y + i.height >= Sdg.screen.camera.y &&
 					i.x <= Sdg.screen.camera.x + Sdg.screen.camera.width && i.y <= Sdg.screen.camera.y + Sdg.screen.camera.height &&
-					i.data['name'] == selectedActors.list[0].data['name'] && selectedActors.indexOf(i) == -1)
+					i.data != null &&
+					i.data.name == selectedActors.list[0].data.name && selectedActors.indexOf(i) == -1)
 					{
 						selectedActors.push(i);
 					}
@@ -286,10 +288,10 @@ class InputSystem extends SimpleEventDispatcher
 		}
 		else if(inputState == BUILDING)
 		{
-			if(builder.team.resources >= buildingData['cost'])
+			if(builder.team.resources >= buildingData.cost)
 			{
 				node = activeNodes[Math.floor(relativeMouseX / activeScreen.lvl.tileset.tileWidth) + Math.floor(relativeMouseY / activeScreen.lvl.tileset.tileWidth)*activeScreen.lvl.levelWidth];
-				builder.team.resources -= buildingData['cost'];
+				builder.team.resources -= buildingData.cost;
 				builder.eventDispatcher.dispatchEvent(BuildAtEvent.BUILD, new BuildAtEvent(node, buildingData));
 				ui.clearBuilding();
 			}						
@@ -353,11 +355,11 @@ class InputSystem extends SimpleEventDispatcher
 			{
 				if(relativeMouseX >= i.x && relativeMouseX <= i.x + i.width && relativeMouseY >= i.y && relativeMouseY <= i.y + i.height)
 				{
-					if(i.occupant != null && i.occupant.team != selectedActors.team && i.occupant.data['resource'] != null)
+					if(i.occupant != null && i.occupant.team != selectedActors.team && i.occupant.resourceData != null)
 					{
 						selectedActors.gather(i.occupant);
 					}
-					else if(i.occupant != null && i.occupant.team == selectedActors.team && i.occupant.data['built'] == false)
+					else if(i.occupant != null && i.occupant.team == selectedActors.team && i.occupant.ready == false)
 					{
 						selectedActors.build(i.occupant);
 					}

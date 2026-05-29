@@ -17,15 +17,13 @@ class DynamicAnimator extends Animator
 	{
 		super.init();
 		var a = cast (object, Actor);
-		regionList = a.data['rl'];
+		regionList = a.rl;
 		a.eventDispatcher.addEvent(AnimateEvent.ANIMATE, anim);
-		var animList: Array<Dynamic> = a.data['animations'];
-		for(i in animList)
+		for(i in a.data.animations)
 		{
 			var frames:Array<Region> = [];
-			var listFrames:Array<Dynamic> = i.frames;
 			var test:Array<Int> = [];
-			for(j in listFrames)
+			for(j in i.frames)
 			{
 				frames.push(regionList[j.id]);
 				test.push(j.id);

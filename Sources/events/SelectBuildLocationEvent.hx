@@ -2,7 +2,7 @@ package events;
 import sdg.event.EventObject;
 import actors.Actor;
 import systems.Data;
-
+import systems.Data.BuildingsKind;
 /**
  * ...
  * @author John Doughty
@@ -10,7 +10,7 @@ import systems.Data;
 
 class SelectBuildLocationEvent extends EventObject
 {
-	public var bData:Map<String, Dynamic>;
+	public var bData:Buildings;
 	public var builder:Actor;
 	public static inline var SELECT:String = "SELECT";
 
@@ -19,7 +19,8 @@ class SelectBuildLocationEvent extends EventObject
 	{
 		super(true);
 		this.builder = builder;
-		bData = Data.dataMap['buildings'][bName];
+		bData = Data.buildings.get(cast (bName,BuildingsKind));
+		//.dataMap['buildings'][bName];
 	}
 	
 }

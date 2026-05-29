@@ -9,6 +9,7 @@ import tween.Delta;
 import events.SimpleEvents;
 import sdg.event.EventObject;
 import events.TargetEvent;
+import systems.Data;
 
 typedef AttackData = {
 	var name : String;
@@ -25,13 +26,16 @@ class AttackState extends MovingState
 	/**
 	* Actors attacks
 	*/
-	private var attacks:Array<AttackData>;
+	private var attacks:Array<AttackData> = [];
 
 	public function new(a:Actor)
 	{
 		super(a);
 		
-		attacks = a.data.get('attacks');
+		for(i in a.data.attacks)
+		{
+			attacks.push({name:i.name,damage:i.damage,minRange: i.minRange,maxRange: i.maxRange,coolDown: i.coolDown});
+		}
 		if(attacks != null && attacks.length > 0)
 			a.eventDispatcher.addEvent(TargetEvent.ATTACK_ACTOR, TargetActor);
 		else
@@ -42,16 +46,16 @@ class AttackState extends MovingState
 	public override function enter()
 	{
 		super.enter();
-		if (actor.data['targetEnemy'] != null && actor.data['targetEnemy'].alive )
+		if (actor.targetEnemy != null && actor.targetEnemy.alive )
 		{
 			if(isEnemyInRange())
 				actor.coolDown = getAvailableAttack().coolDown;
 			else
-				actor.coolDown = Std.int(actor.data['moveCoolDown']);
+				actor.coolDown = Std.int(actor.data.moveCoolDown);
 		}
 		else
 		{
-			actor.coolDown = Std.int(actor.data['moveCoolDown']);
+			actor.coolDown = Std.int(actor.data.moveCoolDown);
 		}
 	}
 
@@ -60,7 +64,7 @@ class AttackState extends MovingState
 		super.takeAction();
 		var i:Int;
 		
-		if (actor.data['targetEnemy'] != null && actor.data['targetEnemy'].alive)
+		if (actor.targetEnemy != null && actor.targetEnemy.alive)
 		{
 			var attack = getAvailableAttack();
 			if (attack != null)
@@ -68,15 +72,15 @@ class AttackState extends MovingState
 				
 				hit(attack);
 			}
-			else if(actor.data['mobile'])
+			else if(actor.data.mobile)
 			{
 				chase();
 			}
 		}
 		else
 		{
-			if(actor.data['targetEnemy'] != null && !actor.data['targetEnemy'].alive)
-				actor.data['targetEnemy'] = null;
+			if(actor.targetEnemy != null && !actor.targetEnemy.alive)
+				actor.targetEnemy = null;
 			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('idle', true));
 		}
 	}
@@ -103,9 +107,9 @@ class AttackState extends MovingState
 		var y2:Int;
 		var dist:Float;
 		
-		if(actor.data['targetEnemy'] != null)
+		if(actor.targetEnemy != null)
 		{
-			var a:Actor = actor.data['targetEnemy'];
+			var a:Actor = actor.targetEnemy;
 			for(i in attacks)
 			{
 				x1 = actor.currentNodes[0].nodeX;
@@ -128,13 +132,13 @@ class AttackState extends MovingState
 	 */
 	private function hit(attack:AttackData)
 	{
-		var ed = actor.data['targetEnemy'].eventDispatcher;//hack to deal with js error, js gets confusted as to what 'this' should be
+		var ed = actor.targetEnemy.eventDispatcher;//hack to deal with js error, js gets confusted as to what 'this' should be
 		ed.dispatchEvent(HurtEvent.HURT, new HurtEvent(attack.damage));
 		actor.eventDispatcher.dispatchEvent(AnimateEvent.ANIMATE, new AnimateEvent('attack',false));
 		actor.coolDown = attack.coolDown;
-		if (actor.data['targetEnemy'].alive == false)
+		if (actor.targetEnemy.alive == false)
 		{
-			actor.data['targetEnemy'] = null;
+			actor.targetEnemy = null;
 		}
 	}
 
@@ -144,10 +148,10 @@ class AttackState extends MovingState
 	 */
 	private function chase()
 	{		
-		actor.coolDown = actor.data['moveCoolDown'];
-		if (path.length == 0 || path[path.length - 1] != actor.data['targetEnemy'].currentNodes[0])
+		actor.coolDown = actor.data.moveCoolDown;
+		if (path.length == 0 || path[path.length - 1] != actor.targetEnemy.currentNodes[0])
 		{
-			path = AStar.newPath(actor.currentNodes[0], actor.data['targetEnemy'].currentNodes[0]);
+			path = AStar.newPath(actor.currentNodes[0], actor.targetEnemy.currentNodes[0]);
 		}
 		
 		
@@ -157,9 +161,9 @@ class AttackState extends MovingState
 		}
 		else
 		{
-			if(actor.data['targetNode'] == null && actor.data['targetEnemy'] != null)
+			if(actor.targetNode == null && actor.targetEnemy != null)
 			{
-				actor.data['targetNode'] = cast(actor.data['targetEnemy'], Actor).currentNodes[0];
+				actor.targetNode = actor.targetEnemy.currentNodes[0];
 			}
 			newPath();
 		}
@@ -174,7 +178,7 @@ class AttackState extends MovingState
 	public function TargetActor(aEvent:TargetEvent)
 	{
 		actor.eventDispatcher.dispatchEvent(SimpleEvents.STOP, new EventObject());
-		actor.data['targetEnemy'] = aEvent.target;
+		actor.targetEnemy = aEvent.target;
 		actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('attacking'));
 	}
 	
@@ -186,8 +190,8 @@ class AttackState extends MovingState
 	 */
 	public function resetData(eO:EventObject = null):Void 
 	{
-		actor.data.set('targetEnemy', null);
-		actor.data.set('aggressive', false);
+		actor.targetEnemy = null;
+		actor.aggressive = false;
 	}
 
 	/**
@@ -198,7 +202,7 @@ class AttackState extends MovingState
 	{
 		var result:Actor = null;
 		var i:Int;
-		var a:Actor = actor.data['targetEnemy'];
+		var a:Actor = actor.targetEnemy;
 		var x:Int = actor.currentNodes[0].nodeX;
 		var y:Int = actor.currentNodes[0].nodeY;
 		var scrn = cast(actor.screen, screens.IGameScreen);

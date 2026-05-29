@@ -41,18 +41,28 @@ class StateAI extends ActorComponent implements AI
 	public override function init()
 	{
 		super.init();
+		//object.eventDispatcher.a
+		var ai;
+		if(actor.data != null)
+			ai = actor.data.ai;
+		else if(actor.buildingData != null)
+			ai = actor.buildingData.ai;
+		else 
+		{
+			trace("looking for AI for non-building/unit");
+			return;
+		}
 
 		object.eventDispatcher.addEvent(SimpleEvents.STOP, resetStates);
 		object.eventDispatcher.addEvent(StateChangeEvent.CHANGE, changeState);
-		//object.eventDispatcher.addEvent(ChangeTimingEvent.CHANGE, newActionTime);
-
-		var ais:Array<Dynamic> = cast (Data.dataMap['ai'][actor.data['ai']]['states'], Array<Dynamic>);
-		for(i in ais)
+		for(i in ai.states)
 		{
 			var key:String = 'idle';
-			if(i.name.indexOf('main') == -1)
-				key = i.name;
-			data.states.set(key, StateFactory.create(i.name, actor));
+			var rf = i.name;
+			var name:String = cast (rf.name, String);
+			if(name.indexOf('main') == -1)
+				key = name;
+			data.states.set(key, StateFactory.create(name, actor));
 		}
 		data.currentState = 'idle';
 		data.states[data.currentState].enter();

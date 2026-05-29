@@ -4,8 +4,13 @@
 			"name": "units",
 			"columns": [
 				{
-					"typeStr": "0",
+					"typeStr": "1",
 					"name": "name"
+				},
+				{
+					"typeStr": "0",
+					"name": "id",
+					"display": null
 				},
 				{
 					"typeStr": "1",
@@ -164,7 +169,8 @@
 							],
 							"fps": 5
 						}
-					]
+					],
+					"id": "soldier"
 				},
 				{
 					"name": "worker",
@@ -254,7 +260,8 @@
 							],
 							"fps": 5
 						}
-					]
+					],
+					"id": "worker"
 				},
 				{
 					"name": "enemy",
@@ -329,7 +336,8 @@
 							],
 							"fps": 5
 						}
-					]
+					],
+					"id": "enemy"
 				}
 			],
 			"separators": [],
@@ -339,8 +347,12 @@
 			"name": "buildings",
 			"columns": [
 				{
+					"typeStr": "1",
+					"name": "name"
+				},
+				{
 					"typeStr": "0",
-					"name": "name",
+					"name": "id",
 					"display": null
 				},
 				{
@@ -463,7 +475,8 @@
 					"viewRange": 5,
 					"buildTime": 3,
 					"buildProgress": 0,
-					"built": false
+					"built": false,
+					"id": "barracks"
 				}
 			],
 			"separators": [],
@@ -473,8 +486,13 @@
 			"name": "ai",
 			"columns": [
 				{
-					"typeStr": "0",
+					"typeStr": "1",
 					"name": "name"
+				},
+				{
+					"typeStr": "0",
+					"name": "id",
+					"display": null
 				},
 				{
 					"typeStr": "8",
@@ -495,7 +513,8 @@
 						{
 							"name": "moving"
 						}
-					]
+					],
+					"id": "soldier"
 				},
 				{
 					"name": "wanderer",
@@ -509,7 +528,8 @@
 						{
 							"name": "main_wander"
 						}
-					]
+					],
+					"id": "wanderer"
 				},
 				{
 					"name": "jackOfAll",
@@ -535,7 +555,8 @@
 						{
 							"name": "go_to_building"
 						}
-					]
+					],
+					"id": "jackOfAll"
 				},
 				{
 					"name": "productionBuilding",
@@ -544,12 +565,13 @@
 							"name": "main_building_idle"
 						},
 						{
-							"name": "producing"
+							"name": "being_built"
 						},
 						{
-							"name": "being_built"
+							"name": "producing"
 						}
-					]
+					],
+					"id": "productionBuilding"
 				},
 				{
 					"name": "worker",
@@ -575,7 +597,8 @@
 						{
 							"name": "go_to_building"
 						}
-					]
+					],
+					"id": "worker"
 				}
 			],
 			"separators": [],
@@ -599,46 +622,63 @@
 			"name": "states",
 			"columns": [
 				{
-					"typeStr": "0",
+					"typeStr": "1",
 					"name": "name"
+				},
+				{
+					"typeStr": "0",
+					"name": "id",
+					"display": null
 				}
 			],
 			"lines": [
 				{
-					"name": "attacking"
+					"name": "attacking",
+					"id": "attacking"
 				},
 				{
-					"name": "moving"
+					"name": "moving",
+					"id": "moving"
 				},
 				{
-					"name": "main_wander"
+					"name": "main_wander",
+					"id": "main_wander"
 				},
 				{
-					"name": "gathering"
+					"name": "gathering",
+					"id": "gathering"
 				},
 				{
-					"name": "returning"
+					"name": "returning",
+					"id": "returning"
 				},
 				{
-					"name": "main_building_idle"
+					"name": "main_building_idle",
+					"id": "main_building_idle"
 				},
 				{
-					"name": "main_idle"
+					"name": "main_idle",
+					"id": "main_idle"
 				},
 				{
-					"name": "being_built"
+					"name": "being_built",
+					"id": "being_built"
 				},
 				{
-					"name": "producing"
+					"name": "producing",
+					"id": "producing"
 				},
 				{
-					"name": "builder"
+					"name": "builder",
+					"id": "builder"
 				},
 				{
-					"name": "go_to_resource"
+					"name": "go_to_resource",
+					"id": "go_to_resource"
 				},
 				{
-					"name": "go_to_building"
+					"name": "go_to_building",
+					"id": "go_to_building"
 				}
 			],
 			"separators": [],
@@ -691,38 +731,50 @@
 			"name": "comps",
 			"columns": [
 				{
+					"typeStr": "1",
+					"name": "name"
+				},
+				{
 					"typeStr": "0",
-					"name": "name",
-					"display": null
+					"name": "id"
 				}
 			],
 			"lines": [
 				{
-					"name": "BasicAnimator"
+					"name": "BasicAnimator",
+					"id": "BasicAnimator"
 				},
 				{
-					"name": "BuildingAnimator"
+					"name": "BuildingAnimator",
+					"id": "BuildingAnimator"
 				},
 				{
-					"name": "Health"
+					"name": "Health",
+					"id": "Health"
 				},
 				{
-					"name": "ResourceHealth"
+					"name": "ResourceHealth",
+					"id": "ResourceHealth"
 				},
 				{
-					"name": "UIHealth"
+					"name": "UIHealth",
+					"id": "UIHealth"
 				},
 				{
-					"name": "View"
+					"name": "View",
+					"id": "View"
 				},
 				{
-					"name": "StateAI"
+					"name": "StateAI",
+					"id": "StateAI"
 				},
 				{
-					"name": "Building"
+					"name": "Building",
+					"id": "Building"
 				},
 				{
-					"name": "DynamicAnimator"
+					"name": "DynamicAnimator",
+					"id": "DynamicAnimator"
 				}
 			],
 			"separators": [],
@@ -846,17 +898,23 @@
 			"name": "resourceTypes",
 			"columns": [
 				{
+					"typeStr": "1",
+					"name": "name"
+				},
+				{
 					"typeStr": "0",
-					"name": "name",
+					"name": "id",
 					"display": null
 				}
 			],
 			"lines": [
 				{
-					"name": "wood"
+					"name": "wood",
+					"id": "wood"
 				},
 				{
-					"name": "gold"
+					"name": "gold",
+					"id": "gold"
 				}
 			],
 			"separators": [],
@@ -875,8 +933,12 @@
 			"name": "resources",
 			"columns": [
 				{
+					"typeStr": "1",
+					"name": "name"
+				},
+				{
 					"typeStr": "0",
-					"name": "name",
+					"name": "id",
 					"display": null
 				},
 				{
@@ -896,8 +958,7 @@
 				},
 				{
 					"typeStr": "6:resourceTypes",
-					"name": "resource",
-					"display": null
+					"name": "resource"
 				},
 				{
 					"typeStr": "3",
@@ -934,7 +995,8 @@
 						{
 							"name": "ResourceHealth"
 						}
-					]
+					],
+					"id": "tree"
 				}
 			],
 			"separators": [],

@@ -2,7 +2,7 @@ package states;
 import actors.Actor;
 import events.StateChangeEvent;
 import events.AnimateEvent;
-import world.Node;
+import sdg.pathfinding.INode;
 import sdg.pathfinding.AStar;
 import tween.Delta;
 import events.MoveEvent;
@@ -11,14 +11,14 @@ import sdg.event.EventObject;
 
 class MoveState extends MovingState
 {
-	private var lastTargetNode:Node;
+	private var lastTargetNode:INode;
 	private var turnsIdle:Int = 0;
 
 	public function new(a:Actor)
 	{
 		super(a);
 		
-		if(a.data['mobile'])
+		if(a.data.mobile)
 			a.eventDispatcher.addEvent(MoveEvent.MOVE, MoveToNode);
 		else
 			trace('mobile unit created without mobile flag');
@@ -28,7 +28,7 @@ class MoveState extends MovingState
 	public override function enter()
 	{
 		super.enter();
-		actor.coolDown = Std.int(actor.data['moveCoolDown']);
+		actor.coolDown = Std.int(actor.data.moveCoolDown);
 	}
 
 	/**
@@ -39,30 +39,30 @@ class MoveState extends MovingState
 	{
 		super.takeAction();
 
-		if (actor.data['aggressive'])
+		if (actor.data.aggressive)
 		{
 			checkView();
-			actor.data['targetEnemy'] = getEnemyInThreat();	
-			if(actor.data['targetEnemy'] != null)
+			actor.targetEnemy = getEnemyInThreat();	
+			if(actor.targetEnemy != null)
 			{
 				actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('attacking'));
 				return;
 			}
 		}
 		
-		if ((actor.data['targetNode'] != null && path.length == 0|| actor.data['targetNode'] != lastTargetNode) && actor.data['targetNode'].isPassible())
+		if ((actor.targetNode != null && path.length == 0|| actor.targetNode != lastTargetNode) && actor.targetNode.isPassible())
 		{
-			path = AStar.newPath(actor.currentNodes[0], actor.data['targetNode']);//remember path[0] is the last 
+			path = AStar.newPath(actor.currentNodes[0], actor.targetNode);//remember path[0] is the last 
 		}
 		
 		if (path.length > 1 && path[1].isPassible())
 		{
 			moveAlongPath();
 			turnsIdle = 0;
-			if (actor.currentNodes[0] == actor.data['targetNode'])
+			if (actor.currentNodes[0] == actor.targetNode)
 			{
 				path = [];
-				actor.data['targetNode'] = null;
+				actor.targetNode = null;
 				actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('idle'));//Unlike other cases, this is after the action has been carried out.
 			}
 		}
@@ -75,11 +75,11 @@ class MoveState extends MovingState
 			turnsIdle++;
 			if(turnsIdle > 3)
 			{
-				actor.data['targetNode'] = null;
+				actor.targetNode = null;
 				actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('idle'));
 			}
 		}
-		lastTargetNode = actor.data['targetNode'];
+		lastTargetNode = actor.targetNode;
 		
 		animateMove();
 	}
@@ -92,8 +92,9 @@ class MoveState extends MovingState
 	public function MoveToNode(moveEvent:MoveEvent)
 	{
 		actor.eventDispatcher.dispatchEvent(SimpleEvents.STOP, new EventObject());
-		actor.data['targetNode'] = moveEvent.node;
-		actor.data['aggressive'] = moveEvent.aggressive;
+		actor.targetNode = moveEvent.node;
+		//TODO
+		//actor.data.aggressive = moveEvent.aggressive;
 		actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('moving'));
 	}
 	
@@ -104,7 +105,8 @@ class MoveState extends MovingState
 	 */
 	public function resetData(eO:EventObject = null):Void 
 	{
-		actor.data.set('targetNode', null);
-		actor.data.set('aggressive', false);
+		actor.targetNode = null;
+		//TODO
+		//actor.data.aggressive = false;
 	}
 }

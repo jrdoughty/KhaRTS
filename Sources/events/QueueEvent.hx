@@ -11,6 +11,7 @@ typedef UnitData = {
 	var name : String;
 	var cost : Int;
 	var coolDown : Int; 
+	var produceTime: Int;
 }
 class QueueEvent extends EventObject
 {

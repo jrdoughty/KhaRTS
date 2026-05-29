@@ -67,7 +67,7 @@ class Node implements Util.ITwoD implements INode
 	
 	public function isPassible():Bool
 	{
-		return (isPassable && !hasResource);
+		return (isPassable && !hasResource && occupant == null);
 	}
 	
 	public function getFinal():Int

@@ -40,11 +40,6 @@ class View extends Component
 		if (Type.getClass(object) == Actor)
 		{
 			data.actor = cast object;
-			if(!data.actor.data.exists('viewRange'))
-			{
-				data.actor.data.set('viewRange', 4);
-				trace('viewRange not set');
-			}
 			data.actor.eventDispatcher.addEvent(SimpleEvents.CLEAR, clearNodes);
 			data.actor.eventDispatcher.addEvent(SimpleEvents.HIDE, function(e:EventObject){data.actor.visible = false;});//uproot these when final place is found
 			data.actor.eventDispatcher.addEvent(SimpleEvents.REVEAL,  function(e:EventObject){data.actor.visible = true;});
@@ -81,11 +76,18 @@ class View extends Component
 			if (data.clearedNodes.indexOf(n) == -1)
 			{
 				distance = Math.sqrt(Math.pow(Math.abs(data.actor.currentNodes[0].nodeX - n.nodeX), 2) + Math.pow(Math.abs(data.actor.currentNodes[0].nodeY - n.nodeY), 2));
-				if (distance <= data.actor.data['viewRange'])
+				var vr:Int = 0;
+				if(data.actor.data != null)
+					vr = data.actor.data.viewRange;
+				else if(data.actor.buildingData != null)
+					vr = data.actor.buildingData.viewRange;
+				else 
+					return;
+				if (distance <= vr)
 				{
 					n.removeOverlay();
 					data.clearedNodes.push(n);
-					if (distance < data.actor.data['viewRange'] && n.canSeeOver)
+					if (distance < vr && n.canSeeOver)
 					{
 						clearFogOfWar(n);
 					}

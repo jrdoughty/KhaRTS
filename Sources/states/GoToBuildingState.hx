@@ -14,12 +14,13 @@ import events.SimpleEvents;
 import sdg.event.EventObject;
 import events.GatherEvent;
 import screens.IGameScreen;
+import systems.Data.Buildings;
 import events.BuildAtEvent;
 
 
 class GoToBuildingState extends MovingState
 {
-	private var bData:Map<String,Dynamic>;
+	private var bData:Buildings;
 	public function new(a:Actor)
 	{
 		super(a);
@@ -30,28 +31,29 @@ class GoToBuildingState extends MovingState
 
 	public override function enter()
 	{
-		actor.coolDown = actor.data['moveCoolDown'];
+		actor.coolDown = actor.data.moveCoolDown;
 		trace('build damn it!');
 	}
 
 	public override function takeAction()
 	{	
-		if (actor.data['targetNode'] != null)
+		if (actor.targetNode != null)
 		{
-			if (Util.getPythagoreanCFromXY(actor.data['targetNode'].nodeX,actor.data['targetNode'].nodeY, actor.currentNodes[0].nodeX, actor.currentNodes[0].nodeY)<=Math.sqrt(2))
+			var bn = cast(actor.buildNode, Node);
+			if (Util.getPythagoreanCFromXY(actor.targetNode.nodeX,actor.targetNode.nodeY, actor.currentNodes[0].nodeX, actor.currentNodes[0].nodeY)<=Math.sqrt(2))
 			{
-				if(cast(actor.data['buildNode'], Node).occupant != null && cast(actor.data['buildNode'], Node).occupant.data['name'] == bData['name'])
+				if(bn.occupant != null && bn.occupant.buildingData.name == bData.name)
 				{
-					actor.eventDispatcher.dispatchEvent(SetBuildingEvent.BUILD_ACTOR, new SetBuildingEvent(cast(actor.data['buildNode'], Node).occupant));
+					actor.eventDispatcher.dispatchEvent(SetBuildingEvent.BUILD_ACTOR, new SetBuildingEvent(bn.occupant));
 				}
 				else
 				{
-					var act = new Actor(actor.data['buildNode'], Util.cloneStringMap(bData));
+					var act = new Actor(bn, bData);
 					actor.screen.add(actor.team.addUnit(act));
 					actor.eventDispatcher.dispatchEvent(SetBuildingEvent.BUILD_ACTOR, new SetBuildingEvent(act));
 				}
 			}
-			else if(actor.data['mobile'])
+			else if(actor.data.mobile)
 			{
 				move();
 			}
@@ -69,11 +71,11 @@ class GoToBuildingState extends MovingState
 
 	private function move()
 	{		
-		actor.coolDown = actor.data['moveCoolDown'];
+		actor.coolDown = actor.data.moveCoolDown;
 
-		if (path.length == 0 || path[path.length - 1] != actor.data['targetNode'])
+		if (path.length == 0 || path[path.length - 1] != actor.targetNode)
 		{
-			path = AStar.newPath(actor.currentNodes[0], actor.data['targetNode']);
+			path = AStar.newPath(actor.currentNodes[0], actor.targetNode);
 		}
 		
 		if (path.length > 1 && path[1].isPassible())
@@ -102,10 +104,10 @@ class GoToBuildingState extends MovingState
 		else
 		{
 			actor.eventDispatcher.dispatchEvent(SimpleEvents.STOP, new EventObject());
-			actor.data['buildNode'] = bEvent.node;
+			actor.buildNode = bEvent.node;
 			
-			var w = (Math.ceil(bEvent.bData['width']/bEvent.node.width));
-			var h = (Math.ceil(bEvent.bData['height']/bEvent.node.height));
+			var w = (Math.ceil(bEvent.bData.width/bEvent.node.width));
+			var h = (Math.ceil(bEvent.bData.height/bEvent.node.height));
 			var paths:Array<Array<INode>> = [];
 			for(i in 0...w)
 			{
@@ -122,7 +124,7 @@ class GoToBuildingState extends MovingState
 				if(i.length < path.length || path.length == 0)
 				{
 					path = i;
-					actor.data['targetNode'] = path[path.length-1];
+					actor.targetNode = path[path.length-1];
 				}
 			}
 
@@ -139,8 +141,8 @@ class GoToBuildingState extends MovingState
 	 */
 	public function resetData(eO:EventObject = null):Void 
 	{
-		actor.data.set('targetNode', null);
-		actor.data.set('buildNode', null);
+		actor.targetNode = null;
+		actor.buildNode = null;
 		path = [];
 	}
 }

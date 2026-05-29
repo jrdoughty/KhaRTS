@@ -20,26 +20,26 @@ class GatherState extends BaseState
 		super(a);
 		
 		a.eventDispatcher.addEvent(SimpleEvents.STOP, resetData);
-		actor.data['currentResource'] = null;
-		actor.data['resourcesCollected'] = 0;
+		actor.currentResource = null;
+		actor.resourcesCollected = 0;
 	}
 
 	public override function enter()
 	{
-		var resources:Array<Dynamic> = actor.data['resources'];
-		for(i in resources)
+		for(i in actor.data.resources)
 		{
-			if(actor.data['currentResource'] == i.name)
+			var rf = i.name;
+			if(actor.currentResource == rf.name)
 			{
 				actor.coolDown = i.coolDown;
 				break;
 			}
 		}
-		if(!cast(actor.data['targetResource'], Actor).alive)
+		if(!cast(actor.targetResource, Actor).alive)
 		{
-			actor.data['targetResource'] = findNewResource();
+			actor.targetResource = findNewResource();
 		}
-		if(actor.data['targetResource'] == null)
+		if(actor.targetResource == null)
 		{
 			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('idle'));
 		}
@@ -51,23 +51,23 @@ class GatherState extends BaseState
 	 */
 	public function resetData(eO:EventObject = null):Void 
 	{
-		actor.data.set('targetResource', null);
+		actor.targetResource = null;
 	}
 
 	public override function takeAction()
 	{	
-		if(actor.data['targetResource'] == null || !cast(actor.data['targetResource'], Actor).alive)
+		if(actor.targetResource == null || !actor.targetResource.alive)
 		{
-			actor.data['targetResource'] = findNewResource();
+			actor.targetResource = findNewResource();
 		}
-		if (actor.data['targetResource'] != null)
+		if (actor.targetResource != null)
 		{
-			var tRes = cast(actor.data['targetResource'], Actor);
+			var tRes = actor.targetResource;
 			if (Util.getPythagoreanCFromXY(tRes.currentNodes[0].nodeX,tRes.currentNodes[0].nodeY, actor.currentNodes[0].nodeX, actor.currentNodes[0].nodeY)<=Math.sqrt(2))
 			{
 				gather();
 			}
-			else if(actor.data['mobile'])
+			else if(actor.data.mobile)
 			{
 				actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('go_to_resource', true));
 			}
@@ -78,7 +78,7 @@ class GatherState extends BaseState
 		}
 		else
 		{
-			if(actor.data['resourcesCollected'])
+			if(actor.resourcesCollected>0)
 			{
 				actor.eventDispatcher.dispatchEvent(SimpleEvents.RETURN, new EventObject());
 			}
@@ -91,37 +91,39 @@ class GatherState extends BaseState
 
 	private function gather()
 	{
-		var tRes:Actor = cast(actor.data['targetResource'], Actor);
+		var tRes:Actor = actor.targetResource;
 		actor.eventDispatcher.dispatchEvent(AnimateEvent.ANIMATE, new AnimateEvent('gather',false));
-		if(actor.data['currentResource'] == null)
+		if(actor.currentResource == null)
 		{
-			actor.data['resourcesCollected'] = 0;
-			actor.data['currentResource'] = tRes.data['resource'];
+			actor.resourcesCollected = 0;
+			var rf=tRes.resourceData.resource;
+			actor.currentResource = rf.name;
 		}
-		var resources:Array<Dynamic> = actor.data['resources'];
-		for(i in resources)
+		
+		for(i in actor.data.resources)
 		{
-			if(actor.data['currentResource'] == i.name)
+			var rf = i.name;
+			if(actor.currentResource == rf.name)
 			{
-				var amtToHarvest = i.harvest + actor.data['resourcesCollected'] > i.harvestMax ? i.harvestmax - actor.data['resourcesCollected']:i.harvest;
-				if(amtToHarvest >= tRes.data['resourceValue'])
+				var amtToHarvest = i.harvest + actor.resourcesCollected > i.maxHarvest ? i.maxHarvest - actor.resourcesCollected:i.harvest;
+				if(amtToHarvest >= tRes.value)
 				{
-					actor.data['resourcesCollected'] += tRes.data['resourceValue'];
-					tRes.data['resourceValue'] = 0; 
+					actor.resourcesCollected += tRes.value;
+					tRes.value = 0; 
 				}
 				else
 				{
-					actor.data['resourcesCollected'] += amtToHarvest;
-					tRes.data['resourceValue'] -= amtToHarvest;
+					actor.resourcesCollected += amtToHarvest;
+					tRes.value -= amtToHarvest;
 				}
-				if(tRes.data['resourceValue'] == 0)
+				if(tRes.value == 0)
 				{
 					var e = new KillEvent(actor);
 					e.bubble = false;
-					actor.data['targetResource'].eventDispatcher.dispatchEvent(KillEvent.KILL, e);
+					actor.targetResource.eventDispatcher.dispatchEvent(KillEvent.KILL, e);
 				}
 				
-				if(actor.data['resourcesCollected'] == i.maxHarvest)
+				if(actor.resourcesCollected == i.maxHarvest)
 				{
 					actor.eventDispatcher.dispatchEvent(SimpleEvents.RETURN, new EventObject());
 				}
@@ -147,24 +149,31 @@ class GatherState extends BaseState
 		while(openList.length > 0 && i < iterationsAllowed)
 		{
 			i++;
-			for(i in openList)
+			for(j in openList)
 			{
-				if(i.occupant != null && i.occupant.data['resource'] != null && i.occupant.data['resource'] == actor.data['currentResource'])
+				if(j.nodeX == 9 && j.nodeY == 0)
+					trace(j.nodeX+", "+j.nodeY);
+				if(j.occupant != null && j.occupant.resourceData != null && j.occupant.resourceData.resource != null)
 				{
-					return i.occupant;
+					var rf = j.occupant.resourceData.resource;
+					if(rf.name == actor.currentResource)
+					{
+						return j.occupant;
+					}
 				}
+				trace(j.nodeX+", "+j.nodeY+" finished");
 			}
 			var nextOpenList:Array<Node> = [];
-			for(i in openList)
+			for(k in openList)
 			{
-				for(j in i.getNodeNeighbors())
+				for(j in k.getNodeNeighbors())
 				{
 					if(openList.indexOf(j) == -1 && closeList.indexOf(j) == -1 && nextOpenList.indexOf(j) == -1)
 					{
 						nextOpenList.push(j);
 					}
 				}
-				closeList.push(i);
+				closeList.push(k);
 			}
 			openList = nextOpenList;
 		}

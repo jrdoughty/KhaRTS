@@ -19,12 +19,12 @@ class ReturnState extends MovingState
 	{
 		super(a);
 		
-		if(a.data.exists('resources'))
+		if(a.data.resources.length> 0)
 			a.eventDispatcher.addEvent(SimpleEvents.RETURN, returnResources);
 		else
 			trace('can\'t harvest');
 		a.eventDispatcher.addEvent(SimpleEvents.STOP, resetData);
-		actor.data['currentResource'] = null;
+		actor.currentResource = null;
 	}
 
 	public override function enter()
@@ -36,9 +36,9 @@ class ReturnState extends MovingState
 		}
 		else
 		{
-			actor.data['targetNode'] = path[path.length-1];
-			if(actor.coolDown != actor.data['moveCoolDown'])
-				actor.coolDown = actor.data['moveCoolDown'];
+			actor.targetNode = path[path.length-1];
+			if(actor.coolDown != actor.data.moveCoolDown)
+				actor.coolDown = actor.data.moveCoolDown;
 		}
 	}
 
@@ -46,11 +46,11 @@ class ReturnState extends MovingState
 	{	
 		if (path.length == 2)
 		{
-			actor.team.resources += actor.data['resourcesCollected'];
-			actor.data['resourcesCollected'] = 0;
-			actor.eventDispatcher.dispatchEvent(GatherEvent.GATHER, new GatherEvent(actor.data['targetResource']));
+			actor.team.resources += actor.resourcesCollected;
+			actor.resourcesCollected = 0;
+			actor.eventDispatcher.dispatchEvent(GatherEvent.GATHER, new GatherEvent(actor.targetResource));
 		}
-		else if (actor.data['resourcesCollected'] > 0)
+		else if (actor.resourcesCollected > 0)
 		{
 			move();
 		}
@@ -63,12 +63,12 @@ class ReturnState extends MovingState
 	
 	private function move()
 	{		
-		actor.coolDown = actor.data['moveCoolDown'];
+		actor.coolDown = actor.data.moveCoolDown;
 
 		if (path.length == 0)
 		{
 			path = findClosestBuilding();
-			actor.data['targetNode'] = path[path.length-1];
+			actor.targetNode = path[path.length-1];
 		}
 		
 		if (path.length > 1 && path[1].isPassible())
@@ -77,9 +77,9 @@ class ReturnState extends MovingState
 		}
 		else
 		{
-			if(actor.data['targetNode'] == null && actor.data['targetResource'] != null)
+			if(actor.targetNode == null && actor.targetResource != null)
 			{
-				actor.data['targetNode'] = cast(actor.data['targetResource'], Actor).currentNodes[0];
+				actor.targetNode = actor.targetResource.currentNodes[0];
 			}
 			newPath();
 		}
@@ -94,7 +94,7 @@ class ReturnState extends MovingState
 	 */
 	public function resetData(eO:EventObject = null):Void 
 	{
-		actor.data.set('targetResource', null);
+		actor.targetResource = null;
 	}
 
 	private function findClosestBuilding()
@@ -103,12 +103,12 @@ class ReturnState extends MovingState
 
 		for(i in actor.team.units)
 		{
-			if(i.data['resourcesAccepted'] != null)
+			if(i.buildingData != null && i.buildingData.resourcesAccepted != null)
 			{
-				var rA:Array<Dynamic> = i.data['resourcesAccepted'];
-				for(j in rA)
+				for(j in i.buildingData.resourcesAccepted)
 				{
-					if(j.name == actor.data['currentResource'])
+					var rf = j.name;
+					if(rf.name == actor.currentResource)
 					{
 						for(k in i.currentNodes)
 						{

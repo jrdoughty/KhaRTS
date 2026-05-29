@@ -26,7 +26,7 @@ class MovingState extends BaseState
 	{
 		failedToMove = false;
 		if(diag == true)
-			actor.eventDispatcher.dispatchEvent(events.ChangeTimingEvent.CHANGE, new events.ChangeTimingEvent(actor.data['moveCoolDown']*1));
+			actor.eventDispatcher.dispatchEvent(events.ChangeTimingEvent.CHANGE, new events.ChangeTimingEvent(actor.data.moveCoolDown*1));
 	}
 	
 	/**
@@ -37,7 +37,7 @@ class MovingState extends BaseState
 	private function newPath()
 	{
 		var nextMove = path[1];
-		path = AStar.newPath(actor.currentNodes[0], actor.data['targetNode']);
+		path = AStar.newPath(actor.currentNodes[0], actor.targetNode);
 		if (path.length > 1 && nextMove != path[1])//In Plain english, if the new path is indeed a new path
 		{
 			takeAction();//try again
@@ -61,20 +61,20 @@ class MovingState extends BaseState
 		actor.currentNodes[0].occupant = actor;
 		if(diag)
 		{
-			actor.coolDown = Math.round(actor.data['moveCoolDown'] * 1.4);
+			actor.coolDown = Math.round(actor.data.moveCoolDown * 1.4);
 			
 			Delta.tween(actor)
-				.prop("x",actor.currentNodes[0].x, actor.data['moveCoolDown'] * 1.4 / 1000)
-				.prop("y",actor.currentNodes[0].y, actor.data['moveCoolDown'] * 1.4 / 1000);
+				.prop("x",actor.currentNodes[0].x, actor.data.moveCoolDown * 1.4 / 1000)
+				.prop("y",actor.currentNodes[0].y, actor.data.moveCoolDown * 1.4 / 1000);
 			
 		}
 		else
 		{
-			actor.coolDown = Math.round(actor.data['moveCoolDown']);
+			actor.coolDown = Math.round(actor.data.moveCoolDown);
 			
 			Delta.tween(actor)
-				.prop("x",actor.currentNodes[0].x, actor.data['moveCoolDown'] / 1000)
-				.prop("y",actor.currentNodes[0].y, actor.data['moveCoolDown'] / 1000);
+				.prop("x",actor.currentNodes[0].x, actor.data.moveCoolDown / 1000)
+				.prop("y",actor.currentNodes[0].y, actor.data.moveCoolDown / 1000);
 			
 		}
 	}

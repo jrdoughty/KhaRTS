@@ -17,6 +17,7 @@ import events.SimpleEvents;
 import sdg.atlas.Atlas;
 import sdg.graphics.text.Text;
 import kha.Assets;
+import systems.Data;
 import sdg.Sdg;
 
 class PlayScreen extends Screen implements IGameScreen
@@ -42,9 +43,9 @@ class PlayScreen extends Screen implements IGameScreen
 		super.init();
 
 		var startNode;
-		var act;
+		var act:Actor;
 		var team;
-		lvl = new Level(systems.Data.dataMap['levels']['demo']['tmxFile'], systems.Data.dataMap['levels']['demo']['tsxFile']);
+		lvl = new Level(Data.levels.get(demo).tmxFile, Data.levels.get(demo).tsxFile);
 		AStar.setLevel(lvl);
 		add(lvl);
 		lvl.setSizeAuto();
@@ -52,7 +53,7 @@ class PlayScreen extends Screen implements IGameScreen
 		for(i in lvl.resourcePos)
 		{
 			startNode = lvl.getNodeByGridXY(Std.int(i.x), Std.int(i.y));
-			act = new Actor(startNode, Util.cloneStringMap(systems.Data.dataMap['resources']['tree']));
+			act = new Actor(startNode, Data.resources.get(tree));
 			add(act);
 		}
 		for(i in lvl.neutralEnemyPos)
@@ -60,7 +61,7 @@ class PlayScreen extends Screen implements IGameScreen
 			//break;
 			team = new Team();
 			startNode = lvl.getNodeByGridXY(Std.int(i.x), Std.int(i.y));
-			act = new Actor(startNode, Util.cloneStringMap(systems.Data.dataMap['units']['enemy']));
+			act = new Actor(startNode, Data.units.get(enemy));
 			add(team.addUnit(act));
 		}
 		for(i in lvl.playerStartPos.keys())
@@ -72,7 +73,7 @@ class PlayScreen extends Screen implements IGameScreen
 			for(k in 0...1)
 			{
 				startNode = lvl.getNodeByGridXY(Std.int(lvl.playerStartPos[i].x+(k % 3)),Std.int(lvl.playerStartPos[i].y+(Math.floor(k / 3))));
-				act = new Actor(startNode, Util.cloneStringMap(systems.Data.dataMap['units']['worker']));
+				act = new Actor(startNode, Data.units.get(worker));
 				add(team.addUnit(act));
 			}	
 		}

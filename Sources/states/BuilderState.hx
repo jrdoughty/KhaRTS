@@ -27,9 +27,9 @@ class BuilderState extends BaseState
 
 	public override function takeAction()
 	{	
-		var tBuild:Actor = actor.data['targetBuilding'];
+		var tBuild:Actor = actor.targetBuilding;
 		tBuild.eventDispatcher.dispatchEvent(SimpleEvents.BUILD_PROGRESS, new EventObject());
-		if(tBuild.data['built'] == true)
+		if(tBuild.ready == true)
 		{
 			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('idle'));
 		}
@@ -43,7 +43,7 @@ class BuilderState extends BaseState
 	 */
 	public function resetData(eO:EventObject = null):Void 
 	{
-		actor.data.set('targetBuilding', null);
+		actor.targetBuilding = null;
 	}
 
 	/**
@@ -52,10 +52,10 @@ class BuilderState extends BaseState
 	 */
 	public function TargetActor(aEvent:SetBuildingEvent)
 	{
-		if(!aEvent.target.data['built'])
+		if(!aEvent.target.ready)
 		{
 			actor.eventDispatcher.dispatchEvent(SimpleEvents.STOP, new EventObject());
-			actor.data['targetBuilding'] = aEvent.target;
+			actor.targetBuilding = aEvent.target;
 			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('builder'));
 		}
 		else

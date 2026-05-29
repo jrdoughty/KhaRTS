@@ -11,8 +11,8 @@ class IdleState extends BaseState
 
 	public override function enter()
 	{
-		if(actor.coolDown != actor.data['idleCoolDown'])
-			actor.coolDown = actor.data['idleCoolDown'];
+		if(actor.data != null)
+			actor.coolDown = actor.data.idleCoolDown;
 		actor.eventDispatcher.dispatchEvent(AnimateEvent.ANIMATE, new AnimateEvent('idle',true));
 	}
 
