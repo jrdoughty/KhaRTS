@@ -73,7 +73,7 @@ class ProductionState extends BaseState
 							{
 								if(i.occupant == null)
 								{
-									availableNode = n;
+									availableNode = i;
 									break;
 								}
 							}
@@ -81,6 +81,12 @@ class ProductionState extends BaseState
 						if(availableNode != null)
 							break;
 					}
+				}
+				if(availableNode == null)
+				{
+					trace("no room");
+					produceNextUnit(true);
+					return;
 				}
 				var act = new Actor(availableNode, uData);
 				actor.team.addUnit(act);

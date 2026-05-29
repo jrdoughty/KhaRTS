@@ -12,7 +12,7 @@ class Team
 	public var buildings:Array<Actor> = [];
 	public var allies:Array<Int> = [];
 	public var id(default, null):Int;
-	public var resources:Int = 400;
+	public var resources:Int = 800;
 	/**
 	 * static count of teams activated that should allow unique Int ids
 	 */
