@@ -48,10 +48,39 @@ class ProductionState extends BaseState
 			var uData = Data.units.get(cast(actor.queue[0].name,UnitsKind));
 			kha.Scheduler.addTimeTask(function(){
 				var availableNode:Node = null;
+				var checkedNodes:Array<Node> = [];
 				for(n in actor.neighbors)
 				{
 					if(n.occupant == null)
+					{
 						availableNode = n;
+						break;
+					}
+					checkedNodes.push(n);
+				}
+				if(availableNode == null)
+				{
+					for(i in actor.currentNodes)
+					{
+						checkedNodes.push(i);
+					}
+					
+					for(n in actor.neighbors)
+					{
+						for(i in n.getNodeNeighbors())
+						{
+							if(checkedNodes.indexOf(i) == -1)
+							{
+								if(i.occupant == null)
+								{
+									availableNode = n;
+									break;
+								}
+							}
+						}
+						if(availableNode != null)
+							break;
+					}
 				}
 				var act = new Actor(availableNode, uData);
 				actor.team.addUnit(act);

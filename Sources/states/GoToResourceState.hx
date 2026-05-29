@@ -186,6 +186,7 @@ class GoToResourceState extends MovingState
 	/**
 	* could use some efficiency by only scanning the perimiter
 	*/
+	
 	private function findNewResource():Actor
 	{
 		var openList:Array<Node> = actor.currentNodes[0].getNodeNeighbors();
@@ -195,24 +196,28 @@ class GoToResourceState extends MovingState
 		while(openList.length > 0 && i < iterationsAllowed)
 		{
 			i++;
-			for(i in openList)
+			for(j in openList)
 			{
-				if(i.occupant != null && i.occupant.resourceData.resource != null && cast (i.occupant.resourceData.resource, String) == actor.currentResource)
+				if(j.occupant != null && j.occupant.resourceData != null && j.occupant.resourceData.resource != null)
 				{
-					return i.occupant;
+					var rf = j.occupant.resourceData.resource;
+					if(rf.name == actor.currentResource)
+					{
+						return j.occupant;
+					}
 				}
 			}
 			var nextOpenList:Array<Node> = [];
-			for(i in openList)
+			for(k in openList)
 			{
-				for(j in i.getNodeNeighbors())
+				for(j in k.getNodeNeighbors())
 				{
 					if(openList.indexOf(j) == -1 && closeList.indexOf(j) == -1 && nextOpenList.indexOf(j) == -1)
 					{
 						nextOpenList.push(j);
 					}
 				}
-				closeList.push(i);
+				closeList.push(k);
 			}
 			openList = nextOpenList;
 		}

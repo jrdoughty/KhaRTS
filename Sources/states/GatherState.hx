@@ -151,8 +151,6 @@ class GatherState extends BaseState
 			i++;
 			for(j in openList)
 			{
-				if(j.nodeX == 9 && j.nodeY == 0)
-					trace(j.nodeX+", "+j.nodeY);
 				if(j.occupant != null && j.occupant.resourceData != null && j.occupant.resourceData.resource != null)
 				{
 					var rf = j.occupant.resourceData.resource;
@@ -161,7 +159,6 @@ class GatherState extends BaseState
 						return j.occupant;
 					}
 				}
-				trace(j.nodeX+", "+j.nodeY+" finished");
 			}
 			var nextOpenList:Array<Node> = [];
 			for(k in openList)
