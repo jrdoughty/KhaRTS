@@ -7,13 +7,11 @@ import sdg.event.EventObject;
 
 class BuildingIdleState extends BaseState
 {
-	var needsBuilt:Bool = true;
 
 	public override function enter()
 	{
-		if(needsBuilt)
+		if(actor.value < 10)
 		{
-			needsBuilt = false;
 			actor.eventDispatcher.dispatchEvent(SimpleEvents.BUILD, new EventObject());
 		}
 		else

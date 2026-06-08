@@ -99,14 +99,31 @@ class Actor extends Object
 	public var currentResource:String;
 	public var resourcesCollected:Int;
 	public var targetResource:Actor;
+	/**
+	* resource value or build progress value
+	**/
 	public var value:Int;
 
+	public static var maxID:Int = 0;
 
-	public function new(node:Node,  data:DataType)
+	public var currentState:String;
+	public var nextState:String;
+	public var lastState:String;
+
+
+	public function new(node:Node,  data:DataType, id:Int = -1)
 	{
 		super();
 		x = node.x;
 		y = node.y;
+		if(id == -1)
+			this.id = maxID++;
+		else
+		{
+			this.id = id;
+			if(id > maxID)
+				maxID = id;
+		}
 		addComponent(new EventDispatcher());
 		var image:Image;
 		switch (data.type)
@@ -193,8 +210,10 @@ class Actor extends Object
 	public function kill()
 	{
 		alive = false;
-		if(team != null)
+		if(team != null && data != null)
 			team.units.remove(this);
+		else if(team != null && buildingData != null)
+			team.buildings.remove(this);
 		for(i in currentNodes)
 		{
 			i.occupant = null;

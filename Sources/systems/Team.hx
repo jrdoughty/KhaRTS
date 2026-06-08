@@ -40,10 +40,11 @@ class Team
 	 * not sure whether or not to make it use the Building class vs BaseActor
 	 * @param	building	Building/BaseActor to be added
 	 */
-	public function addBuilding(building:Actor):Void
+	public function addBuilding(building:Actor):Actor
 	{
 		buildings.push(building);
 		building.team = this;
+		return building;
 	}
 	
 	/**

@@ -14,7 +14,6 @@ import events.SimpleEvents;
 
 class ReturnState extends MovingState
 {
-	var finishedResource:Bool = false;
 	public function new(a:Actor)
 	{
 		super(a);

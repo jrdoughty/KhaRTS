@@ -12,4 +12,5 @@ class SimpleEvents
 	public static inline var RETURN:String = "RETURN";
 	public static inline var REVEAL:String = "REVEAL";
 	public static inline var STOP:String = "STOP";
+	public static inline var GAME_START:String = "GAME_START";
 }

@@ -15,24 +15,11 @@ import sdg.Sdg;
 import events.ChangeTimingEvent;
 
 
-typedef StateAIData = {
-	public var states:Map<String, IState>;
-	public var state:IState;
-	public var nextState:String;
-	public var currentState:String;
-	public var lastState:String;
-	public var actionTimer:Int;
-}
 
 class StateAI extends ActorComponent implements AI
 {
-	var data = {
-		states : new  Map<String, IState>(),
-		nextState : null,
-		currentState : null,
-		lastState : null,
-		actionTimer: null
-	};
+	var states :Map<String, IState> = new  Map<String, IState>();
+	var actionTimer: Int;
 
 	public function new ()
 	{
@@ -62,14 +49,17 @@ class StateAI extends ActorComponent implements AI
 			var name:String = cast (rf.name, String);
 			if(name.indexOf('main') == -1)
 				key = name;
-			data.states.set(key, StateFactory.create(name, actor));
+			states.set(key, StateFactory.create(name, actor));
 		}
-		data.currentState = 'idle';
-		data.states[data.currentState].enter();
+		if(actor.currentState == null)//should only happen from being loaded in
+		{
+			actor.currentState = 'idle';
+			states[actor.currentState].enter();
+		}
 		//Keeps mass created units from updating at the exact same time. 
 		//Idea from: http://answers.unity3d.com/questions/419786/a-pathfinding-multiple-enemies-MOVING-target-effic.html
 
-		data.actionTimer = Sdg.addTimeTask(delayedStart, .2 * Math.random());
+		actionTimer = Sdg.addTimeTask(delayedStart, .2 * Math.random());
 	}
 	/**
 	* end of delay timer that starts the takeAction cycle. 
@@ -77,25 +67,25 @@ class StateAI extends ActorComponent implements AI
 	*/
 	private function delayedStart()
 	{
-		Sdg.removeTimeTask(data.actionTimer);
-		data.actionTimer = Sdg.addTimeTask(takeAction, actor.coolDown/1000,0,1);
+		Sdg.removeTimeTask(actionTimer);
+		actionTimer = Sdg.addTimeTask(takeAction, actor.coolDown/1000,0,1);
 	}
 	/**
 	 * drives actions based on state
 	 */
 	public function takeAction() 
 	{
-		if(data.nextState != null)
+		if(actor.nextState != null)
 		{
-			if(data.currentState != null)
-				data.states[data.currentState].exit();
-			data.currentState = data.nextState;
-			data.nextState = null;
-			data.states[data.currentState].enter();
+			if(actor.currentState != null)
+				states[actor.currentState].exit();
+			actor.currentState = actor.nextState;
+			actor.nextState = null;
+			states[actor.currentState].enter();
 		}
-		data.lastState = data.currentState;
-		data.states[data.currentState].takeAction();
-		data.actionTimer = Sdg.addTimeTask(takeAction, actor.coolDown/1000,0,1);
+		actor.lastState = actor.currentState;
+		states[actor.currentState].takeAction();
+		actionTimer = Sdg.addTimeTask(takeAction, actor.coolDown/1000,0,1);
 	}
 	
 	/**
@@ -105,24 +95,24 @@ class StateAI extends ActorComponent implements AI
 	 */
 	public function resetStates(eO:EventObject = null):Void 
 	{
-		data.nextState = 'idle';
+		actor.nextState = 'idle';
 	}
 
 	private function changeState(e:StateChangeEvent)
 	{
-		if(data.states.exists(e.state) && e.state != data.currentState)
+		if(states.exists(e.state) && e.state != actor.currentState)
 		{
-			data.states[data.currentState].exit();
+			states[actor.currentState].exit();
 			if(e.immediate)
 			{
-				data.currentState = e.state;
-				data.states[data.currentState].takeAction();
+				actor.currentState = e.state;
+				states[actor.currentState].takeAction();
 			}
 			else
 			{
-				data.nextState = e.state;
+				actor.nextState = e.state;
 			}
-			data.states[e.state].enter();
+			states[e.state].enter();
 		}
 	}
 	/**
@@ -130,7 +120,7 @@ class StateAI extends ActorComponent implements AI
 	 */
 	public override function destroy() 
 	{
-		Sdg.removeTimeTask(data.actionTimer);
+		Sdg.removeTimeTask(actionTimer);
 		actor.components.remove(this);
 		super.destroy();
 	}

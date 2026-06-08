@@ -9,7 +9,7 @@ import events.SetBuildingEvent;
 
 class BuilderState extends BaseState
 {
-	var needsBuilt:Bool = true;
+	//var needsBuilt:Bool = true;
 
 	public function new(a:Actor)
 	{
@@ -21,7 +21,7 @@ class BuilderState extends BaseState
 
 	public override function enter()
 	{
-		actor.coolDown = 1000;
+		actor.coolDown = 250;
 		actor.eventDispatcher.dispatchEvent(AnimateEvent.ANIMATE, new AnimateEvent('build'));
 	}
 

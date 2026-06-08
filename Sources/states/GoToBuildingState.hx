@@ -49,7 +49,7 @@ class GoToBuildingState extends MovingState
 				else
 				{
 					var act = new Actor(bn, bData);
-					actor.screen.add(actor.team.addUnit(act));
+					actor.screen.add(actor.team.addBuilding(act));
 					actor.eventDispatcher.dispatchEvent(SetBuildingEvent.BUILD_ACTOR, new SetBuildingEvent(act));
 				}
 			}

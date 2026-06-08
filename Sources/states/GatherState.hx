@@ -13,7 +13,6 @@ import world.Node;
 
 class GatherState extends BaseState
 {
-	var finishedResource:Bool = false;
 
 	public function new(a:Actor)
 	{

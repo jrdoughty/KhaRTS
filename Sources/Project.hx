@@ -1,5 +1,6 @@
 package;
 
+import save.SaveManager;
 import kha.Framebuffer;
 import kha.Scheduler;
 import kha.System;
@@ -42,7 +43,11 @@ class Project {
 		var audioManager = sdg.manager.AudioManager.manager;
 		audioManager.addBank("fx");
 		audioManager.addBank("music");
-
+		Sdg.addTimeTask(function(){
+			//trace(SaveManager.load());
+			SaveManager.save(cast Sdg.screen);
+			//trace(SaveManager.load());
+		},5,1,1);
 		//sdg.manager.AudioManager.manager.playMusic("TitleScreen","music");
 	}
 

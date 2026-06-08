@@ -33,6 +33,7 @@ class PlayScreen extends Screen implements IGameScreen
 	public var fpsText:Text;
 	public var fps:Int =0;
 	public var fpsTimer:Int;
+	public var resources:Array<Actor> = [];
 	
 	public function new()
 	{
@@ -55,15 +56,16 @@ class PlayScreen extends Screen implements IGameScreen
 			startNode = lvl.getNodeByGridXY(Std.int(i.x), Std.int(i.y));
 			act = new Actor(startNode, Data.resources.get(tree));
 			add(act);
+			resources.push(act);
 		}
+		team = new Team();
 		for(i in lvl.neutralEnemyPos)
 		{
-			//break;
-			team = new Team();
 			startNode = lvl.getNodeByGridXY(Std.int(i.x), Std.int(i.y));
 			act = new Actor(startNode, Data.units.get(enemy));
 			add(team.addUnit(act));
 		}
+		teams.push(team);
 		for(i in lvl.playerStartPos.keys())
 		{
 			team = new Team();

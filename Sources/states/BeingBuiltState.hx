@@ -13,8 +13,6 @@ class BeingBuiltState extends BaseState
 	/**
 	* Build Progress in seconds
 	*/
-	var progress:Int = 0;
-	var tID:Int;
 	public function new(a:Actor)
 	{
 		super(a);
@@ -22,21 +20,22 @@ class BeingBuiltState extends BaseState
 	}
 	public override function enter()
 	{
-		actor.coolDown = 1000;
+		actor.coolDown = 250;
 		actor.eventDispatcher.dispatchEvent(AnimateEvent.ANIMATE, new AnimateEvent('building', true));
 		trace("starting build");
 	}
 
 	private function startBuild(e:EventObject)
 	{
+		actor.value = 0;
 		actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('being_built',true));
 		actor.eventDispatcher.addEvent(SimpleEvents.BUILD_PROGRESS, build);
 	}
 
 	private function build(e:EventObject)
 	{
-		progress++;
-		if(progress == 10)
+		actor.value++;
+		if(actor.value == 10)
 		{
 			finishBuild();
 		}
