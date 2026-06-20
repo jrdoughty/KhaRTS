@@ -15,4 +15,6 @@ interface IGameScreen
 	public var activeTeam(default,null):Team;
 	public var resources:Array<Actor>;
 	public var dashboard(default,null):Object;//Dashboard;
+	public function add(object:Object):Object;
+	public var teamsMap(default,null):Map<Int,Team>;
 }

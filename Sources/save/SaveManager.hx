@@ -10,6 +10,10 @@ import js.Browser;
 #end
 import haxe.io.Path;
 import sdg.Sdg;
+import screens.IGameScreen;
+import actors.Actor;
+import systems.Team;
+import systems.Data;
 
 typedef GameSaveData = {
     var version:Int;
@@ -214,11 +218,92 @@ class SaveManager {
                 trace("[SaveManager] Version mismatch: expected $SAVE_VERSION, got ${data.version}");
                 // Handle migration or return null here
             }
-            
             return data;
         } catch (e:Dynamic) {
             trace("[SaveManager] Load failed: " + e);
             return null;
         }
     }
+
+    public static function setupFromSave(screen:IGameScreen,gsd:GameSaveData) 
+	{
+		var actor:Actor = null;
+		var actorsWithTargets:Array<Actor> = [];
+		var actorDataWithTargets:Array<ActorSaveData> = [];
+		var actorMap:Map<Int,Actor> = new Map<Int,Actor>();
+
+		for(a in gsd.actors)
+		{
+			if(a.type == "unit")
+			{
+				actor = new Actor(screen.lvl.getNodeByGridXY(a.x,a.y),Data.units.get(cast a.data),a.id);
+				screen.add(actor);
+			}
+			else if(a.type == "building")
+			{
+				actor = new Actor(screen.lvl.getNodeByGridXY(a.x,a.y),Data.buildings.get(cast a.data),a.id);
+				cast(Sdg.screen,IGameScreen).add(cast(Sdg.screen,IGameScreen).activeTeam.addUnit(actor));
+			}
+			else if(a.type == "resource")
+			{	
+				actor = new Actor(screen.lvl.getNodeByGridXY(a.x,a.y),Data.resources.get(cast a.data),a.id);
+				screen.resources.push(actor);
+			}
+			
+			if(actor != null)
+			{
+				screen.add(actor);
+				actorMap.set(actor.id,actor);
+				if(a.tx != null)
+					actor.targetNode = screen.lvl.getNodeByGridXY(a.tx,a.ty);
+				if(a.bx != null)
+					actor.buildNode = screen.lvl.getNodeByGridXY(a.bx,a.by);
+				actor.currentResource = a.currentResource;
+				actor.value = a.value;
+				if(a.currentState != null)
+					actor.currentState = a.currentState;
+				if(a.lastState != null)
+					actor.lastState = a.lastState;
+				if(a.nextState != null)
+					actor.nextState = a.nextState;
+				actor.health = a.health;
+				if(a.bData != null)
+				{
+					actor.buildData = Data.buildings.get(cast a.bData);
+				}
+				if(a.targetResource != null || a.targetEnemy != null || a.targetBuilding != null)
+				{
+					actorsWithTargets.push(actor);
+					actorDataWithTargets.push(a);
+				}
+				
+				if(a.teamID != null && !screen.teamsMap.exists(a.teamID))
+				{
+					screen.teamsMap[a.teamID] = new Team();
+					screen.teams.push(screen.teamsMap[a.teamID]);
+					screen.teamsMap[a.teamID].addUnit(actor);
+				}
+				else if(a.teamID != null)
+				{
+					screen.teamsMap[a.teamID].addUnit(actor);
+				}
+			}
+		}
+		for( i in 0...actorsWithTargets.length)
+		{
+			if(actorDataWithTargets[i].targetBuilding != null)
+			{
+				actorsWithTargets[i].targetBuilding = actorMap[i];	
+			}
+			if(actorDataWithTargets[i].targetEnemy != null)
+			{
+				actorsWithTargets[i].targetEnemy = actorMap[i];
+			}
+			if(actorDataWithTargets[i].targetResource != null)
+			{
+				actorsWithTargets[i].targetResource = actorMap[i];				
+			}
+		}
+
+	}
 }
