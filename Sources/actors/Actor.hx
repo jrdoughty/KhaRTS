@@ -87,6 +87,11 @@ class Actor extends Object
 	* data storage for sharing information between components and actors
 	*/
 	public var buildingData:Buildings;
+
+	/**
+	* data of the building you're building
+	*/
+	public var buildData:Buildings;
 	public var buildNode:INode;
 	public var queue:Array<UnitData>;
 	public var ready:Bool = true;//set to true because most units show up ready, buildings on the other had do not

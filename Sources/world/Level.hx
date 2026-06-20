@@ -1,5 +1,8 @@
 package world;
 
+import screens.PlayScreen;
+import sdg.Sdg;
+import actors.Actor;
 import sdg.pathfinding.IMap;
 import haxe.xml.Parser;
 import kha.Assets;
@@ -13,6 +16,9 @@ import events.SimpleEvents;
 import sdg.event.EventObject;
 import kha.math.Vector2;
 import sdg.pathfinding.INode;
+import save.SaveManager;
+import format.tmx.Data.TmxTileLayer;
+import systems.Data;
 /**
  * ...
  * @author John Doughty
@@ -33,14 +39,13 @@ class Level extends Object implements IMap
 	{
 		super();
 		var r = new Reader();
-		//trace(Reflect.field(Assets.blobs, tmxFileName+"_tmx"));
 		var t:TmxMap = r.read(Parser.parse( Reflect.field(Assets.blobs,tmxFileName+"_tmx").toString() ));
 		levelWidth = t.width;
 		levelHeight = t.height;
+
 		tileset = new RTSTileset(tilesetTSXFileName);
 		var bgMap = new Tilemap(tileset);
 		var i = -1;
-		var data = new Array<Array<Int>>();
 		for(layer in t.layers)
 		{
 			switch(layer)
@@ -48,84 +53,107 @@ class Level extends Object implements IMap
 				case LTileLayer(layer):
 					if(layer.name == 'Background')
 					{
-						i = 0;
-						var count:Int = 0;
-						for(y in 0...layer.height)	
-						{
-							data.push(new Array<Int>());
-						
-							for (x in 0...layer.width)
-							{
-								data[y].push(layer.data.tiles[i].gid - 1);//need to use FirstGID instead
-								var shouldPass = true;
-								var canSee = true;
-								for(k in tileset.specialTiles)//can probably be made more efficient
-								{
-									if(layer.data.tiles[i].gid - 1 == k.id && k.type == 'wall')
-									{
-										shouldPass = false;
-										canSee = false;
-									}
-									if(layer.data.tiles[i].gid - 1 == k.id && k.type == 'water')
-									{
-										shouldPass = false;
-									}
-								} 
-								activeNodes.push(new Node(layer.data.tiles[i].gid - 1, t.tileWidth, t.tileHeight, x, y, shouldPass, canSee));
-								i++;
-							} 
-						}
-						createNeighbors(t.width,t.height);
-						bgMap.loadFrom2DArray(data);
-						graphic = bgMap;
+						setupBackground(t,bgMap,layer);
 					}
 					else if (layer.name.indexOf('Player') != -1)
 					{
-						var player = Std.parseInt(layer.name.substr(6,2));
-						i = -1;
-						for(tile in layer.data.tiles)
-						{
-							i++;
-							if(tile.gid>0)
-							{
-								if(!playerStartPos.exists(player))//forces single start point
-								{
-									playerStartPos.set(player, new Vector2(i%levelWidth,Std.int(i/levelWidth)));
-								}
-							}
-						}
+						setupPlayer(layer);
 					}
 					else if (layer.name.indexOf('Enemy') != -1)
 					{
-						i = 0;
-						for(y in 0...layer.height)	
-						{						
-							for (x in 0...layer.width)
-							{
-								if(layer.data.tiles[i].gid > 0)
-									neutralEnemyPos.push(new Vector2(x,y));
-								i++;
-							} 
-						}
+						setupEnemy(layer);
 					}
 					else if (layer.name.indexOf('Wood') != -1)
 					{
-						i = 0;
-						for(y in 0...layer.height)	
-						{						
-							for (x in 0...layer.width)
-							{
-								if(layer.data.tiles[i].gid > 0)
-									resourcePos.push(new Vector2(x,y));
-								i++;
-							} 
-						}
+						setupResources(layer);
 					}
 				default:
 			}
 		}
 	}
 	
+	private function setupBackground(t:TmxMap,bgMap:Tilemap,layer:TmxTileLayer) 
+	{
+		var data = new Array<Array<Int>>();
+		var i = 0;
+		var count:Int = 0;
+		for(y in 0...layer.height)	
+		{
+			data.push(new Array<Int>());
+		
+			for (x in 0...layer.width)
+			{
+				data[y].push(layer.data.tiles[i].gid - 1);//need to use FirstGID instead
+				var shouldPass = true;
+				var canSee = true;
+				for(k in tileset.specialTiles)//can probably be made more efficient
+				{
+					if(layer.data.tiles[i].gid - 1 == k.id && k.type == 'wall')
+					{
+						shouldPass = false;
+						canSee = false;
+					}
+					if(layer.data.tiles[i].gid - 1 == k.id && k.type == 'water')
+					{
+						shouldPass = false;
+					}
+				} 
+				activeNodes.push(new Node(layer.data.tiles[i].gid - 1, t.tileWidth, t.tileHeight, x, y, shouldPass, canSee));
+				i++;
+			} 
+		}
+		createNeighbors(t.width,t.height);
+		bgMap.loadFrom2DArray(data);
+		graphic = bgMap;
+	}
+	
+	private function setupPlayer(layer:TmxTileLayer) 
+	{
+		var player = Std.parseInt(layer.name.substr(6,2));
+		var i = -1;
+		for(tile in layer.data.tiles)
+		{
+			i++;
+			if(tile.gid>0)
+			{
+				if(!playerStartPos.exists(player))//forces single start point
+				{
+					playerStartPos.set(player, new Vector2(i%levelWidth,Std.int(i/levelWidth)));
+				}
+			}
+		}
+	}
+	
+	private function setupEnemy(layer:TmxTileLayer) 
+	{
+		var i = 0;
+		for(y in 0...layer.height)	
+		{						
+			for (x in 0...layer.width)
+			{
+				if(layer.data.tiles[i].gid > 0)
+					neutralEnemyPos.push(new Vector2(x,y));
+				i++;
+			} 
+		}
+	}
+	
+	private function setupResources(layer:TmxTileLayer) 
+	{
+		var i = 0;
+		for(y in 0...layer.height)	
+		{						
+			for (x in 0...layer.width)
+			{
+				if(layer.data.tiles[i].gid > 0)
+					resourcePos.push(new Vector2(x,y));
+				i++;
+			} 
+		}
+	}
+
+
+
 	public function getNodeByGridXY(x:Int,y:Int):Node
 	{
 		var result:Node = null;

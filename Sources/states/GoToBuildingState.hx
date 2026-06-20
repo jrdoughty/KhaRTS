@@ -20,7 +20,6 @@ import events.BuildAtEvent;
 
 class GoToBuildingState extends MovingState
 {
-	private var bData:Buildings;
 	public function new(a:Actor)
 	{
 		super(a);
@@ -42,13 +41,15 @@ class GoToBuildingState extends MovingState
 			var bn = cast(actor.buildNode, Node);
 			if (Util.getPythagoreanCFromXY(actor.targetNode.nodeX,actor.targetNode.nodeY, actor.currentNodes[0].nodeX, actor.currentNodes[0].nodeY)<=Math.sqrt(2))
 			{
-				if(bn.occupant != null && bn.occupant.buildingData.name == bData.name)
+				if(bn.occupant != null && bn.occupant.buildingData.name == actor.buildData.name)
 				{
 					actor.eventDispatcher.dispatchEvent(SetBuildingEvent.BUILD_ACTOR, new SetBuildingEvent(bn.occupant));
 				}
 				else
 				{
-					var act = new Actor(bn, bData);
+					trace(actor.buildData);
+					var act = new Actor(bn, actor.buildData);
+					trace('after');
 					actor.screen.add(actor.team.addBuilding(act));
 					actor.eventDispatcher.dispatchEvent(SetBuildingEvent.BUILD_ACTOR, new SetBuildingEvent(act));
 				}
@@ -106,8 +107,8 @@ class GoToBuildingState extends MovingState
 			actor.eventDispatcher.dispatchEvent(SimpleEvents.STOP, new EventObject());
 			actor.buildNode = bEvent.node;
 			
-			var w = (Math.ceil(bEvent.bData.width/bEvent.node.width));
-			var h = (Math.ceil(bEvent.bData.height/bEvent.node.height));
+			var w = (Math.ceil(actor.buildData.width/bEvent.node.width));
+			var h = (Math.ceil(actor.buildData.height/bEvent.node.height));
 			var paths:Array<Array<INode>> = [];
 			for(i in 0...w)
 			{
@@ -129,7 +130,7 @@ class GoToBuildingState extends MovingState
 			}
 
 
-			bData = bEvent.bData;
+			actor.buildData = actor.buildData;
 			actor.eventDispatcher.dispatchEvent(StateChangeEvent.CHANGE, new StateChangeEvent('go_to_building'));
 		}
 	} 

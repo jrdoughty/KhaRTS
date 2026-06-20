@@ -292,7 +292,8 @@ class InputSystem extends SimpleEventDispatcher
 			{
 				node = activeNodes[Math.floor(relativeMouseX / activeScreen.lvl.tileset.tileWidth) + Math.floor(relativeMouseY / activeScreen.lvl.tileset.tileWidth)*activeScreen.lvl.levelWidth];
 				builder.team.resources -= buildingData.cost;
-				builder.eventDispatcher.dispatchEvent(BuildAtEvent.BUILD, new BuildAtEvent(node, buildingData));
+				builder.buildData = buildingData;
+				builder.eventDispatcher.dispatchEvent(BuildAtEvent.BUILD, new BuildAtEvent(node));
 				ui.clearBuilding();
 			}						
 			else

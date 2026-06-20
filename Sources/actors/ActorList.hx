@@ -70,7 +70,8 @@ class ActorList
 					if(buildingsToBuild.indexOf(a.data.name) != -1 && (actor.targetBuilding == null || i == 1))
 					{
 						//actor.eventDispatcher.dispatchEvent(SetBuildingEvent.BUILD_ACTOR, new SetBuildingEvent(a));
-						actor.eventDispatcher.dispatchEvent(BuildAtEvent.BUILD, new BuildAtEvent(a.currentNodes[0], a.buildingData));
+						actor.eventDispatcher.dispatchEvent(BuildAtEvent.BUILD, new BuildAtEvent(a.currentNodes[0]));
+						actor.buildData = a.buildingData;
 						return;
 					}
 				}

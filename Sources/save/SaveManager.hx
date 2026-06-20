@@ -29,18 +29,24 @@ typedef ActorSaveData = {
     var id:Int;
     var x:Int;
     var y:Int;
+    var bx:Int;
+    var by:Int;
+    var bData:String;
     var tx:Int;
     var ty:Int;
-    var t:Int;
+    var targetEnemy:Int;
     var health:Float;
     var data:String;
 	var currentResource:String;
 	var resourcesCollected:Int;
 	var targetResource:Int;
+	var targetBuilding:Int;
 	var value:Int;
 	var currentState:String;
 	var nextState:String;
 	var lastState:String;
+    var type:String;
+    var teamID:Int;
 }
 
 typedef LevelSaveData = {
@@ -80,7 +86,8 @@ class SaveManager {
             // Extract your existing data structures here
             // Example extraction pattern:
             if (state != null && state.teams != null) {
-                for (t in state.teams) {
+                for (t in state.teams) 
+                {
                     saveData.teams.push({
                         id: t.id,
                         resources: t.resources,
@@ -94,16 +101,22 @@ class SaveManager {
                             y: a.currentNodes[0].nodeY,
                             tx: (a.targetNode != null)?a.targetNode.nodeX:null,
                             ty: (a.targetNode != null)?a.targetNode.nodeY:null,
-                            t:(a.targetEnemy != null)?a.targetEnemy.id:null,
+                            bx: (a.buildNode != null)?a.buildNode.nodeX:null,
+                            by: (a.buildNode != null)?a.buildNode.nodeY:null,
+                            bData: (a.buildData != null)?a.buildData.name:null,
+                            targetEnemy:(a.targetEnemy != null)?a.targetEnemy.id:null,
                             health: a.health,
                             data: cast (a.data.id,String),
                             currentResource:a.currentResource,
                             resourcesCollected:a.resourcesCollected,
                             targetResource:(a.targetResource != null)?a.targetResource.id:null,
+                            targetBuilding:(a.targetBuilding != null)?a.targetBuilding.id:null,
                             value:a.value,
                             currentState:a.currentState,
                             nextState:a.nextState,
-                            lastState:a.lastState
+                            lastState:a.lastState,
+                            type:"unit",
+                            teamID:a.team.id
                         });
                     }
 
@@ -114,16 +127,22 @@ class SaveManager {
                             y: a.currentNodes[0].nodeY,
                             tx: null,
                             ty: null,
-                            t:(a.targetEnemy != null)?a.targetEnemy.id:null,
+                            bx: (a.buildNode != null)?a.buildNode.nodeX:null,
+                            by: (a.buildNode != null)?a.buildNode.nodeY:null,
+                            bData: (a.buildData != null)?a.buildData.name:null,
+                            targetEnemy:(a.targetEnemy != null)?a.targetEnemy.id:null,
                             health: a.health,
                             data: cast (a.buildingData.id,String),
                             currentResource:a.currentResource,
                             resourcesCollected:a.resourcesCollected,
                             targetResource:(a.targetResource != null)?a.targetResource.id:null,
+                            targetBuilding:(a.targetBuilding != null)?a.targetBuilding.id:null,
                             value:a.value,
                             currentState:a.currentState,
                             nextState:a.nextState,
-                            lastState:a.lastState
+                            lastState:a.lastState,
+                            type:"building",
+                            teamID:a.team.id
                         });
                     }
                 }
@@ -136,16 +155,22 @@ class SaveManager {
                             y: a.currentNodes[0].nodeY,
                             tx: null,
                             ty: null,
-                            t:null,
+                            bx: (a.buildNode != null)?a.buildNode.nodeX:null,
+                            by: (a.buildNode != null)?a.buildNode.nodeY:null,
+                            bData: (a.buildData != null)?a.buildData.name:null,
+                            targetEnemy:null,
                             health: a.health,
                             data: cast (a.resourceData.id,String),
                             currentResource:a.currentResource,
                             resourcesCollected:a.resourcesCollected,
                             targetResource:(a.targetResource != null)?a.targetResource.id:null,
+                            targetBuilding:(a.targetBuilding != null)?a.targetBuilding.id:null,
                             value:a.value,
                             currentState:a.currentState,
                             nextState:a.nextState,
-                            lastState:a.lastState
+                            lastState:a.lastState,
+                            type:"resource",
+                            teamID:null
                         }
                     );
                 }
